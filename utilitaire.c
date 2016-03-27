@@ -3,9 +3,22 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <SDL/SDL.h>
+    #include <SDL/SDL_image.h>
+    #include <SDL/SDL_ttf.h>
     #include "structure.h"
     #include "utilitaire.h"
+    #include "jeu.h"
+    #define TAUX_SECONDE 20
+    enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
 #endif
+
+void test_surface(SDL_Surface* surface) {
+    if (surface==NULL) {
+        fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+}
+
 void pause() {
     int continuer=1;
     SDL_Event choix;
@@ -16,6 +29,15 @@ void pause() {
             case SDL_QUIT:
                 continuer=0;
                 break;
+            case SDL_KEYDOWN:
+                switch(choix.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        continuer=0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
@@ -25,7 +47,6 @@ void pause() {
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     int i, taux, taille, couleur;
     SDL_Surface **rectangle_degrade;
-
     switch (prop_deg.sens) {
         case HORIZONTAL:
             taille = prop_deg.taille_x;
