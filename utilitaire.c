@@ -9,6 +9,8 @@
     #include "utilitaire.h"
     #include "jeu.h"
     #define TAUX_SECONDE 20
+    #define TAILLE_ECRAN_Y 768
+    #define TAILLE_ECRAN_X 1366
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
 #endif
 
@@ -43,6 +45,8 @@ void pause() {
         }
     }
 }
+
+
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     int i, taux, taille, couleur;

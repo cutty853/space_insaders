@@ -49,9 +49,6 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="structure.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="structure.h" />
 		<Unit filename="utilitaire.c">
 			<Option compilerVar="CC" />

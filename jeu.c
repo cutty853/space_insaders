@@ -10,6 +10,8 @@
     #include "jeu.h"
 
     #define TAUX_SECONDE 20
+    #define TAILLE_ECRAN_Y 768
+    #define TAILLE_ECRAN_X 1366
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
 
     #define CENTRER(cadre, bloc) (cadre/2) - (bloc/2)
@@ -60,7 +62,7 @@ int menu(SDL_Surface *ecran) {
     pos_fond.y=0;
 
     //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'écran (pour l'instant)
-    fond = IMG_Load("background.jpg");
+    fond = IMG_Load("images/background.jpg");
     SDL_BlitSurface(fond, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond);
@@ -74,7 +76,7 @@ int menu(SDL_Surface *ecran) {
 
     //Ajouter les textes à cet endroit
         // TITRE
-    police_titre = TTF_OpenFont("coalition.ttf", 52);
+    police_titre = TTF_OpenFont("policescoalition.ttf", 52);
     titre = TTF_RenderText_Blended(police_titre, "SPACE INSADERS", couleur_titre);
     pos_titre.x = (ecran->w/2) - (titre->w/2);
     pos_titre.y = 150;
@@ -82,7 +84,7 @@ int menu(SDL_Surface *ecran) {
     SDL_FreeSurface(titre);
     TTF_CloseFont(police_titre);
         // OPTIONS DU MENU
-    police_option = TTF_OpenFont("geo_sans_light.ttf", 26);
+    police_option = TTF_OpenFont("polices/geo_sans_light.ttf", 26);
     for (i=0; i<4 ; i++) {
         option[i] = TTF_RenderText_Blended(police_option, texte_option[i], couleur_option);
         pos_option[i].x += 150 - (option[i]->w/2);
@@ -136,6 +138,78 @@ int menu(SDL_Surface *ecran) {
         }
 
     }
+    return -1;
+}
+
+void charge_niveau (SDL_Surface *ecran) {
+    SDL_Surface *fond_combat=NULL;
+    SDL_Rect pos_fond;
+    _vaisseau v_joueur;
+    pos_fond.x=0;
+    pos_fond.y=0;
+
+    v_joueur.vie=HAUT;
+    v_joueur.bouclier=BAS;
+
+    // Affichage du fond de combat
+    fond_combat = IMG_Load("images/map_fond_combat.jpg");
+    SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(fond_combat);
+
+    //Barre de vie
+    barre_vie(ecran, v_joueur);
+    barre_bouclier(ecran, v_joueur);
+}
+
+void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur) {
+    /** CETTE FONCTION AFFICHE DES BARRES DE VIE*/
+
+    SDL_Surface *barre_vie=NULL;
+    SDL_Rect pos_barre_vie;
+    pos_barre_vie.x=5;
+    pos_barre_vie.y=TAILLE_ECRAN_Y-25;
+
+
+    // Affichage de la barre de vie
+    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
+    switch (v_joueur.vie) {
+        case BAS:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0));
+            break;
+        case MOYEN:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0));
+            break;
+        case HAUT:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0));
+            break;
+    }
+    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(barre_vie);
+}
+
+void barre_bouclier(SDL_Surface *ecran, _vaisseau v_joueur) {
+    SDL_Surface *barre_bouclier=NULL;
+    SDL_Rect pos_barre_bouclier;
+    pos_barre_bouclier.x=5;
+    pos_barre_bouclier.y=TAILLE_ECRAN_Y-50;
+
+    // Affichage de la barre du bouclier
+    switch (v_joueur.bouclier) {
+        case BAS:
+            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
+            break;
+        case MOYEN:
+            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
+            break;
+        case HAUT:
+            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
+            break;
+    }
+    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(barre_bouclier);
 }
 
 
