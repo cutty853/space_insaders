@@ -8,15 +8,12 @@
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
-    #define TAUX_SECONDE 20
-    #define TAILLE_ECRAN_Y 768
-    #define TAILLE_ECRAN_X 1366
-    enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
+    #include "constantes.h"
 #endif
 
-void test_surface(SDL_Surface* surface) {
+void test_surface(SDL_Surface* surface, int ref_err) {
     if (surface==NULL) {
-        fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
+        fprintf(stderr, "[ - ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }

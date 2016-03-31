@@ -42,6 +42,7 @@
 			<Add library="dxguid" />
 			<Add directory="C:/Program Files (x86)/CodeBlocks/SDL/lib" />
 		</Linker>
+		<Unit filename="constantes.h" />
 		<Unit filename="jeu.c">
 			<Option compilerVar="CC" />
 		</Unit>

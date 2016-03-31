@@ -9,12 +9,7 @@
     #include "utilitaire.h"
     #include "jeu.h"
 
-    #define TAUX_SECONDE 20
-    #define TAILLE_ECRAN_Y 768
-    #define TAILLE_ECRAN_X 1366
-    enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
-
-    #define CENTRER(cadre, bloc) (cadre/2) - (bloc/2)
+    #include "constantes.h"
 #endif
 
 void cadre(SDL_Surface *ecran, int pos_x, int pos_y) {
@@ -22,8 +17,8 @@ void cadre(SDL_Surface *ecran, int pos_x, int pos_y) {
     SDL_Rect pos_cadre;
     int largeur, hauteur, i;
 
-    largeur = 300;
-    hauteur = 50;
+    largeur = LARGE_CADRE_MENU;
+    hauteur = LONG_CADRE_MENU;
     pos_cadre.x=pos_x;
     pos_cadre.y=pos_y;
 
@@ -50,13 +45,21 @@ void cadre(SDL_Surface *ecran, int pos_x, int pos_y) {
 }
 
 int menu(SDL_Surface *ecran) {
-    SDL_Surface *fond = NULL, *titre = NULL, *option[4]= {NULL};
-    SDL_Rect pos_fond, pos_titre, pos_option[4];
+    /** Fonction servant a afficher un menu et attendant l'action du joueur.
+      * La fonction retour JOUER si le joueur clique sur "jouer", SAUVEGARDER si le joueur clique sur "Sauvegarder...",
+      * CHARGER si le joueur clique sur "Charger...", QUITTER si le joueur clique sur "Quitter"
+      * Elle retour -1 si la fonction n'arrive pas a charger quoi que ce soit
+      */
+
+    /// SUGGESTION pour la fonction == Faire une gestion efficace des erreurs avec un return de menu cohérant a ces erreurs
+
+    SDL_Surface *fond = NULL, *titre = NULL, *option[NB_OPTION_MENU]= {NULL};
+    SDL_Rect pos_fond, pos_titre, pos_option[NB_OPTION_MENU];
     SDL_Color couleur_titre = {240, 170, 23}, couleur_option = {242, 242, 242};
     SDL_Event choix;
     TTF_Font *police_titre=NULL, *police_option=NULL;
-    char texte_option[4][16]={"Jouer", "Sauvegarder...", "Charger...", "Quitter"};
-    int i, continuer=1;
+    char texte_option[NB_OPTION_MENU][16]=ENUM_TITRE_OPTION_MENU();
+    int i, continuer=1, ret[NB_OPTION_MENU]=ENUM_RETURN_OPTION_MENU();
 
     pos_fond.x=0;
     pos_fond.y=0;
@@ -68,26 +71,26 @@ int menu(SDL_Surface *ecran) {
     SDL_FreeSurface(fond);
 
     //Affichage des boutons
-    for (i=0; i<4 ; i++) {
-        pos_option[i].x = CENTRER(ecran->w, 300);
-        pos_option[i].y = CENTRER(ecran->h,(50*4+30*3))+i*80;
+    for (i=0; i<NB_OPTION_MENU ; i++) {
+        pos_option[i].x = CENTRER(ecran->w, LARGE_CADRE_MENU);
+        pos_option[i].y = CENTRER(ecran->h, (LONG_CADRE_MENU*4+ESPACE_CADRE_MENU*3))+i*(LONG_CADRE_MENU+ESPACE_CADRE_MENU);
         cadre(ecran, (int)pos_option[i].x, (int)pos_option[i].y);
     }
 
     //Ajouter les textes à cet endroit
         // TITRE
-    police_titre = TTF_OpenFont("policescoalition.ttf", 52);
+    police_titre = TTF_OpenFont("polices/coalition.ttf", 52);
     titre = TTF_RenderText_Blended(police_titre, "SPACE INSADERS", couleur_titre);
-    pos_titre.x = (ecran->w/2) - (titre->w/2);
-    pos_titre.y = 150;
+    pos_titre.x = CENTRER(ecran->w, titre->w);
+    pos_titre.y = LARGE_CADRE_MENU/2;
     SDL_BlitSurface(titre, NULL, ecran, &pos_titre);
     SDL_FreeSurface(titre);
     TTF_CloseFont(police_titre);
         // OPTIONS DU MENU
     police_option = TTF_OpenFont("polices/geo_sans_light.ttf", 26);
-    for (i=0; i<4 ; i++) {
+    for (i=0; i<NB_OPTION_MENU ; i++) {
         option[i] = TTF_RenderText_Blended(police_option, texte_option[i], couleur_option);
-        pos_option[i].x += 150 - (option[i]->w/2);
+        pos_option[i].x += CENTRER(LARGE_CADRE_MENU, option[i]->w);
         pos_option[i].y += 10;
         SDL_BlitSurface(option[i], NULL, ecran, &pos_option[i]);
         SDL_FreeSurface(option[i]);
@@ -114,20 +117,11 @@ int menu(SDL_Surface *ecran) {
             case SDL_MOUSEBUTTONDOWN:
                 switch (choix.button.button) {
                     case SDL_BUTTON_LEFT:
-                        if ((choix.button.x > CENTRER(ecran->w, 300)) && (choix.button.x < CENTRER(ecran->w, 300)+300)) {
-                            if ((choix.button.y > CENTRER(ecran->h, 290)) && (choix.button.y < CENTRER(ecran->h, 290)+50)) {
-                                return JOUER;
-                            }
-                            if ((choix.button.y > CENTRER(ecran->h, 290)+80) && (choix.button.y < CENTRER(ecran->h, 290)+130)) {
-                                return SAUVEGARDER;
-                            }
-                            if ((choix.button.y > CENTRER(ecran->h, 290)+160) && (choix.button.y < CENTRER(ecran->h, 290)+210)) {
-                                return CHARGER;
-                            }
-                            if ((choix.button.y > CENTRER(ecran->h, 290)+240) && (choix.button.y < CENTRER(ecran->h, 290)+290)) {
-                                return QUITTER;
-                            }
-                        }
+                        // Voir si je peut pas faire une fonction en plus pour tester si le curseur est dans une région prédéfinis
+                        if ((choix.button.x > CENTRER(ecran->w, LARGE_CADRE_MENU)) && (choix.button.x < CENTRER(ecran->w, LARGE_CADRE_MENU)+LARGE_CADRE_MENU))
+                            for (i=0 ; i<NB_OPTION_MENU ; i++)
+                                if ((choix.button.y > CENTRER(ecran->h, TOT_HAUT_CADRE_MENU)+(i*(LONG_CADRE_MENU+ESPACE_CADRE_MENU))) && (choix.button.y < CENTRER(ecran->h, TOT_HAUT_CADRE_MENU)+(LONG_CADRE_MENU+i*(LONG_CADRE_MENU+ESPACE_CADRE_MENU))))
+                                    return ret[i];
                         break;
                     default:
                         break;

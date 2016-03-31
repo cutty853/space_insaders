@@ -8,10 +8,7 @@
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
-    #define TAUX_SECONDE 20
-    #define TAILLE_ECRAN_Y 768
-    #define TAILLE_ECRAN_X 1366
-    enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
+    #include "constantes.h"
 #endif
 
 
@@ -28,7 +25,7 @@ int main ( int argc, char** argv )
         fprintf(stderr, "Erreur d'initialisation de TTF_Init : %s\n", TTF_GetError());
         exit(EXIT_FAILURE);
     }
-    ecran = SDL_SetVideoMode(1366, 768, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+    ecran = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
     if (ecran==NULL) {
         fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
