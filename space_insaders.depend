@@ -204,7 +204,7 @@
 
 1459186234 source:c:\users\antoine\documents\github\space_insaders\structure.c
 
-1459431190 source:c:\users\antoine\documents\github\space_insaders\main.c
+1459440018 source:c:\users\antoine\documents\github\space_insaders\main.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -213,13 +213,15 @@
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
+	"ia.h"
+	"player.h"
 	"constantes.h"
 
-1459189043 c:\users\antoine\documents\github\space_insaders\structure.h
+1459457937 c:\users\antoine\documents\github\space_insaders\structure.h
 
 1459432871 c:\users\antoine\documents\github\space_insaders\utilitaire.h
 
-1459432842 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+1459457518 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -228,9 +230,11 @@
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
+	"ia.h"
+	"player.h"
 	"constantes.h"
 
-1459432961 source:c:\users\antoine\documents\github\space_insaders\jeu.c
+1459439921 source:c:\users\antoine\documents\github\space_insaders\jeu.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -239,9 +243,41 @@
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
+	"ia.h"
+	"player.h"
 	"constantes.h"
 
 1459189135 c:\users\antoine\documents\github\space_insaders\jeu.h
 
-1459433145 c:\users\antoine\documents\github\space_insaders\constantes.h
+1459440777 c:\users\antoine\documents\github\space_insaders\constantes.h
+
+1459457988 source:c:\users\antoine\documents\github\space_insaders\ia.c
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1459436507 c:\users\antoine\documents\github\space_insaders\ia.h
+
+1459439898 c:\users\antoine\documents\github\space_insaders\player.h
+
+1459440691 source:c:\users\antoine\documents\github\space_insaders\player.c
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
 

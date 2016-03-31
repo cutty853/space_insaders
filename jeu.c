@@ -8,6 +8,9 @@
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
+    #include "ia.h"
+    #include "player.h"
+
 
     #include "constantes.h"
 #endif
@@ -138,12 +141,13 @@ int menu(SDL_Surface *ecran) {
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
-    _vaisseau v_joueur;
+    _vaisseau v_joueur, v_ia;
     pos_fond.x=0;
     pos_fond.y=0;
 
     v_joueur.vie=HAUT;
     v_joueur.bouclier=BAS;
+    init_vaisseau(&v_ia);
 
     // Affichage du fond de combat
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
@@ -154,6 +158,9 @@ void charge_niveau (SDL_Surface *ecran) {
     //Barre de vie
     barre_vie(ecran, v_joueur);
     barre_bouclier(ecran, v_joueur);
+    //Affichage de la barre de vie & de la barre du bouclier de l'ia:
+    barre_vie_ia(ecran, v_ia);
+    barre_bouclier_ia(ecran, v_ia);
 }
 
 void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur) {

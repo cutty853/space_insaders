@@ -8,6 +8,10 @@
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
+    #include "ia.h"
+    #include "player.h"
+
+
     #include "constantes.h"
 #endif
 

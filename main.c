@@ -8,6 +8,10 @@
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
+    #include "ia.h"
+    #include "player.h"
+
+
     #include "constantes.h"
 #endif
 
@@ -37,7 +41,7 @@ int main ( int argc, char** argv )
             break;
         case JOUER:
             charge_niveau(ecran);
-            pause();
+            check_player_action(ecran);
             break;
         case SAUVEGARDER:
             break;
