@@ -9,13 +9,17 @@ typedef struct {
 
 typedef enum {BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
-//typedef enum {CAPA1, CAPA2} _capacite;
+//typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
 
 typedef struct {
     int poid;
     int acceleration;
+    int vitesse_max;
     _charge bouclier;
-    _arme arme;
     _charge vie;
+    _arme arme;
     //_capacite capacite;
+
+    int position_x;
+    int position_y;
 } _vaisseau;
