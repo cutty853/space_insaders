@@ -9,8 +9,6 @@
 
     #define CENTRER(cadre, bloc) (((cadre)/2) - ((bloc)/2))
     #define CALCUL_FPS(fps) 1000/fps
-    #define INIT_POS(pos, x, y) pos.x=x; \
-                            pos.y=y;
     /// MENU
     #define LARGE_CADRE_MENU 300
     #define LONG_CADRE_MENU 50

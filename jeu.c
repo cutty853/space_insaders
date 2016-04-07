@@ -142,15 +142,15 @@ int menu(SDL_Surface *ecran) {
 
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
-    SDL_Rect pos_fond, pos_barre_ia;
+    SDL_Rect pos_fond, pos_barre_ia[2], pos_barre_player[2];
     _vaisseau v_joueur, v_ia;
-//    int a=0, b=700, c=30;
-//    INIT_POS(pos_fond, 0, 0);
-//    INIT_POS(pos_barre_ia, 700, 300);
-    pos_fond.x=0;
-    pos_fond.y=0;
-    pos_barre_ia.x=700;
-    pos_barre_ia.y=300;
+
+    // Initialisation des positions
+    init_pos(&pos_fond, 0, 0);
+    init_pos(&pos_barre_ia[0], 700, 300);
+    init_pos(&pos_barre_ia[1], 700, 325);
+    init_pos(&pos_barre_player[0], 5, TAILLE_ECRAN_Y-5);
+    init_pos(&pos_barre_player[1], 5, TAILLE_ECRAN_Y-30);
 
     v_joueur.vie=HAUT;
     v_joueur.bouclier=BAS;
@@ -162,11 +162,11 @@ void charge_niveau (SDL_Surface *ecran) {
     SDL_FreeSurface(fond_combat);
 
     //Barre de vie & bouclier du joueur
-    barre_vie(ecran, v_joueur, pos_barre_ia);
-    barre_bouclier(ecran, v_joueur, pos_barre_ia);
+    barre_vie(ecran, v_joueur, pos_barre_player[0]);
+    barre_bouclier(ecran, v_joueur, pos_barre_player[1]);
     //Affichage de la barre de vie & de la barre du bouclier de l'ia:
-    barre_vie(ecran, v_ia, pos_barre_ia);
-    barre_bouclier(ecran, v_ia, pos_barre_ia);
+    barre_vie(ecran, v_ia, pos_barre_ia[0]);
+    barre_bouclier(ecran, v_ia, pos_barre_ia[1]);
 }
 
 void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur, SDL_Rect pos_barre) {

@@ -20,9 +20,7 @@ int check_player_action (SDL_Surface *ecran) {
     SDL_Surface *player;
     SDL_Rect pos_player;
 
-    pos_player.x=0;
-    pos_player.y=0;
-
+    init_pos(&pos_player, 0, 0);
     while (continuer) {
         SDL_PollEvent(&action);
 
