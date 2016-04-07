@@ -22,6 +22,11 @@ void test_surface(SDL_Surface* surface, int ref_err) {
     }
 }
 
+void init_pos(SDL_Rect* position, int x, int y) {
+    position->x=x;
+    position->y=y;
+}
+
 void pause() {
     int continuer=1;
     SDL_Event choix;

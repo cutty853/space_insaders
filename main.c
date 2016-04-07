@@ -53,7 +53,6 @@ int main ( int argc, char** argv )
             break;
     }
 
-
     TTF_Quit();
     SDL_Quit();
     return 0;
