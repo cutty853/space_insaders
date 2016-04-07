@@ -268,12 +268,13 @@
 
 1460074506 c:\users\antoine\documents\github\space_insaders\player.h
 
-1460074506 source:c:\users\antoine\documents\github\space_insaders\player.c
+1460075655 source:c:\users\antoine\documents\github\space_insaders\player.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
 	<math.h>
 	"structure.h"
 	"utilitaire.h"

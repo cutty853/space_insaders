@@ -266,7 +266,7 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
-                        v_player.rotation=0;
+                        //v_player.rotation=0;
                         break;
                     default:
                         break;

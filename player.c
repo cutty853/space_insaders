@@ -5,6 +5,7 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <SDL/SDL_rotozoom.h>
     #include <math.h>
     #include "structure.h"
     #include "utilitaire.h"
@@ -29,6 +30,7 @@ void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_pl
 
     // Affichage du joueur
     charge_niveau(ecran);
+    surface_player = rotozoomSurface(surface_player, v_player->rotation, 1.0, 1);
     SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
     SDL_Flip(ecran);
 }
