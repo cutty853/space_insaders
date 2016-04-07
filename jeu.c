@@ -69,6 +69,7 @@ int menu(SDL_Surface *ecran) {
 
     //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'écran (pour l'instant)
     fond = IMG_Load("images/background.jpg");
+    test_surface(fond, 10);
     SDL_BlitSurface(fond, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond);
@@ -84,6 +85,7 @@ int menu(SDL_Surface *ecran) {
         // TITRE
     police_titre = TTF_OpenFont("polices/coalition.ttf", 52);
     titre = TTF_RenderText_Blended(police_titre, "SPACE INSADERS", couleur_titre);
+    test_surface(titre, 11);
     pos_titre.x = CENTRER(ecran->w, titre->w);
     pos_titre.y = LARGE_CADRE_MENU/2;
     SDL_BlitSurface(titre, NULL, ecran, &pos_titre);
@@ -140,77 +142,80 @@ int menu(SDL_Surface *ecran) {
 
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
-    SDL_Rect pos_fond;
+    SDL_Rect pos_fond, pos_barre_ia;
     _vaisseau v_joueur, v_ia;
+//    int a=0, b=700, c=30;
+//    INIT_POS(pos_fond, 0, 0);
+//    INIT_POS(pos_barre_ia, 700, 300);
     pos_fond.x=0;
     pos_fond.y=0;
+    pos_barre_ia.x=700;
+    pos_barre_ia.y=300;
 
     v_joueur.vie=HAUT;
     v_joueur.bouclier=BAS;
     init_vaisseau(&v_ia);
-
     // Affichage du fond de combat
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
 
-    //Barre de vie
-    barre_vie(ecran, v_joueur);
-    barre_bouclier(ecran, v_joueur);
+    //Barre de vie & bouclier du joueur
+    barre_vie(ecran, v_joueur, pos_barre_ia);
+    barre_bouclier(ecran, v_joueur, pos_barre_ia);
     //Affichage de la barre de vie & de la barre du bouclier de l'ia:
-    barre_vie_ia(ecran, v_ia);
-    barre_bouclier_ia(ecran, v_ia);
+    barre_vie(ecran, v_ia, pos_barre_ia);
+    barre_bouclier(ecran, v_ia, pos_barre_ia);
 }
 
-void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur) {
+void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur, SDL_Rect pos_barre) {
     /** CETTE FONCTION AFFICHE DES BARRES DE VIE*/
-
-    SDL_Surface *barre_vie=NULL;
-    SDL_Rect pos_barre_vie;
-    pos_barre_vie.x=5;
-    pos_barre_vie.y=TAILLE_ECRAN_Y-25;
-
+    SDL_Surface *surface_barre_vie=NULL;
 
     // Affichage de la barre de vie
-    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
+    surface_barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
     switch (v_joueur.vie) {
         case BAS:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0));
+            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 255, 0, 0));
+            test_surface(surface_barre_vie, 101);
             break;
         case MOYEN:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0));
+            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 255, 165, 0));
+            test_surface(surface_barre_vie, 101);
             break;
         case HAUT:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0));
+            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 0, 255, 0));
+            test_surface(surface_barre_vie, 101);
             break;
     }
-    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
+    SDL_BlitSurface(surface_barre_vie, NULL, ecran, &pos_barre);
     SDL_Flip(ecran);
-    SDL_FreeSurface(barre_vie);
+    SDL_FreeSurface(surface_barre_vie);
 }
 
-void barre_bouclier(SDL_Surface *ecran, _vaisseau v_joueur) {
-    SDL_Surface *barre_bouclier=NULL;
-    SDL_Rect pos_barre_bouclier;
-    pos_barre_bouclier.x=5;
-    pos_barre_bouclier.y=TAILLE_ECRAN_Y-50;
+void barre_bouclier(SDL_Surface *ecran, _vaisseau v, SDL_Rect pos_barre) {
+    /** CETTE FONCTION AFFICHE DES BARRES DE BOUCLIER */
+    SDL_Surface *surface_barre_bouclier=NULL;
 
     // Affichage de la barre du bouclier
-    switch (v_joueur.bouclier) {
+    switch (v.bouclier) {
         case BAS:
-            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
+            surface_barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
+            test_surface(surface_barre_bouclier, 100);
             break;
         case MOYEN:
-            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
+            surface_barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
+            test_surface(surface_barre_bouclier, 100);
             break;
         case HAUT:
-            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
+            surface_barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
+            test_surface(surface_barre_bouclier, 100);
             break;
     }
-    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
+    SDL_BlitSurface(surface_barre_bouclier, NULL, ecran, &pos_barre);
     SDL_Flip(ecran);
-    SDL_FreeSurface(barre_bouclier);
+    SDL_FreeSurface(surface_barre_bouclier);
 }
 
 
