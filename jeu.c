@@ -218,6 +218,84 @@ void barre_bouclier(SDL_Surface *ecran, _vaisseau v, SDL_Rect pos_barre) {
     SDL_FreeSurface(surface_barre_bouclier);
 }
 
+void play(SDL_Surface *ecran) {
+    SDL_Event action;
+    int continuer=1, temps_actuel=0, temps_precedent=0;
+    SDL_Surface *player=NULL;
+    _vaisseau v_player;
+
+    /// Zone pour les commandes a effectué des l'affichage de la carte
+    charge_niveau(ecran);
+    init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
+    player=IMG_Load("images/player_ship.png");
+    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
+    SDL_Flip(ecran);
+    v_player.acceleration=3;
+    v_player.vitesse=0;
+    v_player.vitesse_max=0;
+    v_player.rotation=0;
+
+
+    while (continuer) {
+        /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
+
+
+        // Test de l'action du joueur
+        SDL_PollEvent(&action);
+        switch (action.type) {
+            case SDL_QUIT:
+                continuer=0;
+                break;
+            case SDL_KEYDOWN:
+                switch (action.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        continuer=0;
+                        //menu(ecran);
+                        break;
+                    case SDLK_w:
+                        vitesse_player(&v_player, AVANT);
+                        break;
+                    case SDLK_s:
+                        vitesse_player(&v_player, ARRIERE);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                switch (action.button.button) {
+                    case SDL_BUTTON_LEFT:
+                        charge_niveau(ecran);
+                        v_player.position.x = action.button.x;
+                        v_player.position.y = action.button.y;
+                        aff_player(ecran, player, &v_player);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+
+        /// Zone pour placer les commandes a faires après les actions du joueur, mais avant la pause du jeu
+
+
+        // Gestion du temps pour éviter la surexploitation du CPU
+        temps_actuel=SDL_GetTicks();
+        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
+            temps_precedent=temps_actuel;
+        } else {
+            SDL_Delay(30 - (temps_actuel - temps_precedent));
+        }
+
+        /// Zone pour placer les commandes a faire après la pause du jeu
+        aff_player(ecran, player, &v_player);
+    }
+
+    /// Zone pour les commandes a effectué avant le déchargement de la carte
+    SDL_FreeSurface(player);
+}
 
 
 

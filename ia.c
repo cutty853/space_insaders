@@ -27,54 +27,54 @@ void init_vaisseau(_vaisseau *v_ia){
     v_ia->position.x = 1000;
     v_ia->position.y = 400;
 }
-//
-//void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
-//    SDL_Surface *barre_bouclier=NULL;
-//    SDL_Rect pos_barre_bouclier;
-//    pos_barre_bouclier.x = v_ia.position.x;
-//    pos_barre_bouclier.y = (v_ia.position.y)+1;
-//
-//    /// Affichage de la barre du bouclier
-//    switch (v_ia.bouclier) {
-//        case BAS:
-//            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
-//            test_surface(barre_bouclier, 100); //Verif chargement.
-//            break;
-//        case MOYEN:
-//            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
-//            test_surface(barre_bouclier, 100); //Verif chargement.
-//            break;
-//        case HAUT:
-//            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
-//            test_surface(barre_bouclier, 100); //Verif chargement.
-//            break;
-//    }
-//    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
-//    SDL_Flip(ecran);
-//    SDL_FreeSurface(barre_bouclier);
-//}
-//
-//void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
-//    SDL_Surface *barre_vie=NULL;
-//    SDL_Rect pos_barre_vie;
-//    pos_barre_vie.x = v_ia.position.x;
-//    pos_barre_vie.y = (v_ia.position.y)+21;
-//
-//    /// Affichage de la barre de vie
-//    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
-//    switch (v_ia.vie) {
-//        case BAS:
-//            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
-//            break;
-//        case MOYEN:
-//            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
-//            break;
-//        case HAUT:
-//            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
-//            break;
-//    }
-//    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
-//    SDL_Flip(ecran);
-//    SDL_FreeSurface(barre_vie);
-//}
-//
+
+void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
+    SDL_Surface *barre_bouclier=NULL;
+    SDL_Rect pos_barre_bouclier;
+    pos_barre_bouclier.x = v_ia.position.x;
+    pos_barre_bouclier.y = (v_ia.position.y)+1;
+
+    /// Affichage de la barre du bouclier
+    switch (v_ia.bouclier) {
+        case BAS:
+            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
+            test_surface(barre_bouclier, 100); //Verif chargement.
+            break;
+        case MOYEN:
+            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
+            test_surface(barre_bouclier, 100); //Verif chargement.
+            break;
+        case HAUT:
+            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
+            test_surface(barre_bouclier, 100); //Verif chargement.
+            break;
+    }
+    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(barre_bouclier);
+}
+
+void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
+    SDL_Surface *barre_vie=NULL;
+    SDL_Rect pos_barre_vie;
+    pos_barre_vie.x = v_ia.position.x;
+    pos_barre_vie.y = (v_ia.position.y)+21;
+
+    /// Affichage de la barre de vie
+    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
+    switch (v_ia.vie) {
+        case BAS:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
+            break;
+        case MOYEN:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
+            break;
+        case HAUT:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
+            break;
+    }
+    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(barre_vie);
+}
+

@@ -40,8 +40,7 @@ int main ( int argc, char** argv )
             exit(10000);
             break;
         case JOUER:
-            charge_niveau(ecran);
-            check_player_action(ecran);
+            play(ecran);
             break;
         case SAUVEGARDER:
             break;

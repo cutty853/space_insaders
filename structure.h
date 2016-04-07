@@ -13,8 +13,9 @@ typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 
 typedef struct {
     int poid;
-    int acceleration;
-    int vitesse_max;
+    int vitesse; // En pixel par seconde
+    int acceleration; // En prixel par seconde*pow(-2)
+    int vitesse_max; // En pixel par seconde
     _charge bouclier;
     _charge vie;
     _arme arme;

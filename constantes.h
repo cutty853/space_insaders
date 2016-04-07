@@ -6,6 +6,7 @@
     #define TAILLE_ECRAN_X 1366
 
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
+    enum {AVANT, ARRIERE};
 
     #define CENTRER(cadre, bloc) (((cadre)/2) - ((bloc)/2))
     #define CALCUL_FPS(fps) 1000/fps
