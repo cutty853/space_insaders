@@ -1,6 +1,5 @@
 #ifndef DEF_CONSTANTES
     #define DEF_CONSTANTES
-    #define bijour
 
     #define TAUX_SECONDE 20
     #define TAILLE_ECRAN_Y 768
