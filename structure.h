@@ -19,7 +19,7 @@ typedef struct {
     _charge bouclier;
     _charge vie;
     _arme arme;
-    int rotation;
+    float rotation;
     //_capacite capacite;
     SDL_Rect position;
 } _vaisseau;

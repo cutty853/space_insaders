@@ -5,6 +5,7 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <math.h>
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
@@ -23,7 +24,8 @@ void vitesse_player(_vaisseau *v_player, int sens) {
 
 void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player) {
     // Calcul des positions
-    v_player->position.x += v_player->vitesse;
+    v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->rotation));
+    v_player->position.y += (v_player->vitesse)*(-sin(RADIANATION(v_player->rotation)));
 
     // Affichage du joueur
     charge_niveau(ecran);

@@ -10,6 +10,7 @@
 
     #define CENTRER(cadre, bloc) (((cadre)/2) - ((bloc)/2))
     #define CALCUL_FPS(fps) 1000/fps
+    #define RADIANATION(angle) (angle)*(2.0*PI)/360.0
     /// MENU
     #define LARGE_CADRE_MENU 300
     #define LONG_CADRE_MENU 50
@@ -21,5 +22,7 @@
     /// PLAYER
     #define FPS 60
     #define TAILLE_JOUEUR 50
+    /// GENERAL
+    #define PI  3.14159265
 #endif // DEF_CONSTANTES
 
