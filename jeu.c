@@ -10,7 +10,7 @@
     #include "jeu.h"
     #include "ia.h"
     #include "player.h"
-
+    #define bijour
 
     #include "constantes.h"
 #endif
@@ -177,7 +177,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     switch (v_joueur.vie) {
         case BAS:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
-            
+
             break;
         case MOYEN:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
@@ -186,7 +186,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
             break;
     }
-    
+
     SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
     SDL_Flip(ecran);
     SDL_FreeSurface(barre_vie);
