@@ -143,26 +143,29 @@ int menu(SDL_Surface *ecran) {
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
-    _vaisseau v_joueur, v_ia;
+    _vaisseau v_joueur;
     init_pos(&pos_fond, 0, 0);
 
     /// Affichage du fond de combat
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
-    test_surface(fond_combat); //Verif chargement.
+    test_surface(fond_combat, 102); //Verif chargement.
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
+
+    v_joueur.bouclier=HAUT;
+    v_joueur.vie=MOYEN;
 
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_joueur);
     barre_bouclier_joueur(ecran, v_joueur);
 
-    init_vaisseau(&v_ia);
-    ///Affichage du vaisseau ia:
-    affiche_vaisseau(ecran, v_ia);
-    ///Affichage de la barre de vie & de la barre du bouclier de l'ia:
-    barre_vie_ia(ecran, v_ia);
-    barre_bouclier_ia(ecran, v_ia);
+//    init_vaisseau(&v_ia);
+//    ///Affichage du vaisseau ia:
+//    affiche_vaisseau(ecran, v_ia);
+//    ///Affichage de la barre de vie & de la barre du bouclier de l'ia:
+//    barre_vie_ia(ecran, v_ia);
+//    barre_bouclier_ia(ecran, v_ia);
 }
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
@@ -177,7 +180,6 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     switch (v_joueur.vie) {
         case BAS:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
-
             break;
         case MOYEN:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
@@ -297,7 +299,6 @@ void play(SDL_Surface *ecran) {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
 
-<<<<<<< HEAD
         /// Zone pour placer les commandes a faire après la pause du jeu
         aff_player(ecran, player, &v_player);
     }
