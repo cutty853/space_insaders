@@ -31,6 +31,10 @@ void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_pl
     // Affichage du joueur
     charge_niveau(ecran);
     surface_player = rotozoomSurface(surface_player, v_player->rotation, 1.0, 1);
+    /* La rotation prend plus de place en fonction de l'angle, il serais donc judicieux
+    de voir pour effectuer un décalage du joueur en fonction de l'angle, ou bien de lui prévoir une surface plus grande et
+    de tout gérer (coordonnées, etc...) a partir de cette surface qui contiendra au final la surface de l'image.
+    */
     SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
     SDL_Flip(ecran);
 }
