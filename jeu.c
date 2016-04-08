@@ -297,6 +297,7 @@ void play(SDL_Surface *ecran) {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
 
+<<<<<<< HEAD
         /// Zone pour placer les commandes a faire après la pause du jeu
         aff_player(ecran, player, &v_player);
     }
@@ -304,12 +305,5 @@ void play(SDL_Surface *ecran) {
     /// Zone pour les commandes a effectué avant le déchargement de la carte
     SDL_FreeSurface(player);
 }
-
-
-
-
-
-
-
 
 
