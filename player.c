@@ -23,20 +23,27 @@ void vitesse_player(_vaisseau *v_player, int sens) {
         v_player->vitesse -= v_player->acceleration;
 }
 
-void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player) {
+void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player, SDL_Surface* save_screen) {
+    SDL_Rect pos_save_screen;
+    pos_save_screen.x = 0;
+    pos_save_screen.y = 0;
+
+    // Effacement de l'ancien joueur rempalce charge_niveau
+    SDL_BlitSurface(save_screen, NULL, ecran, NULL);
+    SDL_UpdateRect(ecran, pos_save_screen.x, pos_save_screen.y, 1366, 768);
+
     // Calcul des positions
     v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->rotation));
     v_player->position.y += (v_player->vitesse)*(-sin(RADIANATION(v_player->rotation)));
 
     // Affichage du joueur
-    charge_niveau(ecran);
     surface_player = rotozoomSurface(surface_player, v_player->rotation, 1.0, 1);
     /* La rotation prend plus de place en fonction de l'angle, il serais donc judicieux
     de voir pour effectuer un décalage du joueur en fonction de l'angle, ou bien de lui prévoir une surface plus grande et
     de tout gérer (coordonnées, etc...) a partir de cette surface qui contiendra au final la surface de l'image.
     */
     SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
-    SDL_Flip(ecran);
+    SDL_UpdateRect(ecran, v_player->position.x, v_player->position.y, v_player->position.w, v_player->position.h);
 }
 
 

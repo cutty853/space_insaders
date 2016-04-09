@@ -140,7 +140,7 @@ int menu(SDL_Surface *ecran) {
     return -1;
 }
 
-void charge_niveau (SDL_Surface *ecran) {
+SDL_Surface* charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
     _vaisseau v_joueur;
@@ -166,6 +166,8 @@ void charge_niveau (SDL_Surface *ecran) {
 //    ///Affichage de la barre de vie & de la barre du bouclier de l'ia:
 //    barre_vie_ia(ecran, v_ia);
 //    barre_bouclier_ia(ecran, v_ia);
+
+    return ecran; // Le retour de la fonction permet de sauvegarder un certain état de l'écran
 }
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
@@ -221,20 +223,21 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     int continuer=1, temps_actuel=0, temps_precedent=0;
-    SDL_Surface *player=NULL;
+    SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspond a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_player;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
-    charge_niveau(ecran);
+    save_screen = charge_niveau(ecran); // Le retour de la fonction permet de sauvegarder un certain état de l'écran
+    test_surface(save_screen, 150);
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     player=IMG_Load("images/player_ship.png");
-    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
-    SDL_Flip(ecran);
+//    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
+//    SDL_Flip(ecran);
     v_player.acceleration=3;
     v_player.vitesse=0;
     v_player.vitesse_max=0;
-    v_player.rotation=45;
-
+    v_player.rotation=0;
+    aff_player(ecran, player, &v_player, save_screen);
 
     while (continuer) {
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
@@ -278,7 +281,7 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran);
                         v_player.position.x = action.button.x;
                         v_player.position.y = action.button.y;
-                        aff_player(ecran, player, &v_player);
+                        aff_player(ecran, player, &v_player, save_screen);
                         break;
                     default:
                         break;
@@ -300,7 +303,7 @@ void play(SDL_Surface *ecran) {
         }
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        aff_player(ecran, player, &v_player);
+        aff_player(ecran, player, &v_player, save_screen);
     }
 
     /// Zone pour les commandes a effectué avant le déchargement de la carte
