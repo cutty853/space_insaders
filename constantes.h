@@ -20,9 +20,12 @@
     #define ENUM_TITRE_OPTION_MENU() {"Jouer", "Sauvegarder...", "Charger...", "Quitter"}
     #define ENUM_RETURN_OPTION_MENU() {JOUER, SAUVEGARDER, CHARGER, QUITTER}
     /// PLAY()
-    #define NB_TO_UP_RECT 2
+    #define NB_TO_UP_RECT 3
     /// PLAYER
     #define TAILLE_JOUEUR 50
+    /// CONSOLE
+    #define TAILLE_CONSOLE_X 150
+    #define TAILLE_CONSOLE_Y 300
     /// GENERAL
     #define FPS 60
     #define PI  3.14159265
