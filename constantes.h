@@ -1,7 +1,7 @@
 #ifndef DEF_CONSTANTES
     #define DEF_CONSTANTES
 
-    #define TAUX_SECONDE 20
+    #define TAUX_SECONDE 30
     #define TAILLE_ECRAN_Y 768
     #define TAILLE_ECRAN_X 1366
 
@@ -16,13 +16,15 @@
     #define LONG_CADRE_MENU 50
     #define ESPACE_CADRE_MENU 30
     #define NB_OPTION_MENU 4
-    #define TOT_HAUT_CADRE_MENU (NB_OPTION_MENU * LONG_CADRE_MENU) + ((3) * ESPACE_CADRE_MENU)
+    #define TOT_HAUT_CADRE_MENU (NB_OPTION_MENU * LONG_CADRE_MENU) + ((NB_OPTION_MENU - 1) * ESPACE_CADRE_MENU)
     #define ENUM_TITRE_OPTION_MENU() {"Jouer", "Sauvegarder...", "Charger...", "Quitter"}
     #define ENUM_RETURN_OPTION_MENU() {JOUER, SAUVEGARDER, CHARGER, QUITTER}
+    /// PLAY()
+    #define NB_TO_UP_RECT 2
     /// PLAYER
-    #define FPS 60
     #define TAILLE_JOUEUR 50
     /// GENERAL
+    #define FPS 60
     #define PI  3.14159265
 #endif // DEF_CONSTANTES
 

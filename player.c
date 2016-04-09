@@ -23,10 +23,16 @@ void vitesse_player(_vaisseau *v_player, int sens) {
         v_player->vitesse -= v_player->acceleration;
 }
 
-void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player, SDL_Surface* save_screen) {
+SDL_Rect* aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player, SDL_Surface* save_screen) {
+    SDL_Rect *pos_to_update;
+    pos_to_update = malloc(sizeof(SDL_Rect)*2);
+    v_player->position.w = TAILLE_JOUEUR+100;
+    v_player->position.h = TAILLE_JOUEUR+100;
+
     // Effacement de l'ancien joueur rempalce charge_niveau
     SDL_BlitSurface(save_screen, &(v_player->position), ecran, &(v_player->position));
-    SDL_UpdateRect(ecran, v_player->position.x, v_player->position.y, v_player->position.w, v_player->position.h);
+    pos_to_update[0] = v_player->position;
+//    SDL_UpdateRect(ecran, v_player->position.x, v_player->position.y, v_player->position.w, v_player->position.h);
 
     // Calcul des positions
     v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->rotation));
@@ -39,7 +45,10 @@ void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_pl
     de tout gérer (coordonnées, etc...) a partir de cette surface qui contiendra au final la surface de l'image.
     */
     SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
-    SDL_UpdateRect(ecran, v_player->position.x, v_player->position.y, v_player->position.w, v_player->position.h);
+    pos_to_update[1] = v_player->position;
+//    SDL_UpdateRect(ecran, v_player->position.x, v_player->position.y, v_player->position.w, v_player->position.h);
+
+    return pos_to_update;
 }
 
 

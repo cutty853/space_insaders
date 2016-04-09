@@ -221,21 +221,22 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     int continuer=1, temps_actuel=0, temps_precedent=0;
-    SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspond a l'écran dans son état juste après le chargement du niveau
+    SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_player;
+    SDL_Rect *pos_to_update;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
-    charge_niveau(ecran); // Le retour de la fonction permet de sauvegarder un certain état de l'écran
+    charge_niveau(ecran);
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     player=IMG_Load("images/player_ship.png");
     save_screen = SDL_DisplayFormat(ecran);
-    SDL_Flip(ecran);
-
     v_player.acceleration=3;
     v_player.vitesse=0;
     v_player.vitesse_max=0;
     v_player.rotation=0;
-    aff_player(ecran, player, &v_player, save_screen);
+    pos_to_update = malloc(sizeof(SDL_Rect)*NB_TO_UP_RECT);
+    pos_to_update = aff_player(ecran, player, &v_player, save_screen);
+    SDL_Flip(ecran);
 
     while (continuer) {
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
@@ -301,7 +302,10 @@ void play(SDL_Surface *ecran) {
         }
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        aff_player(ecran, player, &v_player, save_screen);
+        if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
+            pos_to_update = aff_player(ecran, player, &v_player, save_screen);
+
+        SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
     }
 
     /// Zone pour les commandes a effectué avant le déchargement de la carte
