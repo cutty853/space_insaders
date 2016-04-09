@@ -140,7 +140,7 @@ int menu(SDL_Surface *ecran) {
     return -1;
 }
 
-SDL_Surface* charge_niveau (SDL_Surface *ecran) {
+void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
     _vaisseau v_joueur;
@@ -150,7 +150,7 @@ SDL_Surface* charge_niveau (SDL_Surface *ecran) {
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
     test_surface(fond_combat, 102); //Verif chargement.
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
-    SDL_Flip(ecran);
+//    SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
 
     v_joueur.bouclier=HAUT;
@@ -165,9 +165,7 @@ SDL_Surface* charge_niveau (SDL_Surface *ecran) {
 //    affiche_vaisseau(ecran, v_ia);
 //    ///Affichage de la barre de vie & de la barre du bouclier de l'ia:
 //    barre_vie_ia(ecran, v_ia);
-//    barre_bouclier_ia(ecran, v_ia);
-
-    return ecran; // Le retour de la fonction permet de sauvegarder un certain état de l'écran
+//    barre_bouclier_ia(ecran, v_ia);n
 }
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
@@ -192,7 +190,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     }
 
     SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
-    SDL_Flip(ecran);
+//    SDL_Flip(ecran);
     SDL_FreeSurface(barre_vie);
 }
 
@@ -216,7 +214,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     }
     test_surface(barre_bouclier, 101); ///Verif chargement.
     SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
-    SDL_Flip(ecran);
+//    SDL_Flip(ecran);
     SDL_FreeSurface(barre_bouclier);
 }
 
@@ -227,12 +225,12 @@ void play(SDL_Surface *ecran) {
     _vaisseau v_player;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
-    save_screen = charge_niveau(ecran); // Le retour de la fonction permet de sauvegarder un certain état de l'écran
-    test_surface(save_screen, 150);
+    charge_niveau(ecran); // Le retour de la fonction permet de sauvegarder un certain état de l'écran
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     player=IMG_Load("images/player_ship.png");
-//    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
-//    SDL_Flip(ecran);
+    save_screen = SDL_DisplayFormat(ecran);
+    SDL_Flip(ecran);
+
     v_player.acceleration=3;
     v_player.vitesse=0;
     v_player.vitesse_max=0;
