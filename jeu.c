@@ -143,29 +143,14 @@ int menu(SDL_Surface *ecran) {
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
-    _vaisseau v_joueur;
     init_pos(&pos_fond, 0, 0);
 
-    /// Affichage du fond de combat
+    /// Affichage du fond de combat:
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
-    test_surface(fond_combat, 102); //Verif chargement.
+    test_surface(fond_combat, 102); /// Verif chargement.
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
-
-    v_joueur.bouclier=HAUT;
-    v_joueur.vie=MOYEN;
-
-    ///Affichage de la barre de vie & de la barre du bouclier du joueur:
-    barre_vie_joueur(ecran, v_joueur);
-    barre_bouclier_joueur(ecran, v_joueur);
-
-//    init_vaisseau(&v_ia);
-//    ///Affichage du vaisseau ia:
-//    affiche_vaisseau(ecran, v_ia);
-//    ///Affichage de la barre de vie & de la barre du bouclier de l'ia:
-//    barre_vie_ia(ecran, v_ia);
-//    barre_bouclier_ia(ecran, v_ia);
 }
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
@@ -223,20 +208,36 @@ void play(SDL_Surface *ecran) {
     int continuer=1, temps_actuel=0, temps_precedent=0;
     SDL_Surface *player=NULL;
     _vaisseau v_player;
+    _vaisseau v_ia1;
 
-    /// Zone pour les commandes a effectué des l'affichage de la carte
+    /// Zone pour les commandes a effectué dès l'affichage de la carte
     charge_niveau(ecran);
+
+    /// ia:
+    init_vaisseau(&v_ia1, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    affiche_vaisseau(ecran, v_ia1);
+    barre_bouclier_ia(ecran, v_ia1);
+    barre_vie_ia(ecran, v_ia1);
+
+    /// joueur:
+    init_vaisseau(&v_player, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     player=IMG_Load("images/player_ship.png");
     SDL_BlitSurface(player, NULL, ecran, &v_player.position);
     SDL_Flip(ecran);
-    v_player.acceleration=3;
-    v_player.vitesse=0;
-    v_player.vitesse_max=0;
-    v_player.rotation=45;
 
+    ///Affichage de la barre de vie & de la barre du bouclier du joueur:
+    barre_vie_joueur(ecran, v_player);
+    barre_bouclier_joueur(ecran, v_player);
 
+    /// boucle du jeu:
     while (continuer) {
+        /// L'ia joue en première:
+        tour_ia(&v_ia1, &v_player, ecran);
+        affiche_vaisseau(ecran, v_ia1);
+        barre_bouclier_ia(ecran, v_ia1);
+        barre_vie_ia(ecran, v_ia1);
+
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
 
 
@@ -259,10 +260,10 @@ void play(SDL_Surface *ecran) {
                         vitesse_player(&v_player, ARRIERE);
                         break;
                     case SDLK_a:
-                        v_player.rotation+=5;
+                        v_player.angle+=5;
                         break;
                     case SDLK_d:
-                        v_player.rotation-=5;
+                        v_player.angle-=5;
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
