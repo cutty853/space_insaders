@@ -5,6 +5,7 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <SDL/SDL_rotozoom.h>
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
@@ -52,7 +53,35 @@ void pause() {
     }
 }
 
+void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+    vaisseau->poid = poid;
+    vaisseau->vitesse = vitesse;
+    vaisseau->acceleration = acceleration;
+    vaisseau->vitesse_max = v_max;
+    vaisseau->bouclier = bouclier;
+    vaisseau->vie = vie;
+    vaisseau->arme = arme;
+    //vaisseau.capacite=CAPA1;
+    vaisseau->vitesse_rotation = v_rotation;
+    vaisseau->angle = angle;
 
+    vaisseau->position.x = position_x;
+    vaisseau->position.y = position_y;
+}
+
+void affiche_vaisseau(SDL_Surface *ecran, _vaisseau vaisseau){
+    SDL_Surface *surface_vaisseau = NULL;
+    SDL_Rect pos_vaisseau;
+    pos_vaisseau.x = vaisseau.position.x;
+    pos_vaisseau.y = vaisseau.position.y;
+    surface_vaisseau = IMG_Load("images/vaisseau_ia.png");
+    test_surface(surface_vaisseau, 103);
+    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau.angle, 1.0, 1); /// a vérifier
+
+    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &pos_vaisseau);
+    SDL_Flip(ecran);
+    SDL_FreeSurface(surface_vaisseau);
+}
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     int i, taux, taille, couleur;

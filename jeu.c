@@ -10,7 +10,7 @@
     #include "jeu.h"
     #include "ia.h"
     #include "player.h"
-
+    #define bijour
 
     #include "constantes.h"
 #endif
@@ -54,7 +54,7 @@ int menu(SDL_Surface *ecran) {
       * Elle retour -1 si la fonction n'arrive pas a charger quoi que ce soit
       */
 
-    /// SUGGESTION pour la fonction == Faire une gestion efficace des erreurs avec un return de menu coh�rant a ces erreurs
+    /// SUGGESTION pour la fonction == Faire une gestion efficace des erreurs avec un return de menu cohérant a ces erreurs
 
     SDL_Surface *fond = NULL, *titre = NULL, *option[NB_OPTION_MENU]= {NULL};
     SDL_Rect pos_fond, pos_titre, pos_option[NB_OPTION_MENU];
@@ -67,7 +67,7 @@ int menu(SDL_Surface *ecran) {
     pos_fond.x=0;
     pos_fond.y=0;
 
-    //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'�cran (pour l'instant)
+    //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'écran (pour l'instant)
     fond = IMG_Load("images/background.jpg");
     test_surface(fond, 10);
     SDL_BlitSurface(fond, NULL, ecran, &pos_fond);
@@ -81,7 +81,7 @@ int menu(SDL_Surface *ecran) {
         cadre(ecran, (int)pos_option[i].x, (int)pos_option[i].y);
     }
 
-    //Ajouter les textes � cet endroit
+    //Ajouter les textes à cet endroit
         // TITRE
     police_titre = TTF_OpenFont("polices/coalition.ttf", 52);
     titre = TTF_RenderText_Blended(police_titre, "SPACE INSADERS", couleur_titre);
@@ -103,7 +103,7 @@ int menu(SDL_Surface *ecran) {
     TTF_CloseFont(police_option);
     SDL_Flip(ecran);
 
-    // Ajouter/Faire le code de gestion d'evenements pour les diff�rentes options
+    // Ajouter/Faire le code de gestion d'evenements pour les différentes options
     while (continuer) {
         SDL_WaitEvent(&choix);
         switch (choix.type) {
@@ -122,7 +122,7 @@ int menu(SDL_Surface *ecran) {
             case SDL_MOUSEBUTTONDOWN:
                 switch (choix.button.button) {
                     case SDL_BUTTON_LEFT:
-                        // Voir si je peut pas faire une fonction en plus pour tester si le curseur est dans une r�gion pr�d�finis
+                        // Voir si je peut pas faire une fonction en plus pour tester si le curseur est dans une région prédéfinis
                         if ((choix.button.x > CENTRER(ecran->w, LARGE_CADRE_MENU)) && (choix.button.x < CENTRER(ecran->w, LARGE_CADRE_MENU)+LARGE_CADRE_MENU))
                             for (i=0 ; i<NB_OPTION_MENU ; i++)
                                 if ((choix.button.y > CENTRER(ecran->h, TOT_HAUT_CADRE_MENU)+(i*(LONG_CADRE_MENU+ESPACE_CADRE_MENU))) && (choix.button.y < CENTRER(ecran->h, TOT_HAUT_CADRE_MENU)+(LONG_CADRE_MENU+i*(LONG_CADRE_MENU+ESPACE_CADRE_MENU))))
@@ -142,85 +142,170 @@ int menu(SDL_Surface *ecran) {
 
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
-    SDL_Rect pos_fond, pos_barre_ia[2], pos_barre_player[2];
-    _vaisseau v_joueur, v_ia;
-
-    // Initialisation des positions
+    SDL_Rect pos_fond;
     init_pos(&pos_fond, 0, 0);
-    init_pos(&pos_barre_ia[0], 700, 300);
-    init_pos(&pos_barre_ia[1], 700, 325);
-    init_pos(&pos_barre_player[0], 5, TAILLE_ECRAN_Y-5);
-    init_pos(&pos_barre_player[1], 5, TAILLE_ECRAN_Y-30);
 
-    v_joueur.vie=HAUT;
-    v_joueur.bouclier=BAS;
-    init_vaisseau(&v_ia);
-    // Affichage du fond de combat
+    /// Affichage du fond de combat:
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
+    test_surface(fond_combat, 102); /// Verif chargement.
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
-
-    //Barre de vie & bouclier du joueur
-    barre_vie(ecran, v_joueur, pos_barre_player[0]);
-    barre_bouclier(ecran, v_joueur, pos_barre_player[1]);
-    //Affichage de la barre de vie & de la barre du bouclier de l'ia:
-    barre_vie(ecran, v_ia, pos_barre_ia[0]);
-    barre_bouclier(ecran, v_ia, pos_barre_ia[1]);
 }
 
-void barre_vie(SDL_Surface *ecran, _vaisseau v_joueur, SDL_Rect pos_barre) {
-    /** CETTE FONCTION AFFICHE DES BARRES DE VIE*/
-    SDL_Surface *surface_barre_vie=NULL;
+void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
+    SDL_Surface *barre_vie=NULL;
+    SDL_Rect pos_barre_vie;
+    pos_barre_vie.x=5;
+    pos_barre_vie.y=TAILLE_ECRAN_Y-25;
 
-    // Affichage de la barre de vie
-    surface_barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
+    /// Affichage de la barre de vie
+    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
+    test_surface(barre_vie, 100); ///Verif chargement.
     switch (v_joueur.vie) {
         case BAS:
-            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 255, 0, 0));
-            test_surface(surface_barre_vie, 101);
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
             break;
         case MOYEN:
-            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 255, 165, 0));
-            test_surface(surface_barre_vie, 101);
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
             break;
         case HAUT:
-            SDL_FillRect(surface_barre_vie, NULL, SDL_MapRGB(surface_barre_vie->format, 0, 255, 0));
-            test_surface(surface_barre_vie, 101);
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
             break;
     }
-    SDL_BlitSurface(surface_barre_vie, NULL, ecran, &pos_barre);
+
+    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
     SDL_Flip(ecran);
-    SDL_FreeSurface(surface_barre_vie);
+    SDL_FreeSurface(barre_vie);
 }
 
-void barre_bouclier(SDL_Surface *ecran, _vaisseau v, SDL_Rect pos_barre) {
-    /** CETTE FONCTION AFFICHE DES BARRES DE BOUCLIER */
-    SDL_Surface *surface_barre_bouclier=NULL;
+void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
+    SDL_Surface *barre_bouclier=NULL;
+    SDL_Rect pos_barre_bouclier;
+    pos_barre_bouclier.x=5;
+    pos_barre_bouclier.y=TAILLE_ECRAN_Y-50;
 
-    // Affichage de la barre du bouclier
-    switch (v.bouclier) {
+    /// Affichage de la barre du bouclier
+    switch (v_joueur.bouclier) {
         case BAS:
-            surface_barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
-            test_surface(surface_barre_bouclier, 100);
+            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
             break;
         case MOYEN:
-            surface_barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
-            test_surface(surface_barre_bouclier, 100);
+            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
             break;
         case HAUT:
-            surface_barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
-            test_surface(surface_barre_bouclier, 100);
+            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
             break;
     }
-    SDL_BlitSurface(surface_barre_bouclier, NULL, ecran, &pos_barre);
+    test_surface(barre_bouclier, 101); ///Verif chargement.
+    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
     SDL_Flip(ecran);
-    SDL_FreeSurface(surface_barre_bouclier);
+    SDL_FreeSurface(barre_bouclier);
 }
 
+void play(SDL_Surface *ecran) {
+    SDL_Event action;
+    int continuer=1, temps_actuel=0, temps_precedent=0;
+    SDL_Surface *player=NULL;
+    _vaisseau v_player;
+    _vaisseau v_ia1;
+
+    /// Zone pour les commandes a effectué dès l'affichage de la carte
+    charge_niveau(ecran);
+
+    /// ia:
+    init_vaisseau(&v_ia1, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    affiche_vaisseau(ecran, v_ia1);
+    barre_bouclier_ia(ecran, v_ia1);
+    barre_vie_ia(ecran, v_ia1);
+
+    /// joueur:
+    init_vaisseau(&v_player, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
+    player=IMG_Load("images/player_ship.png");
+    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
+    SDL_Flip(ecran);
+
+    ///Affichage de la barre de vie & de la barre du bouclier du joueur:
+    barre_vie_joueur(ecran, v_player);
+    barre_bouclier_joueur(ecran, v_player);
+
+    /// boucle du jeu:
+    while (continuer) {
+        /// L'ia joue en première:
+        tour_ia(&v_ia1, &v_player, ecran);
+        affiche_vaisseau(ecran, v_ia1);
+        barre_bouclier_ia(ecran, v_ia1);
+        barre_vie_ia(ecran, v_ia1);
+
+        /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
 
 
+        // Test de l'action du joueur
+        SDL_PollEvent(&action);
+        switch (action.type) {
+            case SDL_QUIT:
+                continuer=0;
+                break;
+            case SDL_KEYDOWN:
+                switch (action.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        continuer=0;
+                        //menu(ecran);
+                        break;
+                    case SDLK_w:
+                        vitesse_player(&v_player, AVANT);
+                        break;
+                    case SDLK_s:
+                        vitesse_player(&v_player, ARRIERE);
+                        break;
+                    case SDLK_a:
+                        v_player.angle+=5;
+                        break;
+                    case SDLK_d:
+                        v_player.angle-=5;
+                        break;
+                    case SDLK_c:
+                        v_player.vitesse=0;
+                        //v_player.rotation=0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                switch (action.button.button) {
+                    case SDL_BUTTON_LEFT:
+                        charge_niveau(ecran);
+                        v_player.position.x = action.button.x;
+                        v_player.position.y = action.button.y;
+                        aff_player(ecran, player, &v_player);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+
+        /// Zone pour placer les commandes a faires après les actions du joueur, mais avant la pause du jeu
 
 
+        // Gestion du temps pour éviter la surexploitation du CPU
+        temps_actuel=SDL_GetTicks();
+        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
+            temps_precedent=temps_actuel;
+        } else {
+            SDL_Delay(30 - (temps_actuel - temps_precedent));
+        }
+
+        /// Zone pour placer les commandes a faire après la pause du jeu
+        aff_player(ecran, player, &v_player);
+    }
+
+    /// Zone pour les commandes a effectué avant le déchargement de la carte
+    SDL_FreeSurface(player);
+}
 
 

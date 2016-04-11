@@ -16,6 +16,7 @@
 #endif
 
 
+
 int main ( int argc, char** argv )
 {
     SDL_Surface *ecran=NULL;
@@ -40,8 +41,7 @@ int main ( int argc, char** argv )
             exit(10000);
             break;
         case JOUER:
-            charge_niveau(ecran);
-            check_player_action(ecran);
+            play(ecran);
             break;
         case SAUVEGARDER:
             break;
@@ -57,3 +57,4 @@ int main ( int argc, char** argv )
     SDL_Quit();
     return 0;
 }
+
