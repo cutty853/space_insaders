@@ -17,7 +17,7 @@
 
 void test_surface(SDL_Surface* surface, int ref_err) {
     if (surface==NULL) {
-        fprintf(stderr, "[ - ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
+        fprintf(stderr, "[ - ] Erreur nÂ°%d\n Veuillez vous rÃ©ferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
@@ -52,6 +52,21 @@ void pause() {
     }
 }
 
+void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+    vaisseau->poid = poid;
+    vaisseau->vitesse = vitesse;
+    vaisseau->acceleration = acceleration;
+    vaisseau->vitesse_max = v_max;
+    vaisseau->bouclier = bouclier;
+    vaisseau->vie = vie;
+    vaisseau->arme = arme;
+    //vaisseau.capacite=CAPA1;
+    vaisseau->vitesse_rotation = v_rotation;
+    vaisseau->angle = angle;
+
+    vaisseau->position.x = position_x;
+    vaisseau->position.y = position_y;
+}
 
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
