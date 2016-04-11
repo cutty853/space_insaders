@@ -220,10 +220,11 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 
 void play(SDL_Surface *ecran) {
     SDL_Event action;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console=0;
+    TTF_Font *police_texte=NULL;
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0};
     SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_player;
-    SDL_Rect *pos_to_update;
+    SDL_Rect *pos_to_up_player, *pos_to_up_console;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
     charge_niveau(ecran);
@@ -234,9 +235,11 @@ void play(SDL_Surface *ecran) {
     v_player.vitesse=0;
     v_player.vitesse_max=0;
     v_player.rotation=0;
-    pos_to_update = malloc(sizeof(SDL_Rect)*NB_TO_UP_RECT);
-    pos_to_update = aff_player(ecran, player, &v_player, save_screen);
+    pos_to_up_player = malloc(sizeof(SDL_Rect)*2);
+    pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
+    pos_to_up_player = aff_player(ecran, player, &v_player, save_screen);
     SDL_Flip(ecran);
+    police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     //SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
 
     while (continuer) {
@@ -272,14 +275,25 @@ void play(SDL_Surface *ecran) {
                         //v_player.rotation=0;
                         break;
                     case SDLK_F3:
-                        if (etat_console==0)
-                            etat_console=1;
-                        else if (etat_console==1) {
-                            etat_console=0;
-                            SDL_BlitSurface(save_screen, &(pos_to_update[2]), ecran, &(pos_to_update[2]));
+                        if (etat_console[1]==0)
+                            etat_console[0]=1;
+                        else if (etat_console[1]==1) {
+                            etat_console[0]=0;
                         }
                         break;
                     default:
+                        break;
+                }
+                break;
+            case SDL_KEYUP:
+                switch (action.key.keysym.sym) {
+                    case SDLK_F3:
+                        if (etat_console[0]==1)
+                            etat_console[1]=1;
+                        else if (etat_console[0]==0) {
+                            etat_console[1]=0;
+                            SDL_BlitSurface(save_screen, &(pos_to_up_console[0]), ecran, &(pos_to_up_console[0]));
+                        }
                         break;
                 }
                 break;
@@ -312,14 +326,19 @@ void play(SDL_Surface *ecran) {
 
         /// Zone pour placer les commandes a faire après la pause du jeu
         if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
-            pos_to_update = aff_player(ecran, player, &v_player, save_screen);
-        if (etat_console)
-            pos_to_update[2] = aff_console(ecran, v_player, save_screen);
+            pos_to_up_player = aff_player(ecran, player, &v_player, save_screen);
+        if (etat_console[0] && etat_console[1]) {
+            pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
+        }
 
-        SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
+        SDL_UpdateRects(ecran, 2, pos_to_up_player);
+        SDL_UpdateRects(ecran, 1, pos_to_up_console);
     }
 
     /// Zone pour les commandes a effectué avant le déchargement de la carte
+    free(pos_to_up_console);
+    free(pos_to_up_player);
+    TTF_CloseFont(police_texte);
     SDL_FreeSurface(player);
 }
 

@@ -21,11 +21,16 @@
     #define ENUM_RETURN_OPTION_MENU() {JOUER, SAUVEGARDER, CHARGER, QUITTER}
     /// PLAY()
     #define NB_TO_UP_RECT 3
+    /// AFF_CONSOLE()
+    #define NB_STATS_CONSOLE 5
+    #define TAILLE_CONSOLE_X 150
+    #define TAILLE_CONSOLE_Y 180
+    #define ENUM_TITRE_STATS_CONSOLE() {"Vitesse : ", "Position en x : ", "Position en y : ", "Largeur : ", "Hauteur : "}
+    #define ENUM_VAR_STATS_CONSOLE() {sprintf(texte_infosup[0], "%d", vaisseau.vitesse), sprintf(texte_infosup[1], "%d", (int)vaisseau.position.x), \
+    sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%d", (int)vaisseau.position.w), \
+    sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}
     /// PLAYER
     #define TAILLE_JOUEUR 50
-    /// CONSOLE
-    #define TAILLE_CONSOLE_X 150
-    #define TAILLE_CONSOLE_Y 300
     /// GENERAL
     #define FPS 60
     #define PI  3.14159265

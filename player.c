@@ -54,10 +54,9 @@ SDL_Rect* aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau 
 }
 
 
-SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen) {
-    TTF_Font *police_texte=NULL;
-    SDL_Surface *info[4]={NULL};
-    char texte_info[5][50]={"Vitesse : ", "Position en x : ", "Position en y : ", "Largeur : ", "Hauteur : "}, texte_infosup[6][50];
+SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen, TTF_Font *police_texte) {
+    SDL_Surface *info[NB_STATS_CONSOLE]={NULL};
+    char texte_info[NB_STATS_CONSOLE][50]= ENUM_TITRE_STATS_CONSOLE(), texte_infosup[NB_STATS_CONSOLE][20]=ENUM_VAR_STATS_CONSOLE();
     SDL_Rect pos_texte, pos_to_up;
     SDL_Color rouge={255, 0, 0};
     int i;
@@ -68,25 +67,16 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
     init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
     SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
 
-    police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
-    sprintf(texte_infosup[0], "%d", vaisseau.vitesse);
 //    sprintf(texte_infosup[1], "%d", (int)vaisseau.rotation);
-    sprintf(texte_infosup[1], "%d", (int)vaisseau.position.x);
-    sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y);
-    sprintf(texte_infosup[3], "%d", (int)vaisseau.position.w);
-    sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h);
 
-    for (i=0; i<5 ; i++) {
+    for (i=0; i<NB_STATS_CONSOLE ; i++) {
         strcat(texte_info[i], texte_infosup[i]);
         info[i] = TTF_RenderText_Blended(police_texte, texte_info[i], rouge);
         test_surface(info[i], 106+i);
         pos_texte.y += 30;
         SDL_BlitSurface(info[i], NULL, ecran, &pos_texte);
-    }
-    for(i=0; i<5 ;i++)
         SDL_FreeSurface(info[i]);
-    //SDL_UpdateRect(ecran, pos_to_up.x, pos_to_up.y, pos_to_up.w, pos_to_up.h);
-//    TTF_CloseFont(police_texte); // Ne veux pas fonctionner..
+    }
 
     return pos_to_up;
 }
