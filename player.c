@@ -5,6 +5,8 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <SDL/SDL_rotozoom.h>
+    #include <math.h>
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
@@ -14,56 +16,27 @@
     #include "constantes.h"
 #endif
 
-int check_player_action (SDL_Surface *ecran) {
-    SDL_Event action;
-    int continuer=1, temps_actuel=0, temps_precedent=0;
-    SDL_Surface *player;
-    SDL_Rect pos_player;
+void vitesse_player(_vaisseau *v_player, int sens) {
+    if (sens == AVANT)
+        v_player->vitesse += v_player->acceleration;
+    if (sens == ARRIERE)
+        v_player->vitesse -= v_player->acceleration;
+}
 
-    init_pos(&pos_player, 0, 0);
-    while (continuer) {
-        SDL_PollEvent(&action);
+void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player) {
+    // Calcul des positions
+    v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->rotation));
+    v_player->position.y += (v_player->vitesse)*(-sin(RADIANATION(v_player->rotation)));
 
-        // Test de l'action du joueur
-        switch (action.type) {
-            case SDL_KEYDOWN:
-                switch (action.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        continuer=0;
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                switch (action.button.button) {
-                    case SDL_BUTTON_LEFT:
-                        charge_niveau(ecran);
-                        pos_player.x = action.button.x;
-                        pos_player.y = action.button.y;
-                        player = IMG_Load("images/player_ship.png");
-                        test_surface(player, 105);
-                        SDL_BlitSurface(player, NULL, ecran, &pos_player);
-                        SDL_Flip(ecran);
-                        SDL_FreeSurface(player);
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
-
-        // Gestion du temps pour éviter la surexploitation du CPU
-        temps_actuel=SDL_GetTicks();
-        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
-            temps_precedent=temps_actuel;
-        } else {
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
-        }
-
-    }
+    // Affichage du joueur
+    charge_niveau(ecran);
+    surface_player = rotozoomSurface(surface_player, v_player->rotation, 1.0, 1);
+    /* La rotation prend plus de place en fonction de l'angle, il serais donc judicieux
+    de voir pour effectuer un décalage du joueur en fonction de l'angle, ou bien de lui prévoir une surface plus grande et
+    de tout gérer (coordonnées, etc...) a partir de cette surface qui contiendra au final la surface de l'image.
+    */
+    SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
+    SDL_Flip(ecran);
 }
 
 

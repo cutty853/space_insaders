@@ -17,7 +17,7 @@
 
 void test_surface(SDL_Surface* surface, int ref_err) {
     if (surface==NULL) {
-        fprintf(stderr, "[ - ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
+        fprintf(stderr, "[ - ] Erreur nÂ°%d\n Veuillez vous rÃ©ferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
@@ -82,6 +82,21 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaiss
     return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
+void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+    vaisseau->poid = poid;
+    vaisseau->vitesse = vitesse;
+    vaisseau->acceleration = acceleration;
+    vaisseau->vitesse_max = v_max;
+    vaisseau->bouclier = bouclier;
+    vaisseau->vie = vie;
+    vaisseau->arme = arme;
+    //vaisseau.capacite=CAPA1;
+    vaisseau->vitesse_rotation = v_rotation;
+    vaisseau->angle = angle;
+
+    vaisseau->position.x = position_x;
+    vaisseau->position.y = position_y;
+}
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     int i, taux, taille, couleur;
@@ -129,4 +144,31 @@ void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     SDL_Flip(ecran);
     for (i = 0 ; i < prop_deg.nuance ; i++)
         SDL_FreeSurface(rectangle_degrade[i]);
+}
+
+SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen, TTF_Font *police_texte) {
+    SDL_Surface *info[NB_STATS_CONSOLE]={NULL};
+    char texte_info[NB_STATS_CONSOLE][50]= ENUM_TITRE_STATS_CONSOLE(), texte_infosup[NB_STATS_CONSOLE][20]= ENUM_VAR_STATS_CONSOLE();
+    SDL_Rect pos_texte, pos_to_up;
+    SDL_Color rouge={255, 0, 0};
+    int i;
+
+    init_pos(&pos_to_up, TAILLE_ECRAN_X-TAILLE_CONSOLE_X, TAILLE_ECRAN_Y-TAILLE_CONSOLE_Y);
+    pos_to_up.w=TAILLE_CONSOLE_X;
+    pos_to_up.h=TAILLE_CONSOLE_Y;
+    init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
+    SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
+
+//    sprintf(texte_infosup[1], "%d", (int)vaisseau.rotation);
+
+    for (i=0; i<NB_STATS_CONSOLE ; i++) {
+        strcat(texte_info[i], texte_infosup[i]);
+        info[i] = TTF_RenderText_Blended(police_texte, texte_info[i], rouge);
+        test_surface(info[i], 106+i);
+        pos_texte.y += 30;
+        SDL_BlitSurface(info[i], NULL, ecran, &pos_texte);
+        SDL_FreeSurface(info[i]);
+    }
+
+    return pos_to_up;
 }

@@ -1,1 +1,2 @@
-int check_player_action (SDL_Surface *ecran);
+void vitesse_player(_vaisseau *v_player, int sens);
+void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player);
