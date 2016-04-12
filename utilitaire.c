@@ -52,6 +52,35 @@ void pause() {
     }
 }
 
+SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaisseau *vaisseau, SDL_Surface* save_screen, int *etat_rotation) {
+    SDL_Rect *pos_to_update, pre_pos_vaisseau;
+    pos_to_update = malloc(sizeof(SDL_Rect)*2);
+
+    // Effacement de l'ancien joueur rempalce charge_niveau
+    SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
+    pos_to_update[0] = vaisseau->position;
+    // Sauvegarde des anciennes positions
+    pre_pos_vaisseau.w = vaisseau->position.w;
+    pre_pos_vaisseau.h = vaisseau->position.h;
+    // Calcul des positions
+    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->rotation));
+    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->rotation)));
+    // Affichage du joueur
+    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau->rotation, 1.0, 1);
+    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
+    SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
+    if (*etat_rotation == 1) {
+        vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
+        vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
+        *etat_rotation = 0;
+    } // Cette condition permet le décalage du joueur lors de sa rotation, afin que la rotation se fasse réellement par rapport au centre du sprite
+    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
+    pos_to_update[1] = vaisseau->position;
+    SDL_FreeSurface(surface_vaisseau); // Le rotozoom crée une seconde surface, cependant comme surface_vaisseau n'est pas passé en pointeur de pointeur il n'est alors pas modifié
+
+
+    return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
+}
 
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
