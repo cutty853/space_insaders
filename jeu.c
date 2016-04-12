@@ -221,23 +221,23 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0;
-    SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
-    _vaisseau v_player;
-    SDL_Rect *pos_to_up_player, *pos_to_up_console;
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0, delta_t;
+    SDL_Surface *joueur=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
+    _vaisseau v_joueur;
+    SDL_Rect *pos_to_up_joueur, *pos_to_up_console;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
     charge_niveau(ecran);
-    init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
-    player=IMG_Load("images/player_ship.png");
+    init_pos(&(v_joueur.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
+    joueur=IMG_Load("images/joueur_ship.png");
     save_screen = SDL_DisplayFormat(ecran);
-    v_player.acceleration=3;
-    v_player.vitesse=0;
-    v_player.vitesse_max=0;
-    v_player.rotation=45;
-    pos_to_up_player = malloc(sizeof(SDL_Rect)*2);
+    v_joueur.acceleration=3;
+    v_joueur.vitesse=0;
+    v_joueur.vitesse_max=0;
+    v_joueur.angle=45;
+    pos_to_up_joueur = malloc(sizeof(SDL_Rect)*2);
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
-    pos_to_up_player = aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
+    pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
     SDL_Flip(ecran);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     //SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
@@ -259,22 +259,22 @@ void play(SDL_Surface *ecran) {
                         //menu(ecran);
                         break;
                     case SDLK_w:
-                        vitesse_player(&v_player, AVANT);
+                        vitesse_joueur(&v_joueur, AVANT);
                         break;
                     case SDLK_s:
-                        vitesse_player(&v_player, ARRIERE);
+                        vitesse_joueur(&v_joueur, ARRIERE);
                         break;
                     case SDLK_a:
-                        v_player.rotation+=5;
+                        v_joueur.angle+=5;
                         etat_rotation=1;
                         break;
                     case SDLK_d:
-                        v_player.rotation-=5;
+                        v_joueur.angle-=5;
                         etat_rotation=1;
                         break;
                     case SDLK_c:
-                        v_player.vitesse=0;
-                        //v_player.rotation=0;
+                        v_joueur.vitesse=0;
+                        //v_joueur.angle=0;
                         break;
                     case SDLK_F3:
                         if (etat_console[1]==0)
@@ -305,9 +305,9 @@ void play(SDL_Surface *ecran) {
                 switch (action.button.button) {
                     case SDL_BUTTON_LEFT:
                         charge_niveau(ecran);
-                        v_player.position.x = action.button.x;
-                        v_player.position.y = action.button.y;
-                        aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
+                        v_joueur.position.x = action.button.x;
+                        v_joueur.position.y = action.button.y;
+                        aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
                         break;
                     default:
                         break;
@@ -321,7 +321,7 @@ void play(SDL_Surface *ecran) {
 
 
         // Gestion du temps pour éviter la surexploitation du CPU
-        temps_actuel=SDL_GetTicks();
+        delta_t=temps_actuel=SDL_GetTicks();
         if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
             temps_precedent=temps_actuel;
         } else {
@@ -329,21 +329,21 @@ void play(SDL_Surface *ecran) {
         }
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
-            pos_to_up_player = aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
+        if ((v_joueur.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
+            pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
         if (etat_console[0] && etat_console[1]) {
-            pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
+            pos_to_up_console[0] = aff_console(ecran, v_joueur, save_screen, police_texte);
         }
 
-        SDL_UpdateRects(ecran, 2, pos_to_up_player);
+        SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
         SDL_UpdateRects(ecran, 1, pos_to_up_console);
     }
 
     /// Zone pour les commandes a effectué avant le déchargement de la carte
     free(pos_to_up_console);
-    free(pos_to_up_player);
+    free(pos_to_up_joueur);
     TTF_CloseFont(police_texte);
-    SDL_FreeSurface(player);
+    SDL_FreeSurface(joueur);
 }
 
 

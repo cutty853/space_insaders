@@ -5,6 +5,8 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <SDL/SDL_rotozoom.h>
+    #include <math.h>
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
@@ -63,10 +65,10 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaiss
     pre_pos_vaisseau.w = vaisseau->position.w;
     pre_pos_vaisseau.h = vaisseau->position.h;
     // Calcul des positions
-    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->rotation));
-    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->rotation)));
+    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle));
+    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle)));
     // Affichage du joueur
-    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau->rotation, 1.0, 1);
+    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     if (*etat_rotation == 1) {
@@ -159,7 +161,7 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
     init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
     SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
 
-//    sprintf(texte_infosup[1], "%d", (int)vaisseau.rotation);
+//    sprintf(texte_infosup[1], "%d", (int)vaisseau.angle);
 
     for (i=0; i<NB_STATS_CONSOLE ; i++) {
         strcat(texte_info[i], texte_infosup[i]);

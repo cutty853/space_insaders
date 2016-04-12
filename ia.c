@@ -15,19 +15,6 @@
     #include "constantes.h"
 #endif
 
-void init_vaisseau(_vaisseau *v_ia){
-    v_ia->poid = 100;
-    v_ia->acceleration = 20;
-    v_ia->vitesse_max = 200;
-    v_ia->bouclier = BAS;
-    v_ia->vie = HAUT;
-    v_ia->arme = TIR_LASER;
-    //v_ia.capacite=CAPA1;
-
-    v_ia->position.x = 1000;
-    v_ia->position.y = 400;
-}
-
 void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
     SDL_Surface *barre_bouclier=NULL;
     SDL_Rect pos_barre_bouclier;

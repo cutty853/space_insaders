@@ -16,70 +16,9 @@
     #include "constantes.h"
 #endif
 
-void vitesse_player(_vaisseau *v_player, int sens) {
+void vitesse_joueur(_vaisseau *v_joueur, int sens) {
     if (sens == AVANT)
-        v_player->vitesse += v_player->acceleration;
+        v_joueur->vitesse += v_joueur->acceleration;
     if (sens == ARRIERE)
-        v_player->vitesse -= v_player->acceleration;
+        v_joueur->vitesse -= v_joueur->acceleration;
 }
-
-SDL_Rect* aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player, SDL_Surface* save_screen, int *etat_rotation) {
-    SDL_Rect *pos_to_update, pre_pos_joueur;
-    pos_to_update = malloc(sizeof(SDL_Rect)*2);
-
-    // Effacement de l'ancien joueur rempalce charge_niveau
-    SDL_BlitSurface(save_screen, &(v_player->position), ecran, &(v_player->position));
-    pos_to_update[0] = v_player->position;
-    pre_pos_joueur.w = v_player->position.w;
-    pre_pos_joueur.h = v_player->position.h;
-
-    // Calcul des positions
-    v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->rotation));
-    v_player->position.y += (v_player->vitesse)*(-sin(RADIANATION(v_player->rotation)));
-
-    // Affichage du joueur
-    surface_player = rotozoomSurface(surface_player, v_player->rotation, 1.0, 1);
-
-    SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
-    SDL_BlitSurface(save_screen, &(v_player->position), ecran, &(v_player->position));
-    if (*etat_rotation == 1) {
-        v_player->position.x -= ((v_player->position.w - TAILLE_JOUEUR)-(pre_pos_joueur.w - TAILLE_JOUEUR))/2;
-        v_player->position.y -= ((v_player->position.h - TAILLE_JOUEUR)-(pre_pos_joueur.h - TAILLE_JOUEUR))/2;
-        *etat_rotation = 0;
-    }
-    SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
-    pos_to_update[1] = v_player->position;
-    SDL_FreeSurface(surface_player);
-
-
-    return pos_to_update;
-}
-
-
-SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen, TTF_Font *police_texte) {
-    SDL_Surface *info[NB_STATS_CONSOLE]={NULL};
-    char texte_info[NB_STATS_CONSOLE][50]= ENUM_TITRE_STATS_CONSOLE(), texte_infosup[NB_STATS_CONSOLE][20]= ENUM_VAR_STATS_CONSOLE();
-    SDL_Rect pos_texte, pos_to_up;
-    SDL_Color rouge={255, 0, 0};
-    int i;
-
-    init_pos(&pos_to_up, TAILLE_ECRAN_X-TAILLE_CONSOLE_X, TAILLE_ECRAN_Y-TAILLE_CONSOLE_Y);
-    pos_to_up.w=TAILLE_CONSOLE_X;
-    pos_to_up.h=TAILLE_CONSOLE_Y;
-    init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
-    SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
-
-//    sprintf(texte_infosup[1], "%d", (int)vaisseau.rotation);
-
-    for (i=0; i<NB_STATS_CONSOLE ; i++) {
-        strcat(texte_info[i], texte_infosup[i]);
-        info[i] = TTF_RenderText_Blended(police_texte, texte_info[i], rouge);
-        test_surface(info[i], 106+i);
-        pos_texte.y += 30;
-        SDL_BlitSurface(info[i], NULL, ecran, &pos_texte);
-        SDL_FreeSurface(info[i]);
-    }
-
-    return pos_to_up;
-}
-
