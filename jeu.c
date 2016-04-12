@@ -221,7 +221,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0};
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0;
     SDL_Surface *player=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_player;
     SDL_Rect *pos_to_up_player, *pos_to_up_console;
@@ -234,10 +234,10 @@ void play(SDL_Surface *ecran) {
     v_player.acceleration=3;
     v_player.vitesse=0;
     v_player.vitesse_max=0;
-    v_player.rotation=0;
+    v_player.rotation=45;
     pos_to_up_player = malloc(sizeof(SDL_Rect)*2);
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
-    pos_to_up_player = aff_player(ecran, player, &v_player, save_screen);
+    pos_to_up_player = aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
     SDL_Flip(ecran);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     //SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
@@ -266,9 +266,11 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_a:
                         v_player.rotation+=5;
+                        etat_rotation=1;
                         break;
                     case SDLK_d:
                         v_player.rotation-=5;
+                        etat_rotation=1;
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
@@ -295,6 +297,8 @@ void play(SDL_Surface *ecran) {
                             SDL_BlitSurface(save_screen, &(pos_to_up_console[0]), ecran, &(pos_to_up_console[0]));
                         }
                         break;
+                    default:
+                        break;
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
@@ -303,7 +307,7 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran);
                         v_player.position.x = action.button.x;
                         v_player.position.y = action.button.y;
-                        aff_player(ecran, player, &v_player, save_screen);
+                        aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
                         break;
                     default:
                         break;
@@ -326,7 +330,7 @@ void play(SDL_Surface *ecran) {
 
         /// Zone pour placer les commandes a faire après la pause du jeu
         if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
-            pos_to_up_player = aff_player(ecran, player, &v_player, save_screen);
+            pos_to_up_player = aff_player(ecran, player, &v_player, save_screen, &etat_rotation);
         if (etat_console[0] && etat_console[1]) {
             pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
         }
