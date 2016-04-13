@@ -140,10 +140,9 @@ int menu(SDL_Surface *ecran) {
     return -1;
 }
 
-void charge_niveau (SDL_Surface *ecran) {
+void charge_niveau (SDL_Surface *ecran, _vaisseau *v_joueur) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
-    _vaisseau v_joueur;
     init_pos(&pos_fond, 0, 0);
 
     /// Affichage du fond de combat
@@ -153,12 +152,12 @@ void charge_niveau (SDL_Surface *ecran) {
 //    SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
 
-    v_joueur.bouclier=HAUT;
-    v_joueur.vie=MOYEN;
+    v_joueur->bouclier=HAUT;
+    v_joueur->vie=MOYEN;
 
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
-    barre_vie_joueur(ecran, v_joueur);
-    barre_bouclier_joueur(ecran, v_joueur);
+    barre_vie_joueur(ecran, *v_joueur);
+    barre_bouclier_joueur(ecran, *v_joueur);
 
 //    init_vaisseau(&v_ia);
 //    ///Affichage du vaisseau ia:
@@ -185,7 +184,10 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
             break;
         case HAUT:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Vert
+            break;
+        case MORT:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 0, 0)); //Noir
             break;
     }
 
@@ -211,6 +213,8 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
         case HAUT:
             barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
             break;
+        case MORT:
+            break;
     }
     test_surface(barre_bouclier, 101); ///Verif chargement.
     SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
@@ -221,25 +225,28 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0, delta_t;
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0;
     SDL_Surface *joueur=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_joueur;
-    SDL_Rect *pos_to_up_joueur, *pos_to_up_console;
+    _explosion explosion;
+    SDL_Rect *pos_to_up_joueur, *pos_to_up_console, *pos_to_up_explosion;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
-    charge_niveau(ecran);
+    charge_niveau(ecran, &v_joueur);
     init_pos(&(v_joueur.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     joueur=IMG_Load("images/joueur_ship.png");
     save_screen = SDL_DisplayFormat(ecran);
-    v_joueur.acceleration=3;
+    v_joueur.acceleration=10;
     v_joueur.vitesse=0;
-    v_joueur.vitesse_max=0;
+    v_joueur.vitesse_max=8;
     v_joueur.angle=45;
     pos_to_up_joueur = malloc(sizeof(SDL_Rect)*2);
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
     SDL_Flip(ecran);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
+    explosion.phase=0;
+    charge_sprite_explosion(&explosion);
     //SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
 
     while (continuer) {
@@ -283,6 +290,9 @@ void play(SDL_Surface *ecran) {
                             etat_console[0]=0;
                         }
                         break;
+                    case SDLK_KP1:
+                        v_joueur.vie = MORT;
+                        break;
                     default:
                         break;
                 }
@@ -304,7 +314,7 @@ void play(SDL_Surface *ecran) {
             case SDL_MOUSEBUTTONDOWN:
                 switch (action.button.button) {
                     case SDL_BUTTON_LEFT:
-                        charge_niveau(ecran);
+                        charge_niveau(ecran, &v_joueur);
                         v_joueur.position.x = action.button.x;
                         v_joueur.position.y = action.button.y;
                         aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
@@ -321,7 +331,7 @@ void play(SDL_Surface *ecran) {
 
 
         // Gestion du temps pour éviter la surexploitation du CPU
-        delta_t=temps_actuel=SDL_GetTicks();
+        temps_actuel=SDL_GetTicks();
         if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
             temps_precedent=temps_actuel;
         } else {
@@ -329,19 +339,36 @@ void play(SDL_Surface *ecran) {
         }
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        if ((v_joueur.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d))
-            pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
+        switch (v_joueur.vie) {
+            case BAS:
+            case MOYEN:
+            case HAUT:
+                if ((v_joueur.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d)) {
+                    pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
+                    SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
+                }
+                break;
+            case MORT:
+                if (explosion.phase < NB_SPRITES_EXPLOSION) {
+                    pos_to_up_explosion = explosion_joueur(ecran, save_screen, &explosion, &v_joueur);
+                    SDL_UpdateRects(ecran, 2, pos_to_up_explosion);
+                    explosion.phase++;
+                }
+                break;
+            default:
+                break;
+        }
         if (etat_console[0] && etat_console[1]) {
             pos_to_up_console[0] = aff_console(ecran, v_joueur, save_screen, police_texte);
+            SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
 
-        SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
-        SDL_UpdateRects(ecran, 1, pos_to_up_console);
     }
 
     /// Zone pour les commandes a effectué avant le déchargement de la carte
     free(pos_to_up_console);
     free(pos_to_up_joueur);
+    free(pos_to_up_explosion);
     TTF_CloseFont(police_texte);
     SDL_FreeSurface(joueur);
 }

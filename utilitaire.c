@@ -65,8 +65,8 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaiss
     pre_pos_vaisseau.w = vaisseau->position.w;
     pre_pos_vaisseau.h = vaisseau->position.h;
     // Calcul des positions
-    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle));
-    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle)));
+    vaisseau->position.x += (int)((vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle)));
+    vaisseau->position.y += (int)((vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle))));
     // Affichage du joueur
     surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
@@ -155,7 +155,7 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
     SDL_Color rouge={255, 0, 0};
     int i;
 
-    init_pos(&pos_to_up, TAILLE_ECRAN_X-TAILLE_CONSOLE_X, TAILLE_ECRAN_Y-TAILLE_CONSOLE_Y);
+    init_pos(&pos_to_up, 0, TAILLE_ECRAN_Y-TAILLE_CONSOLE_Y-45);
     pos_to_up.w=TAILLE_CONSOLE_X;
     pos_to_up.h=TAILLE_CONSOLE_Y;
     init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);

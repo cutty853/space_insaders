@@ -1,3 +1,5 @@
+#include "constantes.h"
+
 typedef enum{HORIZONTAL, VERTICAL} _sens;
 
 typedef struct {
@@ -7,13 +9,13 @@ typedef struct {
     _sens sens;
 } _degrade;
 
-typedef enum {BAS, MOYEN, HAUT} _charge;
+typedef enum {MORT, BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 //typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
 
 typedef struct {
     int poid;
-    int vitesse; // En pixel par seconde
+    double vitesse; // En pixel par seconde
     int acceleration; // En prixel par seconde*pow(-2)
     int vitesse_max; // En pixel par seconde
     _charge bouclier;
@@ -24,3 +26,9 @@ typedef struct {
     //_capacite capacite;
     SDL_Rect position;
 } _vaisseau;
+
+typedef struct {
+    SDL_Surface *sprite[NB_SPRITES_EXPLOSION];
+    SDL_Rect position;
+    int phase;
+} _explosion;

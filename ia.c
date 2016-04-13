@@ -35,6 +35,8 @@ void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
             barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
             test_surface(barre_bouclier, 100); //Verif chargement.
             break;
+        case MORT:
+            break;
     }
     SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
     SDL_Flip(ecran);
@@ -58,6 +60,9 @@ void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
             break;
         case HAUT:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
+            break;
+        case MORT:
+            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 0, 0)); //Noir
             break;
     }
     SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
