@@ -211,7 +211,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 
 void play(SDL_Surface *ecran) {
     SDL_Event action;
-    int continuer=1, temps_actuel=0, temps_precedent=0;
+    int continuer=1, i=0, temps_actuel=0, temps_precedent=0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_joueur = NULL, *pos_to_up_ia = NULL;
     _vaisseau v_player;
@@ -222,7 +222,7 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
 
     /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    init_vaisseau(&v_ia1, IA, 100, 0, 25, 200, HAUT, HAUT, TIR_LASER, 600, 300, 1, 0);
     pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
     SDL_UpdateRects(ecran, 2, pos_to_up_ia);
     barre_bouclier_ia(ecran, v_ia1);
@@ -237,14 +237,12 @@ void play(SDL_Surface *ecran) {
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_player);
     barre_bouclier_joueur(ecran, v_player);
-
-    pause(); /// TEST VISUEL
     /// boucle du jeu:
     while (continuer) {
         /// L'ia joue en première:
         tour_ia(&v_ia1, &v_player, ecran);
+        /// Affichage du vaisseau ia et des ses dépendances:
         pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
-
         SDL_UpdateRects(ecran, 2, pos_to_up_ia);
         barre_bouclier_ia(ecran, v_ia1);
         barre_vie_ia(ecran, v_ia1);
@@ -299,6 +297,7 @@ void play(SDL_Surface *ecran) {
                 break;
             default:
                 break;
+
         }
 
         /// Zone pour placer les commandes a faires après les actions du joueur, mais avant la pause du jeu
@@ -318,10 +317,12 @@ void play(SDL_Surface *ecran) {
             pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
             SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
         }
+        i ++;
+        if(i>=20)
+            continuer = 0;
+        pause();
     }
     /// Zone pour les commandes a effectuer avant le déchargement de la carte
     SDL_FreeSurface(v_ia1.sprite);
     SDL_FreeSurface(v_player.sprite);
 }
-
-
