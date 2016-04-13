@@ -19,7 +19,7 @@
 
 void test_surface(SDL_Surface* surface, int ref_err) {
     if (surface==NULL) {
-        fprintf(stderr, "[ - ] Erreur nÂ°%d\n Veuillez vous rÃ©ferer au tableau des erreurs s'il vous plait.\n", ref_err);
+        fprintf(stderr, "[ - ] Erreur nÃ‚Â°%d\n Veuillez vous rÃƒÂ©ferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
@@ -75,16 +75,17 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaiss
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
         *etat_rotation = 0;
-    } // Cette condition permet le décalage du joueur lors de sa rotation, afin que la rotation se fasse réellement par rapport au centre du sprite
+    } // Cette condition permet le dÃ©calage du joueur lors de sa rotation, afin que la rotation se fasse rÃ©ellement par rapport au centre du sprite
     SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
     pos_to_update[1] = vaisseau->position;
-    SDL_FreeSurface(surface_vaisseau); // Le rotozoom crée une seconde surface, cependant comme surface_vaisseau n'est pas passé en pointeur de pointeur il n'est alors pas modifié
+    SDL_FreeSurface(surface_vaisseau); // Le rotozoom crÃ©e une seconde surface, cependant comme surface_vaisseau n'est pas passÃ© en pointeur de pointeur il n'est alors pas modifiÃ©
 
 
-    return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
+    return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une rÃ©gion spÃ©cifique de la carte (se tableau a Ã©tÃ© malloc il est donc Ã  free)
 }
 
-void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+    vaisseau->intelligence = intelligence;
     vaisseau->poid = poid;
     vaisseau->vitesse = vitesse;
     vaisseau->acceleration = acceleration;
@@ -95,7 +96,11 @@ void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration,
     //vaisseau.capacite=CAPA1;
     vaisseau->vitesse_rotation = v_rotation;
     vaisseau->angle = angle;
-
+    if(intelligence == IA)
+        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
+    else
+        vaisseau->sprite = IMG_Load("images/joueur_ship.png");
+    test_surface(vaisseau->sprite, 106);
     vaisseau->position.x = position_x;
     vaisseau->position.y = position_y;
 }
