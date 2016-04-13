@@ -163,6 +163,9 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
     test_surface(barre_vie, 100); ///Verif chargement.
     switch (v_joueur.vie) {
+        case VIDE:
+            /// plus de vie
+            break;
         case BAS:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
             break;
@@ -187,6 +190,9 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 
     /// Affichage de la barre du bouclier
     switch (v_joueur.bouclier) {
+        case VIDE:
+        /// plus de bouclier
+        break;
         case BAS:
             barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
             break;
@@ -206,40 +212,44 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     int continuer=1, temps_actuel=0, temps_precedent=0;
-    SDL_Surface *player=NULL;
+    SDL_Surface *save_screen = NULL;
+    SDL_Rect *pos_to_up_joueur = NULL, *pos_to_up_ia = NULL;
     _vaisseau v_player;
     _vaisseau v_ia1;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
     charge_niveau(ecran);
+    save_screen = SDL_DisplayFormat(ecran);
 
     /// ia:
-    init_vaisseau(&v_ia1, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
-    affiche_vaisseau(ecran, v_ia1);
+    init_vaisseau(&v_ia1, IA, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
+    SDL_UpdateRects(ecran, 2, pos_to_up_ia);
     barre_bouclier_ia(ecran, v_ia1);
     barre_vie_ia(ecran, v_ia1);
 
     /// joueur:
-    init_vaisseau(&v_player, 100, 0, 50, 250, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 20, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
-    player=IMG_Load("images/player_ship.png");
-    SDL_BlitSurface(player, NULL, ecran, &v_player.position);
+    SDL_BlitSurface(v_player.sprite, NULL, ecran, &v_player.position);
     SDL_Flip(ecran);
 
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_player);
     barre_bouclier_joueur(ecran, v_player);
 
+    pause(); /// TEST VISUEL
     /// boucle du jeu:
     while (continuer) {
         /// L'ia joue en première:
         tour_ia(&v_ia1, &v_player, ecran);
-        affiche_vaisseau(ecran, v_ia1);
+        pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
+
+        SDL_UpdateRects(ecran, 2, pos_to_up_ia);
         barre_bouclier_ia(ecran, v_ia1);
         barre_vie_ia(ecran, v_ia1);
 
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
-
 
         // Test de l'action du joueur
         SDL_PollEvent(&action);
@@ -261,9 +271,11 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_a:
                         v_player.angle+=5;
+                        v_player.etat_rotation = 1;
                         break;
                     case SDLK_d:
                         v_player.angle-=5;
+                        v_player.etat_rotation = 1;
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
@@ -279,7 +291,7 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran);
                         v_player.position.x = action.button.x;
                         v_player.position.y = action.button.y;
-                        aff_player(ecran, player, &v_player);
+                        pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
                         break;
                     default:
                         break;
@@ -292,7 +304,7 @@ void play(SDL_Surface *ecran) {
         /// Zone pour placer les commandes a faires après les actions du joueur, mais avant la pause du jeu
 
 
-        // Gestion du temps pour éviter la surexploitation du CPU
+        /// Gestion du temps pour éviter la surexploitation du CPU
         temps_actuel=SDL_GetTicks();
         if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
             temps_precedent=temps_actuel;
@@ -300,12 +312,16 @@ void play(SDL_Surface *ecran) {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
 
-        /// Zone pour placer les commandes a faire après la pause du jeu
-        aff_player(ecran, player, &v_player);
-    }
 
-    /// Zone pour les commandes a effectué avant le déchargement de la carte
-    SDL_FreeSurface(player);
+        /// Zone pour placer les commandes a faire après la pause du jeu
+        if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d)) {
+            pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
+            SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
+        }
+    }
+    /// Zone pour les commandes a effectuer avant le déchargement de la carte
+    SDL_FreeSurface(v_ia1.sprite);
+    SDL_FreeSurface(v_player.sprite);
 }
 
 

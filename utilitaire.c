@@ -53,7 +53,8 @@ void pause() {
     }
 }
 
-void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+    vaisseau->intelligence = intelligence;
     vaisseau->poid = poid;
     vaisseau->vitesse = vitesse;
     vaisseau->acceleration = acceleration;
@@ -64,23 +65,42 @@ void init_vaisseau(_vaisseau *vaisseau, int poid, int vitesse, int acceleration,
     //vaisseau.capacite=CAPA1;
     vaisseau->vitesse_rotation = v_rotation;
     vaisseau->angle = angle;
-
+    if(intelligence == IA)
+        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
+    else
+        vaisseau->sprite = IMG_Load("images/joueur_ship.png");
+    test_surface(vaisseau->sprite, 106);
     vaisseau->position.x = position_x;
     vaisseau->position.y = position_y;
 }
 
-void affiche_vaisseau(SDL_Surface *ecran, _vaisseau vaisseau){
-    SDL_Surface *surface_vaisseau = NULL;
-    SDL_Rect pos_vaisseau;
-    pos_vaisseau.x = vaisseau.position.x;
-    pos_vaisseau.y = vaisseau.position.y;
-    surface_vaisseau = IMG_Load("images/vaisseau_ia.png");
-    test_surface(surface_vaisseau, 103);
-    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau.angle, 1.0, 1); /// a vérifier
+SDL_Rect* aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface* save_screen) {
+    SDL_Rect *pos_to_update, pre_pos_vaisseau;
+    pos_to_update = malloc(sizeof(SDL_Rect)*2);
 
-    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &pos_vaisseau);
-    SDL_Flip(ecran);
-    SDL_FreeSurface(surface_vaisseau);
+    // Effacement de l'ancien joueur remplace charge_niveau
+    SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
+    pos_to_update[0] = vaisseau->position;
+    // Sauvegarde des anciennes positions
+    pre_pos_vaisseau.w = vaisseau->position.w;
+    pre_pos_vaisseau.h = vaisseau->position.h;
+    // Calcul des positions
+    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle));
+    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle)));
+    // Affichage du joueur
+
+    vaisseau->sprite = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
+    SDL_BlitSurface(vaisseau->sprite, NULL, ecran, &(vaisseau->position));
+    SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
+    if (vaisseau->etat_rotation == 1) {
+        vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
+        vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
+        vaisseau->etat_rotation = 0;
+    } // Cette condition permet le décalage du joueur lors de sa angle, afin que la angle se fasse réellement par rapport au centre du sprite
+    SDL_BlitSurface(vaisseau->sprite, NULL, ecran, &(vaisseau->position));
+    pos_to_update[1] = vaisseau->position;
+    SDL_FreeSurface(vaisseau->sprite); // Le rotozoom crée une seconde surface, cependant comme vaisseau->sprite n'est pas passé en pointeur de pointeur il n'est alors pas modifié
+    return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
