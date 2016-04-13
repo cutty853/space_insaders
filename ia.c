@@ -16,7 +16,6 @@
     #include "constantes.h"
 #endif
 
-
 void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
     SDL_Surface *barre_bouclier=NULL;
     SDL_Rect pos_barre_bouclier;
@@ -25,16 +24,19 @@ void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
 
     /// Affichage de la barre du bouclier
     switch (v_ia.bouclier) {
+        case VIDE:
+            ///plus de bouclier
+            break;
         case BAS:
-            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
+            barre_bouclier = IMG_Load("images/ia_bouclier_BAS.png");
             test_surface(barre_bouclier, 100); //Verif chargement.
             break;
         case MOYEN:
-            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
+            barre_bouclier = IMG_Load("images/ia_bouclier_MOYEN.png");
             test_surface(barre_bouclier, 100); //Verif chargement.
             break;
         case HAUT:
-            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
+            barre_bouclier = IMG_Load("images/ia_bouclier_HAUT.png");
             test_surface(barre_bouclier, 100); //Verif chargement.
             break;
     }
@@ -46,11 +48,14 @@ void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
     SDL_Surface *barre_vie=NULL;
     SDL_Rect pos_barre_vie;
     pos_barre_vie.x = v_ia.position.x;
-    pos_barre_vie.y = (v_ia.position.y)+20+61;
+    pos_barre_vie.y = (v_ia.position.y)+60+5;
 
     /// Affichage de la barre de vie
     barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
     switch (v_ia.vie) {
+        case VIDE:
+            /// plus de vie
+            break;
         case BAS:
             SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); ///Rouge
             break;
@@ -65,6 +70,7 @@ void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
     SDL_Flip(ecran);
     SDL_FreeSurface(barre_vie);
 }
+
 
 void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
     int position_relative = compare_position(v_ia, v_joueur);
@@ -144,16 +150,22 @@ int choix_sens_de_rotation(_vaisseau *v_ia, int compare_position){
 void mouvement_ia (int action, int sens, _vaisseau *v_ia){
     switch (action){
         case AVANCE:
-            /// Ne fait rien car maintient de vitesse et pas de rotation.
+            if (v_ia->vitesse < v_ia->vitesse_max)
+                v_ia->vitesse += v_ia->acceleration;
             break;
         case RECUL:
-            v_ia->vitesse -= v_ia->acceleration;
+            if (v_ia->vitesse > 0)
+                v_ia->vitesse -= v_ia->acceleration;
             break;
         case TOURNE:
+            v_ia->etat_rotation = 1;
             if(sens == POSITIF)
                 v_ia->angle += v_ia->vitesse_rotation;
             else
                 v_ia->angle -= v_ia->vitesse_rotation;
+
+            if (v_ia->vitesse < v_ia->vitesse_max)
+                v_ia->vitesse += v_ia->acceleration;
             break;
     }
 }
