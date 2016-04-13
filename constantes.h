@@ -7,7 +7,7 @@
 
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
     enum {AVANT, ARRIERE, RDROITE, RGAUCHE};
-    enum {AVANCE, RECUL, TOURNE}; /// ordre de mouvement
+    enum {RIEN, AVANCE, RECUL, TOURNE}; /// ordre de mouvement
     enum {EN_BAS, EN_HAUT, DROITE, GAUCHE, BAS_DROITE, BAS_GAUCHE, HAUT_DROITE, HAUT_GAUCHE}; /// Position relative
     enum {POSITIF, NEGATIF, DROIT}; /// sens de rotation
 
