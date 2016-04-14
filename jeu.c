@@ -225,8 +225,8 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_rotation=0;
-    SDL_Surface *joueur=NULL, *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0};
+    SDL_Surface *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_joueur;
     _explosion explosion;
     SDL_Rect *pos_to_up_joueur, *pos_to_up_console, *pos_to_up_explosion;
@@ -234,15 +234,16 @@ void play(SDL_Surface *ecran) {
     /// Zone pour les commandes a effectué des l'affichage de la carte
     charge_niveau(ecran, &v_joueur);
     init_pos(&(v_joueur.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
-    joueur=IMG_Load("images/joueur_ship.png");
+    v_joueur.sprite=IMG_Load("images/joueur_ship.png");
     save_screen = SDL_DisplayFormat(ecran);
     v_joueur.acceleration=10;
     v_joueur.vitesse=0;
-    v_joueur.vitesse_max=8;
+    v_joueur.vitesse_max=80;
     v_joueur.angle=45;
+    v_joueur.etat_rotation=0;
     pos_to_up_joueur = malloc(sizeof(SDL_Rect)*2);
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
-    pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
+    pos_to_up_joueur = aff_vaisseau(ecran, &v_joueur, save_screen);
     SDL_Flip(ecran);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     explosion.phase=0;
@@ -273,11 +274,11 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_a:
                         v_joueur.angle+=5;
-                        etat_rotation=1;
+                        v_joueur.etat_rotation=1;
                         break;
                     case SDLK_d:
                         v_joueur.angle-=5;
-                        etat_rotation=1;
+                        v_joueur.etat_rotation=1;
                         break;
                     case SDLK_c:
                         v_joueur.vitesse=0;
@@ -317,7 +318,7 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran, &v_joueur);
                         v_joueur.position.x = action.button.x;
                         v_joueur.position.y = action.button.y;
-                        aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
+                        aff_vaisseau(ecran, &v_joueur, save_screen);
                         break;
                     default:
                         break;
@@ -344,7 +345,7 @@ void play(SDL_Surface *ecran) {
             case MOYEN:
             case HAUT:
                 if ((v_joueur.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d)) {
-                    pos_to_up_joueur = aff_vaisseau(ecran, joueur, &v_joueur, save_screen, &etat_rotation);
+                    pos_to_up_joueur = aff_vaisseau(ecran, &v_joueur, save_screen);
                     SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
                 }
                 break;
@@ -370,7 +371,7 @@ void play(SDL_Surface *ecran) {
     free(pos_to_up_joueur);
     free(pos_to_up_explosion);
     TTF_CloseFont(police_texte);
-    SDL_FreeSurface(joueur);
+    SDL_FreeSurface(v_joueur.sprite);
 }
 
 

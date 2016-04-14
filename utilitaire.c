@@ -54,9 +54,10 @@ void pause() {
     }
 }
 
-SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaisseau *vaisseau, SDL_Surface* save_screen, int *etat_rotation) {
+SDL_Rect* aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface* save_screen) {
     SDL_Rect *pos_to_update, pre_pos_vaisseau;
     pos_to_update = malloc(sizeof(SDL_Rect)*2);
+    SDL_Surface *tmp_rotation = NULL;
 
     // Effacement de l'ancien joueur rempalce charge_niveau
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
@@ -68,18 +69,20 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, SDL_Surface *surface_vaisseau, _vaiss
     vaisseau->position.x += (int)((vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle)));
     vaisseau->position.y += (int)((vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle))));
     // Affichage du joueur
-    surface_vaisseau = rotozoomSurface(surface_vaisseau, vaisseau->angle, 1.0, 1);
-    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
+        // Gestion de la rotation
+    //tmp_rotation = SDL_CreateRGBSurface(SDL_HWSURFACE, TAILLE_JOUEUR, TAILLE_JOUEUR, 32, 255, 0, 255, 0);
+    tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
+        // Gestion du blit
+    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
-    if (*etat_rotation == 1) {
+    if (vaisseau->etat_rotation == 1) {
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
-        *etat_rotation = 0;
+        vaisseau->etat_rotation = 0;
     } // Cette condition permet le décalage du joueur lors de sa rotation, afin que la rotation se fasse réellement par rapport au centre du sprite
-    SDL_BlitSurface(surface_vaisseau, NULL, ecran, &(vaisseau->position));
+    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
+    SDL_FreeSurface(tmp_rotation);
     pos_to_update[1] = vaisseau->position;
-    SDL_FreeSurface(surface_vaisseau); // Le rotozoom crée une seconde surface, cependant comme surface_vaisseau n'est pas passé en pointeur de pointeur il n'est alors pas modifié
-
 
     return pos_to_update; // La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }

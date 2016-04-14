@@ -29,7 +29,7 @@
     #define TAILLE_CONSOLE_X 150
     #define TAILLE_CONSOLE_Y 180
     #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Vitesse : ", "Position en y : ", "Largeur : ", "Hauteur : "}
-    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%lf", vaisseau.vitesse), \
+    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%lf", (double)vaisseau.vitesse), \
     sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%d", (int)vaisseau.position.w), \
     sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}}
     /// PLAYER
