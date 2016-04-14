@@ -7,7 +7,7 @@
 
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
     enum {AVANT, ARRIERE, RDROITE, RGAUCHE};
-    enum {RIEN, AVANCE, RECUL, TOURNE}; /// ordre de mouvement
+    enum {RIEN, AVANCE, RECUL, TOURNE}; /// ordre de mouvement (ia)
     enum {EN_BAS, EN_HAUT, DROITE, GAUCHE, BAS_DROITE, BAS_GAUCHE, HAUT_DROITE, HAUT_GAUCHE}; /// Position relative
     enum {POSITIF, NEGATIF, DROIT}; /// sens de rotation
 
@@ -22,6 +22,14 @@
     #define TOT_HAUT_CADRE_MENU (NB_OPTION_MENU * LONG_CADRE_MENU) + ((3) * ESPACE_CADRE_MENU)
     #define ENUM_TITRE_OPTION_MENU() {"Jouer", "Sauvegarder...", "Charger...", "Quitter"}
     #define ENUM_RETURN_OPTION_MENU() {JOUER, SAUVEGARDER, CHARGER, QUITTER}
+    /// AFF_CONSOLE()
+    #define NB_STATS_CONSOLE 5
+    #define TAILLE_CONSOLE_X 150
+    #define TAILLE_CONSOLE_Y 180
+    #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Angle : ", "Position en y : ", "Angle de decalage : ", "Hauteur : "}
+    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%i", (int)vaisseau.angle), \
+    sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%i", (int)vaisseau.angle_de_decalage), \
+    sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}}
     /// PLAYER
     #define FPS 60
     #define TAILLE_JOUEUR 50

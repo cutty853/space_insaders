@@ -22,9 +22,12 @@ typedef struct {
     _charge vie;
     _arme arme;
     int vitesse_rotation;
-    float angle;
+    int angle;
     int etat_rotation;
     //_capacite capacite;
     SDL_Rect position;
     SDL_Surface *sprite;
+
+
+    int angle_de_decalage;
 } _vaisseau;
