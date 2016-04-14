@@ -233,7 +233,7 @@ void play(SDL_Surface *ecran) {
     v_player.acceleration=3;
     v_player.vitesse=0;
     v_player.vitesse_max=0;
-    v_player.rotation=45;
+    v_player.angle=45;
 
 
     while (continuer) {
@@ -259,14 +259,14 @@ void play(SDL_Surface *ecran) {
                         vitesse_player(&v_player, ARRIERE);
                         break;
                     case SDLK_a:
-                        v_player.rotation+=5;
+                        v_player.angle+=5;
                         break;
                     case SDLK_d:
-                        v_player.rotation-=5;
+                        v_player.angle-=5;
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
-                        //v_player.rotation=0;
+                        //v_player.angle=0;
                         break;
                     default:
                         break;
