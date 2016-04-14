@@ -72,49 +72,52 @@ void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
 
 
 void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
-    int angle_de_decalage = atan((v_joueur->position.x - v_ia->position.x) / (v_ia->position.y - v_joueur->position.y));
-    if(angle_de_decalage != v_ia->angle){
-        v_ia->etat_rotation = 1;
-        v_ia->angle -= v_ia->vitesse_rotation;
+    int ancienne_pos_relative = 0, nouv_pos_relative = 0, sens_de_rotation = 0;
+
+    if(v_ia->angle >= 360) /// un tour complet a été fait.
+        v_ia->angle -= 360;
+    else if(v_ia->angle < 0)
+        v_ia->angle += 360;
+
+    ancienne_pos_relative = nouv_pos_relative;
+    nouv_pos_relative = compare_position(v_ia, v_joueur);
+    switch (nouv_pos_relative){
+        case BAS_DROITE:
+            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
+            break; //ok
+        case HAUT_DROITE:
+            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
+            v_ia->angle_de_decalage += 90; /// décalage de l'arctan.
+            break;
+        case HAUT_GAUCHE:
+            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
+            v_ia->angle_de_decalage += 180; /// décalage de l'arctan.
+            break; //ok
+        case BAS_GAUCHE:
+            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
+            v_ia->angle_de_decalage += 270; /// décalage de l'arctan.
+            break;
     }
 
 
-    /*int position_relative = compare_position(v_ia, v_joueur);
-    int sens_de_rotation = choix_sens_de_rotation(v_ia, position_relative);
-    angle_de_decalage = atan((v_joueur->position.x - v_ia->position.x) / (v_ia->position.y - v_joueur->position.y));
-    if(angle_de_decalage == v_ia->angle)
-        mouvement_ia(RIEN, RIEN, v_ia, v_joueur);
-    else {
-        switch (position_relative){
-        case EN_HAUT:
-            mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-            break;
-        case EN_BAS:
-            mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-            break;
-        case DROITE:
-            mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-            break;
-        case GAUCHE:
-            mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-            break;
-        case BAS_DROITE:
-            mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
-            break;
-        case BAS_GAUCHE:
-            mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
-            break;
-        case HAUT_DROITE:
-            mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
-            break;
-        case HAUT_GAUCHE:
-            mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
-            break ;
-        }
-    }*/
+    /*if(ancienne_pos_relative == BAS_GAUCHE && nouv_pos_relative == BAS_DROITE)
+        sens_de_rotation = POSITIF;
+    else if(ancienne_pos_relative == BAS_DROITE && nouv_pos_relative == BAS_GAUCHE)
+        sens_de_rotation = NEGATIF;*/
+
+    if((v_ia->angle+2) < v_ia->angle_de_decalage || (v_ia->angle-2) > v_ia->angle_de_decalage){ /// +2 et -2 = imprecision.
+        sens_de_rotation = choix_sens_de_rotation(v_ia, ancienne_pos_relative, nouv_pos_relative);
+        mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
+    }else if(v_ia->vitesse < v_joueur->vitesse){
+        mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
+    }else if(v_ia->vitesse > v_joueur->vitesse){
+        mouvement_ia(RECUL, DROIT, v_ia, v_joueur);
+    }else{
+        mouvement_ia(RIEN, DROIT, v_ia, v_joueur);
+    }
 }
 
-int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){
+int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vaisseau ia par rapport au vaisseau joueur.
     int pos_x_relative = v_ia->position.x - v_joueur->position.x;
     int pos_y_relative = v_ia->position.y - v_joueur->position.y;
     if(pos_x_relative > 0 && pos_y_relative > 0)
@@ -136,47 +139,29 @@ int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){
     else
         return 666;
 }
-int choix_sens_de_rotation(_vaisseau *v_ia, int compare_position){
-    if(v_ia->angle >= 360) /// un tour complet a été fait.
-        v_ia->angle = v_ia->angle - 360;
-
-    if(compare_position == BAS_DROITE && v_ia->angle > 180)
+int choix_sens_de_rotation(_vaisseau *v_ia, int ancienne_pos_relative, int nouv_pos_relative){ /// Choix du sens de rotation: positif = sens trigo.
+    if(v_ia->angle < v_ia->angle_de_decalage)
         return POSITIF;
-    else if(compare_position == BAS_DROITE && v_ia->angle > 180)
-        return NEGATIF;
-    else if(compare_position == BAS_GAUCHE && v_ia->angle < 180)
-        return NEGATIF;
-    else if(compare_position == BAS_GAUCHE && v_ia->angle > 180)
-        return POSITIF;
-    else if(compare_position == HAUT_DROITE && v_ia->angle > 180)
-        return NEGATIF;
-    else if(compare_position == HAUT_DROITE && v_ia->angle > 180)
-        return POSITIF;
-    else if(compare_position == HAUT_GAUCHE && v_ia->angle < 180)
-        return POSITIF;
-    else if(compare_position == HAUT_GAUCHE && v_ia->angle > 180)
-        return NEGATIF;
     else
-        return 666;
+        return NEGATIF;
 }
 
 void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
     switch (action){
-//        case AVANCE:
-//            if (v_ia->vitesse < v_ia->vitesse_max)
-//                v_ia->vitesse += v_ia->acceleration;
-//            break;
-//        case RECUL:
-//            if (v_ia->vitesse > 0)
-//                v_ia->vitesse -= v_ia->acceleration;
-//            break;
+        case AVANCE:
+            if (v_ia->vitesse < v_ia->vitesse_max)
+                v_ia->vitesse += v_ia->acceleration;
+            break;
+        case RECUL:
+            if (v_ia->vitesse > 0)
+                v_ia->vitesse -= v_ia->acceleration;
+            break;
         case TOURNE:
-                v_ia->etat_rotation = 1;
-                if(sens == POSITIF)
-                    v_ia->angle += v_ia->vitesse_rotation;
-                else
-                    v_ia->angle -= v_ia->vitesse_rotation;
-
+            v_ia->etat_rotation = 1;
+            if(sens == POSITIF)
+                v_ia->angle += v_ia->vitesse_rotation;
+            else
+            v_ia->angle -= v_ia->vitesse_rotation;
             break;
         case RIEN:
             /// L'ia choisi de ne pas bouger.

@@ -17,10 +17,14 @@
 #endif
 
 void vitesse_player(_vaisseau *v_player, int sens) {
-    if (sens == AVANT)
-        v_player->vitesse += v_player->acceleration;
-    if (sens == ARRIERE)
-        v_player->vitesse -= v_player->acceleration;
+    if (sens == AVANT){
+        if (v_player->vitesse < v_player->vitesse_max)
+            v_player->vitesse += v_player->acceleration;
+    }
+    if (sens == ARRIERE){
+        if (v_player->vitesse > 0)
+            v_player->vitesse -= v_player->acceleration;
+    }
 }
 
 void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player) {

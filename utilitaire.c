@@ -2,6 +2,7 @@
     #define DEF_INCLUDE
     #include <stdlib.h>
     #include <stdio.h>
+    #include <math.h>
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
@@ -77,6 +78,7 @@ void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, int vitesse,
 SDL_Rect* aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen) {
     SDL_Rect *pos_to_update, pre_pos_vaisseau;
     pos_to_update = malloc(sizeof(SDL_Rect)*2);
+    SDL_Surface *tmp_rotation=NULL;
 
     /// Effacement de l'ancien joueur remplace charge_niveau
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
@@ -85,19 +87,20 @@ SDL_Rect* aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *sav
     pre_pos_vaisseau.w = vaisseau->position.w;
     pre_pos_vaisseau.h = vaisseau->position.h;
     /// Calcul des positions
-    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle));
-    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle)));
+    vaisseau->position.x += (vaisseau->vitesse)*cos(RADIANATION(vaisseau->angle+90));
+    vaisseau->position.y += (vaisseau->vitesse)*(-sin(RADIANATION(vaisseau->angle+90)));
     /// Affichage du vaisseau
-    vaisseau->sprite = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
-    SDL_BlitSurface(vaisseau->sprite, NULL, ecran, &(vaisseau->position));
+    tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
+    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     if (vaisseau->etat_rotation == 1) {
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
         vaisseau->etat_rotation = 0;
     } /// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
-    SDL_BlitSurface(vaisseau->sprite, NULL, ecran, &(vaisseau->position));
+    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     pos_to_update[1] = vaisseau->position;
+    SDL_FreeSurface(tmp_rotation);
     return pos_to_update; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
@@ -148,3 +151,32 @@ void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     for (i = 0 ; i < prop_deg.nuance ; i++)
         SDL_FreeSurface(rectangle_degrade[i]);
 }
+
+SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen, TTF_Font *police_texte) {
+    SDL_Surface *info[NB_STATS_CONSOLE]={NULL};
+    char texte_info[NB_STATS_CONSOLE][50]= ENUM_TITRE_STATS_CONSOLE(), texte_infosup[NB_STATS_CONSOLE][20]= ENUM_VAR_STATS_CONSOLE();
+    SDL_Rect pos_texte, pos_to_up;
+    SDL_Color rouge={255, 0, 0};
+    int i;
+
+    init_pos(&pos_to_up, 0, TAILLE_ECRAN_Y-TAILLE_CONSOLE_Y-45);
+    pos_to_up.w=TAILLE_CONSOLE_X;
+    pos_to_up.h=TAILLE_CONSOLE_Y;
+    init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
+    SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
+
+//    sprintf(texte_infosup[1], "%d", (int)vaisseau.angle);
+
+    for (i=0; i<NB_STATS_CONSOLE ; i++) {
+        strcat(texte_info[i], texte_infosup[i]);
+        info[i] = TTF_RenderText_Blended(police_texte, texte_info[i], rouge);
+        test_surface(info[i], 106+i);
+        pos_texte.y += 30;
+        SDL_BlitSurface(info[i], NULL, ecran, &pos_texte);
+        SDL_FreeSurface(info[i]);
+    }
+
+    return pos_to_up;
+}
+
+

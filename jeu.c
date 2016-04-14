@@ -211,9 +211,10 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 
 void play(SDL_Surface *ecran) {
     SDL_Event action;
-    int continuer=1, i=0, temps_actuel=0, temps_precedent=0;
+    TTF_Font *police_texte=NULL;
+    int continuer=1, temps_actuel=0, temps_precedent=0;
     SDL_Surface *save_screen = NULL;
-    SDL_Rect *pos_to_up_joueur = NULL, *pos_to_up_ia = NULL;
+    SDL_Rect *pos_to_up_joueur, *pos_to_up_ia, *pos_to_up_console;
     _vaisseau v_player;
     _vaisseau v_ia1;
 
@@ -222,21 +223,31 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
 
     /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 25, 200, HAUT, HAUT, TIR_LASER, 600, 300, 1, 0);
+    init_vaisseau(&v_ia1, IA, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 600, 300, 4, 0);
     pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
     SDL_UpdateRects(ecran, 2, pos_to_up_ia);
     barre_bouclier_ia(ecran, v_ia1);
     barre_vie_ia(ecran, v_ia1);
 
     /// joueur:
-    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 20, HAUT, HAUT, TIR_LASER, 600, 300, 5, 0);
+    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 600, 300, 4, 0);
     init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
     SDL_BlitSurface(v_player.sprite, NULL, ecran, &v_player.position);
+
+    // test console
+    pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
+    police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
+
     SDL_Flip(ecran);
 
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_player);
     barre_bouclier_joueur(ecran, v_player);
+
+
+
+
+
     /// boucle du jeu:
     while (continuer) {
         /// L'ia joue en première:
@@ -317,10 +328,11 @@ void play(SDL_Surface *ecran) {
             pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
             SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
         }
-        i ++;
-        if(i>=20)
-            continuer = 0;
-        pause();
+
+        // console de test
+        pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
+        SDL_UpdateRects(ecran, 1, pos_to_up_console);
+
     }
     /// Zone pour les commandes a effectuer avant le déchargement de la carte
     SDL_FreeSurface(v_ia1.sprite);
