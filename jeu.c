@@ -162,7 +162,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     /// Affichage de la barre de vie
     barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
     test_surface(barre_vie, 100); ///Verif chargement.
-    switch (v_joueur.vie) {
+    switch (v_joueur.vie.charge) {
         case VIDE:
             /// plus de vie
             break;
@@ -181,7 +181,6 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Flip(ecran);
     SDL_FreeSurface(barre_vie);
 }
-
 void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Surface *barre_bouclier=NULL;
     SDL_Rect pos_barre_bouclier;
@@ -189,7 +188,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     pos_barre_bouclier.y=TAILLE_ECRAN_Y-50;
 
     /// Affichage de la barre du bouclier
-    switch (v_joueur.bouclier) {
+    switch (v_joueur.bouclier.charge) {
         case VIDE:
         /// plus de bouclier
         break;
@@ -214,7 +213,8 @@ void play(SDL_Surface *ecran) {
     TTF_Font *police_texte=NULL;
     int continuer=1, temps_actuel=0, temps_precedent=0;
     SDL_Surface *save_screen = NULL;
-    SDL_Rect *pos_to_up_joueur, *pos_to_up_ia, *pos_to_up_console;
+    SDL_Rect /* *nouv_pos_joueur, *nouv_pos_v_ia, *nouv_pos_bouclier_ia, *nouv_pos_vie_ia,*/ *pos_to_up_console;
+    SDL_Rect *nouv_pos[4]; /// 4 = nombre actuel de nouvelles positions.
     _vaisseau v_player;
     _vaisseau v_ia1;
 
@@ -223,44 +223,41 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
 
     /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 600, 300, 4, 0);
-    pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
-    SDL_UpdateRects(ecran, 2, pos_to_up_ia);
-    barre_bouclier_ia(ecran, v_ia1);
-    barre_vie_ia(ecran, v_ia1);
+    init_vaisseau(&v_ia1, IA, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
+    //aff_sprite(ecran, VAISSEAU, &v_ia1, save_screen);
 
     /// joueur:
-    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 600, 300, 4, 0);
-    init_pos(&(v_player.position), 20, CENTRER(TAILLE_ECRAN_Y, 50)); //place le joueur a gauche de l'écran
-    SDL_BlitSurface(v_player.sprite, NULL, ecran, &v_player.position);
+    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
+    //aff_sprite(ecran, VAISSEAU, &v_player, save_screen);
 
-    // test console
+    /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
-
-    SDL_Flip(ecran);
 
     ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_player);
     barre_bouclier_joueur(ecran, v_player);
 
-
-
-
-
     /// boucle du jeu:
     while (continuer) {
         /// L'ia joue en première:
+        /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
+        eff_sprite(ecran, VAISSEAU, &v_ia1, save_screen);
+        eff_sprite(ecran, BOUCLIER, &v_ia1, save_screen);
+        eff_sprite(ecran, VIE, &v_ia1, save_screen);
+
         tour_ia(&v_ia1, &v_player, ecran);
-        /// Affichage du vaisseau ia et des ses dépendances:
-        pos_to_up_ia = aff_vaisseau(ecran, &v_ia1, save_screen);
-        SDL_UpdateRects(ecran, 2, pos_to_up_ia);
-        barre_bouclier_ia(ecran, v_ia1);
-        barre_vie_ia(ecran, v_ia1);
+
+        nouv_pos[0] = aff_sprite(ecran, VAISSEAU, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+        nouv_pos[1] = aff_sprite(ecran, BOUCLIER, &v_ia1, save_screen);
+        nouv_pos[2] = aff_sprite(ecran, VIE, &v_ia1, save_screen);
+
+
 
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
 
-        // Test de l'action du joueur
+        /// Test de l'action du joueur
+        eff_sprite(ecran, VAISSEAU, &v_player, save_screen); //test
         SDL_PollEvent(&action);
         switch (action.type) {
             case SDL_QUIT:
@@ -279,11 +276,11 @@ void play(SDL_Surface *ecran) {
                         vitesse_player(&v_player, ARRIERE);
                         break;
                     case SDLK_a:
-                        v_player.angle+=5;
+                        v_player.angle+= v_player.vitesse_rotation;
                         v_player.etat_rotation = 1;
                         break;
                     case SDLK_d:
-                        v_player.angle-=5;
+                        v_player.angle-= v_player.vitesse_rotation;
                         v_player.etat_rotation = 1;
                         break;
                     case SDLK_c:
@@ -300,7 +297,7 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran);
                         v_player.position.x = action.button.x;
                         v_player.position.y = action.button.y;
-                        pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
+                        nouv_pos[3] = aff_sprite(ecran, VAISSEAU, &v_player, save_screen);
                         break;
                     default:
                         break;
@@ -318,23 +315,29 @@ void play(SDL_Surface *ecran) {
         temps_actuel=SDL_GetTicks();
         if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
             temps_precedent=temps_actuel;
-        } else {
+        }else{
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
 
 
         /// Zone pour placer les commandes a faire après la pause du jeu
         if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d)) {
-            pos_to_up_joueur = aff_vaisseau(ecran, &v_player, save_screen);
-            SDL_UpdateRects(ecran, 2, pos_to_up_joueur);
+            nouv_pos[3] = aff_sprite(ecran, VAISSEAU, &v_player, save_screen);
         }
 
         // console de test
         pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
         SDL_UpdateRects(ecran, 1, pos_to_up_console);
 
+        /// AFFICHAGE:
+        SDL_UpdateRects(ecran, 5, *nouv_pos); //JE sais pas combien il y a de tableau 4, 5 ou 1 ?
+
     }
-    /// Zone pour les commandes a effectuer avant le déchargement de la carte
+
     SDL_FreeSurface(v_ia1.sprite);
+    SDL_FreeSurface(v_ia1.bouclier.sprite);
+    SDL_FreeSurface(v_ia1.vie.sprite);
     SDL_FreeSurface(v_player.sprite);
+    SDL_FreeSurface(v_player.bouclier.sprite);
+    SDL_FreeSurface(v_player.vie.sprite);
 }

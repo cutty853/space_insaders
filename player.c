@@ -22,7 +22,7 @@ void vitesse_player(_vaisseau *v_player, int sens) {
             v_player->vitesse += v_player->acceleration;
     }
     if (sens == ARRIERE){
-        if (v_player->vitesse > 0)
+        if (v_player->vitesse > v_player->vitesse_min)
             v_player->vitesse -= v_player->acceleration;
     }
 }

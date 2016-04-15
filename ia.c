@@ -15,59 +15,46 @@
     #include "constantes.h"
 #endif
 
-void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau v_ia) {
-    SDL_Surface *barre_bouclier=NULL;
-    SDL_Rect pos_barre_bouclier;
-    pos_barre_bouclier.x = v_ia.position.x;
-    pos_barre_bouclier.y = (v_ia.position.y)+60;
+void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau *v_ia) {
+    v_ia->bouclier.position.x = v_ia->position.x;
+    v_ia->bouclier.position.y = (v_ia->position.y)+70; /// +70 = taille verticale du vaisseau.
 
-    /// Affichage de la barre du bouclier
-    switch (v_ia.bouclier) {
+    switch (v_ia->bouclier.charge) {/// "Affichage" de la barre du bouclier
         case VIDE:
             ///plus de bouclier
             break;
         case BAS:
-            barre_bouclier = IMG_Load("images/ia_bouclier_BAS.png");
-            test_surface(barre_bouclier, 100); //Verif chargement.
+            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_BAS.png");
             break;
         case MOYEN:
-            barre_bouclier = IMG_Load("images/ia_bouclier_MOYEN.png");
-            test_surface(barre_bouclier, 100); //Verif chargement.
+            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_MOYEN.png");
             break;
         case HAUT:
-            barre_bouclier = IMG_Load("images/ia_bouclier_HAUT.png");
-            test_surface(barre_bouclier, 100); //Verif chargement.
+            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_HAUT.png");
             break;
     }
-    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
-    SDL_Flip(ecran);
-    SDL_FreeSurface(barre_bouclier);
+    test_surface(v_ia->bouclier.sprite, 100); ///Verif chargement.
 }
-void barre_vie_ia(SDL_Surface *ecran, _vaisseau v_ia) {
-    SDL_Surface *barre_vie=NULL;
-    SDL_Rect pos_barre_vie;
-    pos_barre_vie.x = v_ia.position.x;
-    pos_barre_vie.y = (v_ia.position.y)+60+5;
+void barre_vie_ia(SDL_Surface *ecran, _vaisseau *v_ia) {
+    v_ia->vie.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
 
-    /// Affichage de la barre de vie
-    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
-    switch (v_ia.vie) {
+    v_ia->vie.position.x = v_ia->position.x;
+    v_ia->vie.position.y = (v_ia->position.y)+70+5; /// +70 = taille verticale du vaisseau, +5 = epaisseur de la barre de bouclier.
+
+    switch (v_ia->vie.charge) {/// "Affichage" de la barre de vie
         case VIDE:
             /// plus de vie
             break;
         case BAS:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); ///Rouge
+            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 255, 0, 0)); ///Rouge
             break;
         case MOYEN:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); ///Orange
+            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 255, 165, 0)); ///Orange
             break;
         case HAUT:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); ///Bleu
+            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 0, 255, 0)); ///Bleu
             break;
     }
-    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
-    SDL_Flip(ecran);
-    SDL_FreeSurface(barre_vie);
 }
 
 
@@ -84,7 +71,8 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
     switch (nouv_pos_relative){
         case BAS_DROITE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
-            break; //ok
+            v_ia->angle_de_decalage += 0; /// décalage de l'arctan.
+            break;
         case HAUT_DROITE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
             v_ia->angle_de_decalage += 90; /// décalage de l'arctan.
@@ -92,7 +80,7 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
         case HAUT_GAUCHE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
             v_ia->angle_de_decalage += 180; /// décalage de l'arctan.
-            break; //ok
+            break;
         case BAS_GAUCHE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
             v_ia->angle_de_decalage += 270; /// décalage de l'arctan.
@@ -115,6 +103,9 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
     }else{
         mouvement_ia(RIEN, DROIT, v_ia, v_joueur);
     }
+
+    barre_bouclier_ia(ecran, v_ia);
+    barre_vie_ia(ecran, v_ia);
 }
 
 int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vaisseau ia par rapport au vaisseau joueur.
@@ -153,7 +144,7 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
                 v_ia->vitesse += v_ia->acceleration;
             break;
         case RECUL:
-            if (v_ia->vitesse > 0)
+            if (v_ia->vitesse > v_ia->vitesse_min)
                 v_ia->vitesse -= v_ia->acceleration;
             break;
         case TOURNE:
