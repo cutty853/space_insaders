@@ -6,6 +6,7 @@
     #define TAILLE_ECRAN_X 1366
 
     enum {JOUER, SAUVEGARDER, CHARGER, QUITTER};
+    enum {VAISSEAU, BOUCLIER, VIE}; /// type pour fonction eff_sprite
     enum {AVANT, ARRIERE, RDROITE, RGAUCHE};
     enum {RIEN, AVANCE, RECUL, TOURNE}; /// ordre de mouvement (ia)
     enum {EN_BAS, EN_HAUT, DROITE, GAUCHE, BAS_DROITE, BAS_GAUCHE, HAUT_DROITE, HAUT_GAUCHE}; /// Position relative
@@ -24,7 +25,7 @@
     #define ENUM_RETURN_OPTION_MENU() {JOUER, SAUVEGARDER, CHARGER, QUITTER}
     /// AFF_CONSOLE()
     #define NB_STATS_CONSOLE 5
-    #define TAILLE_CONSOLE_X 150
+    #define TAILLE_CONSOLE_X 200
     #define TAILLE_CONSOLE_Y 180
     #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Angle : ", "Position en y : ", "Angle de decalage : ", "Hauteur : "}
     #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%i", (int)vaisseau.angle), \
@@ -34,6 +35,10 @@
     #define FPS 60
     #define TAILLE_JOUEUR 50
     /// GENERAL
-    #define PI  3.14159265
+    #define NB_SPRITES_EXPLOSION 25
+    #define NB_SPRITES_BOUCLIER 3
+    #define NB_SPRITES_VIE 3
+    #define FPS 60
+    #define PI  3.14159265358979323846264338327950288419716939937510582
 #endif // DEF_CONSTANTES
 
