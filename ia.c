@@ -15,47 +15,8 @@
     #include "constantes.h"
 #endif
 
-void barre_bouclier_ia(SDL_Surface *ecran, _vaisseau *v_ia) {
-    v_ia->bouclier.position.x = v_ia->position.x;
-    v_ia->bouclier.position.y = (v_ia->position.y)+70; /// +70 = taille verticale du vaisseau.
 
-    switch (v_ia->bouclier.charge) {/// "Affichage" de la barre du bouclier
-        case VIDE:
-            ///plus de bouclier
-            break;
-        case BAS:
-            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_BAS.png");
-            break;
-        case MOYEN:
-            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_MOYEN.png");
-            break;
-        case HAUT:
-            v_ia->bouclier.sprite = IMG_Load("images/ia_bouclier_HAUT.png");
-            break;
-    }
-    test_surface(v_ia->bouclier.sprite, 100); ///Verif chargement.
-}
-void barre_vie_ia(SDL_Surface *ecran, _vaisseau *v_ia) {
-    v_ia->vie.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
 
-    v_ia->vie.position.x = v_ia->position.x;
-    v_ia->vie.position.y = (v_ia->position.y)+70+5; /// +70 = taille verticale du vaisseau, +5 = epaisseur de la barre de bouclier.
-
-    switch (v_ia->vie.charge) {/// "Affichage" de la barre de vie
-        case VIDE:
-            /// plus de vie
-            break;
-        case BAS:
-            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 255, 0, 0)); ///Rouge
-            break;
-        case MOYEN:
-            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 255, 165, 0)); ///Orange
-            break;
-        case HAUT:
-            SDL_FillRect(v_ia->vie.sprite, NULL, SDL_MapRGB((v_ia->vie.sprite)->format, 0, 255, 0)); ///Bleu
-            break;
-    }
-}
 
 
 void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
@@ -104,8 +65,8 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
         mouvement_ia(RIEN, DROIT, v_ia, v_joueur);
     }
 
-    barre_bouclier_ia(ecran, v_ia);
-    barre_vie_ia(ecran, v_ia);
+//    barre_bouclier_ia(ecran, v_ia);
+//    barre_vie_ia(ecran, v_ia);
 }
 
 int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vaisseau ia par rapport au vaisseau joueur.

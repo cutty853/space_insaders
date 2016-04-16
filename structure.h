@@ -15,12 +15,12 @@ typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 //typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
 
 typedef struct{
-    SDL_Surface *sprite;
+    SDL_Surface *sprite[NB_SPRITES_BOUCLIER];
     SDL_Rect position;
     _charge charge;
 } _bouclier;
 typedef struct{
-    SDL_Surface *sprite;
+    SDL_Surface *sprite[NB_SPRITES_VIE];
     SDL_Rect position;
     _charge charge;
 } _vie;
