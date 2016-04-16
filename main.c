@@ -20,8 +20,10 @@
 int main ( int argc, char** argv )
 {
     SDL_Surface *ecran=NULL;
+    FILE* ctt = NULL;
     int action;
 
+    freopen( "CON", "w", stdout );
     if (SDL_Init(SDL_INIT_VIDEO) == -1) {
         fprintf(stderr, "Erreur lors du chargement de la SDL %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
@@ -30,6 +32,7 @@ int main ( int argc, char** argv )
         fprintf(stderr, "Erreur d'initialisation de TTF_Init : %s\n", TTF_GetError());
         exit(EXIT_FAILURE);
     }
+    ctt = fopen("CON", "w");
     ecran = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
     if (ecran==NULL) {
         fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
@@ -55,6 +58,7 @@ int main ( int argc, char** argv )
 
     TTF_Quit();
     SDL_Quit();
+    fclose(ctt);
     return 0;
 }
 

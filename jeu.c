@@ -238,7 +238,7 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
     v_joueur.acceleration=10;
     v_joueur.vitesse=0;
-    v_joueur.vitesse_max=80;
+    v_joueur.vitesse_max=8;
     v_joueur.angle=45;
     v_joueur.etat_rotation=0;
     pos_to_up_joueur = malloc(sizeof(SDL_Rect)*2);
