@@ -76,91 +76,22 @@ void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, int vitesse,
     vaisseau->position.y = position_y;
 }
 
-//void eff_sprite(SDL_Surface *ecran, int type, _vaisseau *vaisseau, SDL_Surface *save_screen) {/// Effacement de l'ancien joueur remplace charge_niveau.
-//    switch (type){
-//        case VAISSEAU:
-//            SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
-////            SDL_UpdateRects(ecran, 2, &(vaisseau->position));
-//            break;
-//        case BOUCLIER:
-//            SDL_BlitSurface(save_screen, &(vaisseau->bouclier.position), ecran, &(vaisseau->bouclier.position));
-////            SDL_UpdateRects(ecran, 2, &(vaisseau->bouclier.position));
-//            break;
-//        case VIE:
-//            SDL_BlitSurface(save_screen, &(vaisseau->vie.position), ecran, &(vaisseau->vie.position));
-////            SDL_UpdateRects(ecran, 2, &(vaisseau->vie.position));
-//            break;
-//        default:
-//            break;
-//    }
-//}
-
-SDL_Rect eff_vie(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen)
-{
+SDL_Rect eff_vie(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen){
     SDL_BlitSurface(save_screen, &(vaisseau->vie.position), ecran, &(vaisseau->vie.position));
     return vaisseau->vie.position;
 }
-
-SDL_Rect eff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen)
-{
+SDL_Rect eff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen){
     SDL_BlitSurface(save_screen, &(vaisseau->bouclier.position), ecran, &(vaisseau->bouclier.position));
     return vaisseau->bouclier.position;
 }
-
-SDL_Rect eff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen)
-{
+SDL_Rect eff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen){
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     return vaisseau->position;
 }
 
-//SDL_Rect* aff_sprite(SDL_Surface *ecran, int type, _vaisseau *vaisseau, SDL_Surface *save_screen) {/// Calcul de la nouvelle position et rotation + affichage complet.
-//    SDL_Rect pre_pos_vaisseau;
-//    SDL_Surface *tmp_rotation = NULL;
-//    switch (type){
-//        case VAISSEAU:
-//            /// Sauvegarde des anciennes positions:
-//            pre_pos_vaisseau.w = vaisseau->position.w;
-//            pre_pos_vaisseau.h = vaisseau->position.h;
-//            /// Calcul des positions:
-//            vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
-//            vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
-//            /// Affichage du vaisseau:
-//            tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
-//            SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
-//            if (vaisseau->etat_rotation == 1) {/// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
-//                vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
-//                vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
-//                vaisseau->etat_rotation = 0;
-//            }
-//            SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
-//            //SDL_UpdateRects(ecran, 2, &(vaisseau->position));
-//
-//            SDL_FreeSurface(tmp_rotation);
-//            return (&(vaisseau->position)); /// retourne la position à UpdateRects.
-//            break;
-//        case BOUCLIER:
-//            SDL_BlitSurface(vaisseau->bouclier.sprite, NULL, ecran, &(vaisseau->bouclier.position));
-//            //SDL_UpdateRects(ecran, 2, &(vaisseau->bouclier.position));
-//            return (&(vaisseau->bouclier.position));
-//            break;
-//        case VIE:
-//            SDL_BlitSurface(vaisseau->vie.sprite, NULL, ecran, &(vaisseau->vie.position));
-//            //SDL_UpdateRects(ecran, 2, &(vaisseau->vie.position));
-//            return (&(vaisseau->vie.position));
-//            break;
-//        default:
-//            break;
-//    }
-//    /// Je sais pas quoi return pck je ne peux pas return un int pour signaler un erreur. Réponse : Tu aurais pu faire Retrun NULL; puisque ici ta fonction est en pointeur, du coup il aurait fallu tester
-//    /// lors de l'appel de la fonction si elle retournais null
-//}
-
-SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau)
-{
-
+SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
     vaisseau->bouclier.position.x = vaisseau->position.x;
-    vaisseau->bouclier.position.y = vaisseau->position.y+10;
-    /// Pas des plus optimisé tout ça..
+    vaisseau->bouclier.position.y = (vaisseau->position.y)+60; /// +60 = taille verticale du vaisseau.
     switch (vaisseau->bouclier.charge) {
         case VIDE:
             SDL_BlitSurface(vaisseau->bouclier.sprite[0], NULL, ecran, &(vaisseau->bouclier.position));
@@ -174,16 +105,12 @@ SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau)
         case HAUT:
             SDL_BlitSurface(vaisseau->bouclier.sprite[3], NULL, ecran, &(vaisseau->bouclier.position));
             break;
-
     }
     return vaisseau->bouclier.position;
 }
-
-SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau)
-{
-    /// Pas des plus optimisé tout ça..
-    vaisseau->vie.position.x = vaisseau->position.x;
-    vaisseau->vie.position.y = vaisseau->position.y+5;
+SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau){
+    vaisseau->vie.position.x = vaisseau->bouclier.position.x;
+    vaisseau->vie.position.y = (vaisseau->bouclier.position.y)+5; /// +5 = epaisseur de la barre de bouclier.
     switch (vaisseau->vie.charge) {
         case VIDE:
             SDL_BlitSurface(vaisseau->vie.sprite[0], NULL, ecran, &(vaisseau->vie.position));
@@ -197,13 +124,10 @@ SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau)
         case HAUT:
             SDL_BlitSurface(vaisseau->vie.sprite[3], NULL, ecran, &(vaisseau->vie.position));
             break;
-
     }
     return vaisseau->vie.position;
 }
-
-SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen)
-{
+SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen){
     SDL_Rect pre_pos_vaisseau;
     SDL_Surface *tmp_rotation=NULL;
     /// Sauvegarde des anciennes positions
@@ -214,7 +138,7 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
-    //SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
+    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     //SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     if (vaisseau->etat_rotation == 1) {/// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
@@ -226,11 +150,8 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
-void charge_sprite_bouclier(_vaisseau *vaisseau)
-{
+void charge_sprite_bouclier(_vaisseau *vaisseau){
     int i;
-    vaisseau->bouclier.position.x = vaisseau->position.x;
-    vaisseau->bouclier.position.y = (vaisseau->position.y)+70; /// +70 = taille verticale du vaisseau.
     vaisseau->bouclier.sprite[0] = IMG_Load("images/ia_bouclier_VIDE.png");
     vaisseau->bouclier.sprite[1] = IMG_Load("images/ia_bouclier_BAS.png");
     vaisseau->bouclier.sprite[2] = IMG_Load("images/ia_bouclier_MOYEN.png");
@@ -238,8 +159,7 @@ void charge_sprite_bouclier(_vaisseau *vaisseau)
     for(i=0;i<NB_SPRITES_BOUCLIER;i++)
         test_surface(vaisseau->bouclier.sprite[i], 100); ///Verif chargement.
 }
-void charge_sprite_vie(_vaisseau *vaisseau)
-{
+void charge_sprite_vie(_vaisseau *vaisseau){
     int i;
     switch (vaisseau->intelligence) {
         case IA:
@@ -256,22 +176,20 @@ void charge_sprite_vie(_vaisseau *vaisseau)
     }
     for (i=0;i<NB_SPRITES_VIE;i++)
         vaisseau->vie.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
-    vaisseau->vie.position.x = vaisseau->position.x;
-    vaisseau->vie.position.y = (vaisseau->position.y)+70+5; /// +70 = taille verticale du vaisseau, +5 = epaisseur de la barre de bouclier.
+
     SDL_FillRect(vaisseau->vie.sprite[0], NULL, SDL_MapRGB((vaisseau->vie.sprite[0])->format, 33, 33, 33)); /// Gris
     SDL_FillRect(vaisseau->vie.sprite[1], NULL, SDL_MapRGB((vaisseau->vie.sprite[0])->format, 255, 0, 0)); ///Rouge
     SDL_FillRect(vaisseau->vie.sprite[2], NULL, SDL_MapRGB((vaisseau->vie.sprite[1])->format, 255, 165, 0)); ///Orange
     SDL_FillRect(vaisseau->vie.sprite[3], NULL, SDL_MapRGB((vaisseau->vie.sprite[2])->format, 0, 255, 0)); ///Bleu
 }
+
 /// Les deux fonctions suivantes ne sont pas forcément très utiles, mais permettent une sorte de centralisation...
-void decharge_sprite_vie(_vaisseau *vaisseau)
-{
+void decharge_sprite_vie(_vaisseau *vaisseau){
     int i;
     for (i=0;i<NB_SPRITES_VIE;i++)
         SDL_FreeSurface(vaisseau->vie.sprite[i]);
 }
-void decharge_sprite_bouclier(_vaisseau *vaisseau)
-{
+void decharge_sprite_bouclier(_vaisseau *vaisseau){
     int i;
     for (i=0;i<NB_SPRITES_BOUCLIER;i++)
         SDL_FreeSurface(vaisseau->bouclier.sprite[i]);
@@ -351,5 +269,3 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
 
     return pos_to_up;
 }
-
-

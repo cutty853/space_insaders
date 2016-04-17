@@ -213,7 +213,7 @@ void play(SDL_Surface *ecran) {
     TTF_Font *police_texte=NULL;
     int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0;
     SDL_Surface *save_screen = NULL;
-    SDL_Rect /* *nouv_pos_joueur, *nouv_pos_v_ia, *nouv_pos_bouclier_ia, *nouv_pos_vie_ia,*/ *pos_to_up_console;
+    SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[8]; /// 8 = nombre actuel de nouvelles positions.
     _vaisseau v_player, v_ia1;
 
@@ -224,12 +224,10 @@ void play(SDL_Surface *ecran) {
     init_vaisseau(&v_ia1, IA, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
-    //aff_sprite(ecran, VAISSEAU, &v_ia1, save_screen);
         /// joueur:
     init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
     charge_sprite_bouclier(&v_player);
     charge_sprite_vie(&v_player);
-    //aff_sprite(ecran, VAISSEAU, &v_player, save_screen);
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
@@ -248,12 +246,8 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
-//        eff_sprite(ecran, VAISSEAU, &v_ia1, save_screen);
-//        eff_sprite(ecran, BOUCLIER, &v_ia1, save_screen);
-//        eff_sprite(ecran, VIE, &v_ia1, save_screen);
 
         tour_ia(&v_ia1, &v_player, ecran);
-
 
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
 
@@ -297,7 +291,6 @@ void play(SDL_Surface *ecran) {
                         charge_niveau(ecran);
                         v_player.position.x = action.button.x;
                         v_player.position.y = action.button.y;
-                        //pos_to_up_ecran[4] = aff_sprite(ecran, VAISSEAU, &v_player, save_screen);
                         break;
                     default:
                         break;
@@ -321,12 +314,13 @@ void play(SDL_Surface *ecran) {
 
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        pos_to_up_ecran[4] = aff_vie(ecran, &v_ia1);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
         pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
-        pos_to_up_ecran[6] = aff_vaisseau(ecran, &v_ia1, save_screen);
+        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+
         nb_pos_to_up_ecran = 7;
         if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d) || (action.button.button == SDL_BUTTON_LEFT)) {
-        pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
+            pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
             nb_pos_to_up_ecran = 8;
         }
 
@@ -335,8 +329,6 @@ void play(SDL_Surface *ecran) {
         SDL_UpdateRects(ecran, 1, pos_to_up_console);
 
         /// AFFICHAGE:
-//        SDL_UpdateRects(ecran, 5, *nouv_pos); //JE sais pas combien il y a de tableau 4, 5 ou 1 ? Réponse : le 5 doit correspondre au nombre de case dans le tableau
-        // PS : Le dernier parametre doit etre un pointeur! Or nouv_pos est un tableau donc un pointeur! L'étoile est inutile
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
 
     }

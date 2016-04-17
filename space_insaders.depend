@@ -349,7 +349,7 @@
 	"player.h"
 	"constantes.h"
 
-1460755140 source:c:\users\administrateur\documents\space_insaders\jeu.c
+1460914911 source:c:\users\administrateur\documents\space_insaders\jeu.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -362,20 +362,20 @@
 	"player.h"
 	"constantes.h"
 
-1460743922 c:\users\administrateur\documents\space_insaders\structure.h
+1460822678 c:\users\administrateur\documents\space_insaders\structure.h
 	"constantes.h"
 
-1460751948 c:\users\administrateur\documents\space_insaders\utilitaire.h
+1460914297 c:\users\administrateur\documents\space_insaders\utilitaire.h
 
 1460407759 c:\users\administrateur\documents\space_insaders\jeu.h
 
-1460673655 c:\users\administrateur\documents\space_insaders\ia.h
+1460922191 c:\users\administrateur\documents\space_insaders\ia.h
 
 1460401030 c:\users\administrateur\documents\space_insaders\player.h
 
-1460746257 c:\users\administrateur\documents\space_insaders\constantes.h
+1460822678 c:\users\administrateur\documents\space_insaders\constantes.h
 
-1460746420 source:c:\users\administrateur\documents\space_insaders\main.c
+1460822678 source:c:\users\administrateur\documents\space_insaders\main.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -403,7 +403,7 @@
 	"player.h"
 	"constantes.h"
 
-1460752051 source:c:\users\administrateur\documents\space_insaders\utilitaire.c
+1460914994 source:c:\users\administrateur\documents\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
 	<math.h>
@@ -418,10 +418,11 @@
 	"player.h"
 	"constantes.h"
 
-1460743922 source:c:\users\administrateur\documents\space_insaders\ia.c
+1460920696 source:c:\users\administrateur\documents\space_insaders\ia.c
 	<stdlib.h>
 	<stdio.h>
 	<math.h>
+	<time.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
