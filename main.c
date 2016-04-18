@@ -33,7 +33,7 @@ int main ( int argc, char** argv )
         exit(EXIT_FAILURE);
     }
     ctt = fopen("CON", "w");
-    ecran = SDL_SetVideoMode(0, 0, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+    ecran = SDL_SetVideoMode(1366, 768, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
     if (ecran==NULL) {
         fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
         exit(EXIT_FAILURE);

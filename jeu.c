@@ -225,11 +225,12 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0};
+    int continuer=1, temps_actuel=0, temps_precedent=0, etat_console[2]={0}, etat_tir[2]={0};
     SDL_Surface *save_screen=NULL; // La variable save_screen correspondra a l'écran dans son état juste après le chargement du niveau
     _vaisseau v_joueur;
     _explosion explosion;
-    SDL_Rect *pos_to_up_joueur, *pos_to_up_console, *pos_to_up_explosion;
+    SDL_Rect *pos_to_up_joueur, *pos_to_up_console, pos_to_up_explosion[2], pos_to_up_tir[2];
+    _tir tir1;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
     charge_niveau(ecran, &v_joueur);
@@ -241,6 +242,7 @@ void play(SDL_Surface *ecran) {
     v_joueur.vitesse_max=8;
     v_joueur.angle=45;
     v_joueur.etat_rotation=0;
+    v_joueur.arme = TIR_LASER;
     pos_to_up_joueur = malloc(sizeof(SDL_Rect)*2);
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     pos_to_up_joueur = aff_vaisseau(ecran, &v_joueur, save_screen);
@@ -293,6 +295,7 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_KP1:
                         v_joueur.vie = MORT;
+//                        v_joueur.explosion->phase=0;
                         break;
                     default:
                         break;
@@ -320,9 +323,23 @@ void play(SDL_Surface *ecran) {
                         v_joueur.position.y = action.button.y;
                         aff_vaisseau(ecran, &v_joueur, save_screen);
                         break;
+                    case SDL_BUTTON_RIGHT:
+                        charge_tir(&tir1, v_joueur);
+                        etat_tir[0] = 1;
+                        break;
                     default:
                         break;
                 }
+                break;
+            case SDL_MOUSEBUTTONUP:
+                switch (action.button.button) {
+                    case SDL_BUTTON_RIGHT:
+                        etat_tir[1]=1;
+                        break;
+                    default:
+                        break;
+                }
+
                 break;
             default:
                 break;
@@ -351,13 +368,20 @@ void play(SDL_Surface *ecran) {
                 break;
             case MORT:
                 if (explosion.phase < NB_SPRITES_EXPLOSION) {
-                    pos_to_up_explosion = explosion_joueur(ecran, save_screen, &explosion, &v_joueur);
+                    pos_to_up_explosion[0] = eff_vaisseau(ecran, &v_joueur, save_screen);
+                    pos_to_up_explosion[1] = aff_explosion(ecran, &v_joueur);
                     SDL_UpdateRects(ecran, 2, pos_to_up_explosion);
                     explosion.phase++;
                 }
                 break;
             default:
                 break;
+        }
+        if (0) {
+            charge_tir(&tir1, v_joueur);
+            pos_to_up_tir[0] = eff_tir(ecran, &tir1, save_screen);
+            pos_to_up_tir[1] = aff_tir(ecran, &tir1);
+            SDL_UpdateRects(ecran, 2, pos_to_up_tir);
         }
         if (etat_console[0] && etat_console[1]) {
             pos_to_up_console[0] = aff_console(ecran, v_joueur, save_screen, police_texte);
@@ -369,7 +393,6 @@ void play(SDL_Surface *ecran) {
     /// Zone pour les commandes a effectué avant le déchargement de la carte
     free(pos_to_up_console);
     free(pos_to_up_joueur);
-    free(pos_to_up_explosion);
     TTF_CloseFont(police_texte);
     SDL_FreeSurface(v_joueur.sprite);
 }
