@@ -231,6 +231,7 @@ void play(SDL_Surface *ecran) {
     _explosion explosion;
     SDL_Rect *pos_to_up_joueur, *pos_to_up_console, pos_to_up_explosion[2], pos_to_up_tir[2];
     _tir tir1;
+    _explosion boom;
 
     /// Zone pour les commandes a effectué des l'affichage de la carte
     charge_niveau(ecran, &v_joueur);
@@ -248,8 +249,8 @@ void play(SDL_Surface *ecran) {
     pos_to_up_joueur = aff_vaisseau(ecran, &v_joueur, save_screen);
     SDL_Flip(ecran);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
-    explosion.phase=0;
-    charge_sprite_explosion(&explosion);
+    charge_sprite_explosion(&boom);
+    charge_sprite_laser(&tir1, v_joueur);
     //SDL_UpdateRects(ecran, NB_TO_UP_RECT, pos_to_update);
 
     while (continuer) {
@@ -295,7 +296,7 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_KP1:
                         v_joueur.vie = MORT;
-//                        v_joueur.explosion->phase=0;
+                        boom.phase=0;
                         break;
                     default:
                         break;
@@ -369,9 +370,9 @@ void play(SDL_Surface *ecran) {
             case MORT:
                 if (explosion.phase < NB_SPRITES_EXPLOSION) {
                     pos_to_up_explosion[0] = eff_vaisseau(ecran, &v_joueur, save_screen);
-                    pos_to_up_explosion[1] = aff_explosion(ecran, &v_joueur);
+                    pos_to_up_explosion[1] = aff_explosion(ecran, &boom, v_joueur);
                     SDL_UpdateRects(ecran, 2, pos_to_up_explosion);
-                    explosion.phase++;
+                    boom.phase++;
                 }
                 break;
             default:

@@ -75,11 +75,11 @@ SDL_Rect eff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 }
 
 // ça fait vraiment des petites fonctions...
-SDL_Rect aff_explosion (SDL_Surface *ecran, _vaisseau *vaisseau)
+SDL_Rect aff_explosion (SDL_Surface *ecran, _explosion *boom, _vaisseau vaisseau)
 {
-    init_pos(&(vaisseau->explosion->position), vaisseau->position.x, vaisseau->position.y);
-    SDL_BlitSurface(vaisseau->explosion->sprite[vaisseau->explosion->phase], NULL, ecran, &(vaisseau->explosion->position));
-    return vaisseau->position;
+    init_pos(&(boom->position), vaisseau.position.x, vaisseau.position.y);
+    SDL_BlitSurface(boom->sprite[boom->phase], NULL, ecran, &(boom->position));
+    return vaisseau.position;
 }
 
 void decharge_sprite_explosion (_explosion *boom)

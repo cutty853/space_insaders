@@ -1,15 +1,6 @@
-<<<<<<< Updated upstream
-bin/
-obj/
-todo.list
-*.cbp
-*.depend
-*.layout
-=======
 /obj
 /bin
 *.cbp
 *.depend
 *.layout
 todo.list
->>>>>>> Stashed changes
