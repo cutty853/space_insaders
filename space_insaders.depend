@@ -204,9 +204,9 @@
 
 1459186234 source:c:\users\antoine\documents\github\space_insaders\structure.c
 
-1460123322 D
+1460123105 D
 
-1460465662 source:c:\users\antoine\documents\github\space_insaders\main.c
+1460822678 source:c:\users\antoine\documents\github\space_insaders\main.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -219,7 +219,7 @@
 	"player.h"
 	"constantes.h"
 
-1460123322 1f890a4edbbeaddd30bc1a3efac13cee7f8f2
+1460123322 3bc3508792ec85dbd30bb1b2bf046471a4896
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -278,13 +278,27 @@
 	"player.h"
 	"constantes.h"
 
-1460595685 c:\users\antoine\documents\github\space_insaders\structure.h
+1461351903 c:\users\antoine\documents\github\space_insaders\structure.h
+	"constantes.h"
 
-1460595685 c:\users\antoine\documents\github\space_insaders\utilitaire.h
+1461351987 c:\users\antoine\documents\github\space_insaders\utilitaire.h
 
-1460120752 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+1461352001 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
 
-1460595804 source:c:\users\antoine\documents\github\space_insaders\jeu.c
+1461360216 source:c:\users\antoine\documents\github\space_insaders\jeu.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -297,16 +311,19 @@
 	"player.h"
 	"constantes.h"
 
-1460595685 c:\users\antoine\documents\github\space_insaders\jeu.h
+1460407759 c:\users\antoine\documents\github\space_insaders\jeu.h
 
-1460595685 c:\users\antoine\documents\github\space_insaders\constantes.h
+1461351563 c:\users\antoine\documents\github\space_insaders\constantes.h
 
-1460595787 source:c:\users\antoine\documents\github\space_insaders\ia.c
+1460922206 source:c:\users\antoine\documents\github\space_insaders\ia.c
 	<stdlib.h>
 	<stdio.h>
+	<math.h>
+	<time.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
@@ -314,11 +331,11 @@
 	"player.h"
 	"constantes.h"
 
-1460595780 c:\users\antoine\documents\github\space_insaders\ia.h
+1460922191 c:\users\antoine\documents\github\space_insaders\ia.h
 
-1460595685 c:\users\antoine\documents\github\space_insaders\player.h
+1461360401 c:\users\antoine\documents\github\space_insaders\player.h
 
-1460595685 source:c:\users\antoine\documents\github\space_insaders\player.c
+1461352554 source:c:\users\antoine\documents\github\space_insaders\player.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -326,6 +343,91 @@
 	<SDL/SDL_ttf.h>
 	<SDL/SDL_rotozoom.h>
 	<math.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1461353154 source:c:\users\administrateur\documents\space_insaders\jeu.c
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1461351903 c:\users\administrateur\documents\space_insaders\structure.h
+	"constantes.h"
+
+1461351987 c:\users\administrateur\documents\space_insaders\utilitaire.h
+
+1460407759 c:\users\administrateur\documents\space_insaders\jeu.h
+
+1460922191 c:\users\administrateur\documents\space_insaders\ia.h
+
+1461352944 c:\users\administrateur\documents\space_insaders\player.h
+
+1461351563 c:\users\administrateur\documents\space_insaders\constantes.h
+
+1460822678 source:c:\users\administrateur\documents\space_insaders\main.c
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1461352554 source:c:\users\administrateur\documents\space_insaders\player.c
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	<math.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1461352001 source:c:\users\administrateur\documents\space_insaders\utilitaire.c
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+
+1460922206 source:c:\users\administrateur\documents\space_insaders\ia.c
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<time.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
