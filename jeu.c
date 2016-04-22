@@ -223,11 +223,11 @@ void play(SDL_Surface *ecran) {
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
         /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 0.1, 10, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
+    init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8,  HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
         /// joueur:
-    init_vaisseau(&v_player, JOUEUR, 100, 0, 0.1, 10, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
+    init_vaisseau(&v_player, JOUEUR, 100, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
     charge_sprite_bouclier(&v_player);
     charge_sprite_vie(&v_player);
         /// test console
