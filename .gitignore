@@ -1,0 +1,6 @@
+/obj
+/bin
+*.cbp
+*.depend
+*.layout
+todo.list
