@@ -17,31 +17,34 @@
 #endif
 
 void vitesse_joueur(_vaisseau *v_joueur, int sens) {
+    /// Suggestion : ajouté
     if (sens == AVANT) {
         if (v_joueur->vitesse == 0) {
-            v_joueur->vitesse = VITESSE_MIN_JOUEUR;
+            v_joueur->vitesse = VITESSE_MINI_COS;
         } else {
-            if ((v_joueur->vitesse + (v_joueur->acceleration/100.0)) < v_joueur->vitesse_max)
-                v_joueur->vitesse += (v_joueur->acceleration/100.0);
+            if ((v_joueur->vitesse + (v_joueur->acceleration)) < v_joueur->vitesse_max)
+                v_joueur->vitesse += (v_joueur->acceleration);
         }
-        if (v_joueur->vitesse < VITESSE_MIN_JOUEUR && v_joueur->vitesse > -VITESSE_MIN_JOUEUR) {
+        if (v_joueur->vitesse < VITESSE_MINI_COS && v_joueur->vitesse > -VITESSE_MINI_COS) {
             v_joueur->vitesse = 0;
         }
     }
+    // A modifié la vitesse minimum est désormais un champ de la structure vaisseau
     if (sens == ARRIERE) {
         if (v_joueur->vitesse == 0) {
-            v_joueur->vitesse = -VITESSE_MIN_JOUEUR;
+            v_joueur->vitesse = -VITESSE_MINI_COS;
         } else {
-            if ((v_joueur->vitesse - (v_joueur->acceleration/100.0)) > -v_joueur->vitesse_max)
-                v_joueur->vitesse -= (v_joueur->acceleration/100.0);
+            if ((v_joueur->vitesse - v_joueur->acceleration) > v_joueur->vitesse_min)
+                v_joueur->vitesse -= v_joueur->acceleration;
         }
-        if (v_joueur->vitesse < VITESSE_MIN_JOUEUR && v_joueur->vitesse > -VITESSE_MIN_JOUEUR) {
+        if (v_joueur->vitesse < VITESSE_MINI_COS && v_joueur->vitesse > -VITESSE_MINI_COS) {
             v_joueur->vitesse = 0;
         }
     }
 }
 
-void charge_sprite_explosion (_explosion *boom) {
+void charge_sprite_explosion (_explosion *boom)
+{
     SDL_Surface *tmp_boom;
     SDL_Rect case_courante;
     int i;
@@ -65,15 +68,17 @@ void charge_sprite_explosion (_explosion *boom) {
     }
 }
 
-SDL_Rect* explosion_joueur (SDL_Surface *ecran, SDL_Surface *save_screen, _explosion *boom, _vaisseau *v_joueur) {
-    SDL_Rect *pos_to_update;
-
-    pos_to_update = malloc(sizeof(SDL_Rect)*2);
-    init_pos(&(boom->position), v_joueur->position.x, v_joueur->position.y);
-    SDL_BlitSurface(save_screen, &(v_joueur->position), ecran, &(v_joueur->position));
+// ça fait vraiment des petites fonctions...
+SDL_Rect aff_explosion (SDL_Surface *ecran, _explosion *boom, _vaisseau vaisseau)
+{
+    init_pos(&(boom->position), vaisseau.position.x, vaisseau.position.y);
     SDL_BlitSurface(boom->sprite[boom->phase], NULL, ecran, &(boom->position));
-    pos_to_update[0] = v_joueur->position;
-    pos_to_update[1] = boom->position;
+    return vaisseau.position;
+}
 
-    return pos_to_update; // Penser a bien free avant la fin du jeu
+void decharge_sprite_explosion (_explosion *boom)
+{
+    int i;
+    for (i=0;i<NB_SPRITES_EXPLOSION;i++)
+        SDL_FreeSurface(boom->sprite[i]);
 }
