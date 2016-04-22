@@ -16,36 +16,69 @@
     #include "constantes.h"
 #endif
 
-void vitesse_player(_vaisseau *v_player, int sens) {
-    if (sens == AVANT){
-        if (v_player->vitesse < v_player->vitesse_max)
-            v_player->vitesse += v_player->acceleration;
+void vitesse_joueur(_vaisseau *v_joueur, int sens) {
+    /// Suggestion : ajouté
+    if (sens == AVANT) {
+        if (v_joueur->vitesse == 0) {
+            v_joueur->vitesse = VITESSE_MINI_COS;
+        } else {
+            if ((v_joueur->vitesse + (v_joueur->acceleration)) < v_joueur->vitesse_max)
+                v_joueur->vitesse += (v_joueur->acceleration);
+        }
+        if (v_joueur->vitesse < VITESSE_MINI_COS && v_joueur->vitesse > -VITESSE_MINI_COS) {
+            v_joueur->vitesse = 0;
+        }
     }
-    if (sens == ARRIERE){
-        if (v_player->vitesse > v_player->vitesse_min)
-            v_player->vitesse -= v_player->acceleration;
+    // A modifié la vitesse minimum est désormais un champ de la structure vaisseau
+    if (sens == ARRIERE) {
+        if (v_joueur->vitesse == 0) {
+            v_joueur->vitesse = -VITESSE_MINI_COS;
+        } else {
+            if ((v_joueur->vitesse - v_joueur->acceleration) > v_joueur->vitesse_min)
+                v_joueur->vitesse -= v_joueur->acceleration;
+        }
+        if (v_joueur->vitesse < VITESSE_MINI_COS && v_joueur->vitesse > -VITESSE_MINI_COS) {
+            v_joueur->vitesse = 0;
+        }
     }
 }
 
-void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player) {
-    // Calcul des positions
-    v_player->position.x += (v_player->vitesse)*cos(RADIANATION(v_player->angle));
-    v_player->position.y += (v_player->vitesse)*(-sin(RADIANATION(v_player->angle)));
+void charge_sprite_explosion (_explosion *boom)
+{
+    SDL_Surface *tmp_boom;
+    SDL_Rect case_courante;
+    int i;
 
-    // Affichage du joueur
-    charge_niveau(ecran);
-    surface_player = rotozoomSurface(surface_player, v_player->angle, 1.0, 1);
-    /* La rotation prend plus de place en fonction de l'angle, il serais donc judicieux
-    de voir pour effectuer un décalage du joueur en fonction de l'angle, ou bien de lui prévoir une surface plus grande et
-    de tout gérer (coordonnées, etc...) a partir de cette surface qui contiendra au final la surface de l'image.
-    */
-    SDL_BlitSurface(surface_player, NULL, ecran, &(v_player->position));
-    SDL_Flip(ecran);
+    tmp_boom = IMG_Load("images/explosion.png");
+    test_surface(tmp_boom, 150);
+    init_pos (&case_courante, 0, 0);
+    case_courante.w = 65;
+    case_courante.h = 65;
+    for (i=0 ; i<NB_SPRITES_EXPLOSION ; i++) {
+        if ((i%5 == 0) && i!=0) {
+            case_courante.y += 65;
+            case_courante.x = 0;
+        } else {
+            case_courante.x += 65;
+        }
+        boom->sprite[i] = IMG_Load("images/transparent_explosion.png");
+        test_surface(boom->sprite[i], 104+i);
+        SDL_BlitSurface(tmp_boom, &case_courante, boom->sprite[i], NULL);
+        SDL_SetAlpha(boom->sprite[i], SDL_SRCALPHA, 255);
+    }
 }
 
+// ça fait vraiment des petites fonctions...
+SDL_Rect aff_explosion (SDL_Surface *ecran, _explosion *boom, _vaisseau vaisseau)
+{
+    init_pos(&(boom->position), vaisseau.position.x, vaisseau.position.y);
+    SDL_BlitSurface(boom->sprite[boom->phase], NULL, ecran, &(boom->position));
+    return vaisseau.position;
+}
 
-
-
-
-
-
+void decharge_sprite_explosion (_explosion *boom)
+{
+    int i;
+    for (i=0;i<NB_SPRITES_EXPLOSION;i++)
+        SDL_FreeSurface(boom->sprite[i]);
+}

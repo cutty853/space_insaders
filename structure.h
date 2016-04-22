@@ -24,11 +24,16 @@ typedef struct{
     SDL_Rect position;
     _charge charge;
 } _vie;
+typedef struct {
+    SDL_Surface *sprite[NB_SPRITES_EXPLOSION];
+    SDL_Rect position;
+    int phase;
+} _explosion;
 
 typedef struct {
     int poid;
-    int vitesse; // En pixel par seconde
-    int acceleration; // En prixel par seconde*pow(-2)
+    float vitesse; // En pixel par seconde
+    float acceleration; // En prixel par seconde*pow(-2)
     int vitesse_max; // En pixel par seconde
     int vitesse_min;
     _intelligence intelligence;

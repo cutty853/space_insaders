@@ -28,12 +28,16 @@
     #define TAILLE_CONSOLE_X 200
     #define TAILLE_CONSOLE_Y 180
     #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Angle : ", "Position en y : ", "Angle de decalage : ", "Hauteur : "}
-    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%i", (int)vaisseau.angle), \
+    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%lf", vaisseau.vitesse), \
     sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%i", (int)vaisseau.angle_de_decalage), \
     sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}}
     /// PLAYER
-    #define FPS 60
-    #define TAILLE_JOUEUR 50
+    #define TAILLE_JOUEUR 60
+    #define VITESSE_MINI_COS 2
+    #define NB_SPRITES_EXPLOSION 25
+    #define DEGAT_TIR_LASER 30
+    #define DEGAT_RAYON_LASER 200
+    #define DEGAT_OBUS 50
     /// GENERAL
     #define NB_SPRITES_EXPLOSION 25
     #define NB_SPRITES_BOUCLIER 4

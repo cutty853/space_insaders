@@ -54,7 +54,7 @@ void pause() {
     }
 }
 
-void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, int vitesse, int acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
     vaisseau->intelligence = intelligence;
     vaisseau->poid = poid;
     vaisseau->vitesse = vitesse;

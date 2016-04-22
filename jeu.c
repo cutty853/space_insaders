@@ -214,32 +214,36 @@ void play(SDL_Surface *ecran) {
     int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
-    SDL_Rect pos_to_up_ecran[8]; /// 8 = nombre actuel de nouvelles positions.
+    SDL_Rect pos_to_up_ecran[9]; /// 9 = nombre actuel de nouvelles positions.
     _vaisseau v_player, v_ia1;
+    _explosion boom;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
         /// Chargement de la map
     charge_niveau(ecran);
+    charge_sprite_explosion(&boom);
         /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
+    init_vaisseau(&v_ia1, IA, 100, 0, 0.1, 10, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
         /// joueur:
-    init_vaisseau(&v_player, JOUEUR, 100, 0, 2, 10, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
+    init_vaisseau(&v_player, JOUEUR, 100, 0, 0.1, 10, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
     charge_sprite_bouclier(&v_player);
     charge_sprite_vie(&v_player);
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
         ///Affichage de la barre de vie & de la barre du bouclier du joueur:
-//    barre_vie_joueur(ecran, v_player);
-//    barre_bouclier_joueur(ecran, v_player);
+    barre_vie_joueur(ecran, v_player);
+    barre_bouclier_joueur(ecran, v_player);
         /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
 
 
     /// boucle du jeu:
     while (continuer) {
+
+
         /// L'ia joue en première:
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
@@ -264,10 +268,10 @@ void play(SDL_Surface *ecran) {
                         //menu(ecran);
                         break;
                     case SDLK_w:
-                        vitesse_player(&v_player, AVANT);
+                        vitesse_joueur(&v_player, AVANT);
                         break;
                     case SDLK_s:
-                        vitesse_player(&v_player, ARRIERE);
+                        vitesse_joueur(&v_player, ARRIERE);
                         break;
                     case SDLK_a:
                         v_player.angle+= v_player.vitesse_rotation;
@@ -280,6 +284,10 @@ void play(SDL_Surface *ecran) {
                     case SDLK_c:
                         v_player.vitesse=0;
                         //v_player.rotation=0;
+                        break;
+                    case SDLK_KP1:
+                        v_player.vie.charge = VIDE;
+                        boom.phase=0;
                         break;
                     default:
                         break;
@@ -319,13 +327,29 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
 
         nb_pos_to_up_ecran = 7;
-        if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d) || (action.button.button == SDL_BUTTON_LEFT)) {
-            pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
-            nb_pos_to_up_ecran = 8;
+        switch (v_player.vie.charge) {
+            case BAS:
+            case MOYEN:
+            case HAUT:
+                if ((v_player.vitesse !=0) || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d) || (action.button.button == SDL_BUTTON_LEFT)) {
+                    pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
+                    nb_pos_to_up_ecran = 8;
+                }
+                break;
+            case VIDE:
+                if (boom.phase < NB_SPRITES_EXPLOSION) {
+                    pos_to_up_ecran[7] = eff_vaisseau(ecran, &v_player, save_screen);
+                    pos_to_up_ecran[8] = aff_explosion(ecran, &boom, v_player);
+                    boom.phase++;
+                    nb_pos_to_up_ecran = 9;
+                }
+                break;
+            default:
+                break;
         }
 
         // console de test
-        pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
+        pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
         SDL_UpdateRects(ecran, 1, pos_to_up_console);
 
         /// AFFICHAGE:
@@ -333,6 +357,7 @@ void play(SDL_Surface *ecran) {
 
     }
 
+    decharge_sprite_explosion(&boom);
     decharge_sprite_bouclier(&v_ia1);
     decharge_sprite_vie(&v_ia1);
     SDL_FreeSurface(v_ia1.sprite);
