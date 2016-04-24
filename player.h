@@ -1,4 +1,4 @@
-void vitesse_player(_vaisseau *v_joueur, int sens);
+void vitesse_joueur(_vaisseau *v_joueur, int sens);
 void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_player);
 
 void charge_sprite_explosion (_explosion *boom);

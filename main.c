@@ -40,7 +40,7 @@ int main ( int argc, char** argv ){
     action = menu(ecran);
     switch (action) {
         case -1:
-            exit(10000);
+            exit(301);
             break;
         case JOUER:
             play(ecran);

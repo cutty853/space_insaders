@@ -45,15 +45,16 @@ void vitesse_joueur(_vaisseau *v_joueur, int sens) {
 
 void charge_sprite_explosion (_explosion *boom)
 {
+    /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
     SDL_Surface *tmp_boom;
     SDL_Rect case_courante;
     int i;
 
     tmp_boom = IMG_Load("images/explosion.png");
-    test_surface(tmp_boom, 150);
+    test_surface(tmp_boom, 102);
     init_pos (&case_courante, 0, 0);
-    case_courante.w = 65;
-    case_courante.h = 65;
+    case_courante.w = LARGEUR_EXPLOSION;
+    case_courante.h = HAUTEUR_EXPLOSION;
     for (i=0 ; i<NB_SPRITES_EXPLOSION ; i++) {
         if ((i%5 == 0) && i!=0) {
             case_courante.y += 65;
@@ -62,10 +63,12 @@ void charge_sprite_explosion (_explosion *boom)
             case_courante.x += 65;
         }
         boom->sprite[i] = IMG_Load("images/transparent_explosion.png");
-        test_surface(boom->sprite[i], 104+i);
+        test_surface(boom->sprite[i], 103);
         SDL_BlitSurface(tmp_boom, &case_courante, boom->sprite[i], NULL);
+        test_surface(boom->sprite[i], 302+i);
         SDL_SetAlpha(boom->sprite[i], SDL_SRCALPHA, 255);
     }
+    SDL_FreeSurface(tmp_boom);
 }
 
 // ça fait vraiment des petites fonctions...

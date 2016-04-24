@@ -15,7 +15,8 @@
     #include "constantes.h"
 #endif
 
-void cadre(SDL_Surface *ecran, int pos_x, int pos_y) {
+void cadre(SDL_Surface *ecran, int pos_x, int pos_y)
+{
     SDL_Surface *cadre[12]={NULL};
     SDL_Rect pos_cadre;
     int largeur, hauteur, i;
@@ -47,7 +48,8 @@ void cadre(SDL_Surface *ecran, int pos_x, int pos_y) {
         SDL_FreeSurface(cadre[i]);
 }
 
-int menu(SDL_Surface *ecran) {
+int menu(SDL_Surface *ecran)
+{
     /** Fonction servant a afficher un menu et attendant l'action du joueur.
       * La fonction retour JOUER si le joueur clique sur "jouer", SAUVEGARDER si le joueur clique sur "Sauvegarder...",
       * CHARGER si le joueur clique sur "Charger...", QUITTER si le joueur clique sur "Quitter"
@@ -69,7 +71,7 @@ int menu(SDL_Surface *ecran) {
 
     //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'écran (pour l'instant)
     fond = IMG_Load("images/background.jpg");
-    test_surface(fond, 10);
+    test_surface(fond, 100);
     SDL_BlitSurface(fond, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
     SDL_FreeSurface(fond);
@@ -84,8 +86,8 @@ int menu(SDL_Surface *ecran) {
     //Ajouter les textes à cet endroit
         // TITRE
     police_titre = TTF_OpenFont("polices/coalition.ttf", 52);
+    test_police(police_titre, 201);
     titre = TTF_RenderText_Blended(police_titre, "SPACE INSADERS", couleur_titre);
-    test_surface(titre, 11);
     pos_titre.x = CENTRER(ecran->w, titre->w);
     pos_titre.y = LARGE_CADRE_MENU/2;
     SDL_BlitSurface(titre, NULL, ecran, &pos_titre);
@@ -93,6 +95,7 @@ int menu(SDL_Surface *ecran) {
     TTF_CloseFont(police_titre);
         // OPTIONS DU MENU
     police_option = TTF_OpenFont("polices/geo_sans_light.ttf", 26);
+    test_police(police_option, 202);
     for (i=0; i<NB_OPTION_MENU ; i++) {
         option[i] = TTF_RenderText_Blended(police_option, texte_option[i], couleur_option);
         pos_option[i].x += CENTRER(LARGE_CADRE_MENU, option[i]->w);
@@ -147,10 +150,10 @@ void charge_niveau (SDL_Surface *ecran) {
 
     /// Affichage du fond de combat:
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
-    test_surface(fond_combat, 102); /// Verif chargement.
+    test_surface(fond_combat, 101);
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
-    SDL_Flip(ecran);
     SDL_FreeSurface(fond_combat);
+    SDL_Flip(ecran);
 }
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
@@ -211,7 +214,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0;
+    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0};
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[9]; /// 9 = nombre actuel de nouvelles positions.
@@ -233,6 +236,7 @@ void play(SDL_Surface *ecran) {
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
+    test_police(police_texte, 202);
         ///Affichage de la barre de vie & de la barre du bouclier du joueur:
     barre_vie_joueur(ecran, v_player);
     barre_bouclier_joueur(ecran, v_player);
@@ -285,9 +289,31 @@ void play(SDL_Surface *ecran) {
                         v_player.vitesse=0;
                         //v_player.rotation=0;
                         break;
+                    case SDLK_F3:
+                        if (etat_console[1]==0)
+                            etat_console[0]=1;
+                        else if (etat_console[1]==1) {
+                            etat_console[0]=0;
+                        }
+                        break;
                     case SDLK_KP1:
                         v_player.vie.charge = VIDE;
                         boom.phase=0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case SDL_KEYUP:
+                switch (action.key.keysym.sym) {
+                    case SDLK_F3:
+                        if (etat_console[0]==1)
+                            etat_console[1]=1;
+                        else if (etat_console[0]==0) {
+                            etat_console[1]=0;
+                            SDL_BlitSurface(save_screen, &(pos_to_up_console[0]), ecran, &(pos_to_up_console[0]));
+                            SDL_UpdateRects(ecran, 1, pos_to_up_console);
+                        }
                         break;
                     default:
                         break;
@@ -344,13 +370,13 @@ void play(SDL_Surface *ecran) {
                     nb_pos_to_up_ecran = 9;
                 }
                 break;
-            default:
-                break;
         }
 
         // console de test
-        pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
-        SDL_UpdateRects(ecran, 1, pos_to_up_console);
+        if (etat_console[0] && etat_console[1]) {
+            pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
+            SDL_UpdateRects(ecran, 1, pos_to_up_console);
+        }
 
         /// AFFICHAGE:
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);

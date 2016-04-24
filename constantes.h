@@ -34,6 +34,8 @@
     /// PLAYER
     #define TAILLE_JOUEUR 60
     #define VITESSE_MINI_COS 2
+    #define LARGEUR_EXPLOSION 65
+    #define HAUTEUR_EXPLOSION 65
     #define NB_SPRITES_EXPLOSION 25
     #define DEGAT_TIR_LASER 30
     #define DEGAT_RAYON_LASER 200

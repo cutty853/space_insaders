@@ -17,19 +17,30 @@
     #include "constantes.h"
 #endif
 
-void test_surface(SDL_Surface* surface, int ref_err) {
+void test_surface(SDL_Surface* surface, int ref_err)
+{
     if (surface==NULL) {
-        fprintf(stderr, "[ - ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
+        fprintf(stderr, "[ images ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
 
-void init_pos(SDL_Rect* position, int x, int y) {
+void test_police(TTF_Font* police, int ref_err)
+{
+    if (police==NULL) {
+        fprintf(stderr, "[ polices ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void init_pos(SDL_Rect* position, int x, int y)
+{
     position->x=x;
     position->y=y;
 }
 
-void pause() {
+void pause()
+{
     int continuer=1;
     SDL_Event choix;
 
@@ -67,11 +78,14 @@ void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, float vitess
     //vaisseau.capacite=CAPA1;
     vaisseau->vitesse_rotation = v_rotation;
     vaisseau->angle = angle;
-    if(intelligence == IA)
+    if(intelligence == IA) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
-    else
+        test_surface(vaisseau->sprite, 104);
+    }
+    else {
         vaisseau->sprite = IMG_Load("images/joueur_ship.png");
-    test_surface(vaisseau->sprite, 106);
+        test_surface(vaisseau->sprite, 105);
+    }
     vaisseau->position.x = position_x;
     vaisseau->position.y = position_y;
 }
@@ -150,7 +164,8 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
-void charge_sprite_bouclier(_vaisseau *vaisseau){
+void charge_sprite_bouclier(_vaisseau *vaisseau)
+{
     int i;
     vaisseau->bouclier.sprite[0] = IMG_Load("images/ia_bouclier_VIDE.png");
     vaisseau->bouclier.sprite[1] = IMG_Load("images/ia_bouclier_BAS.png");
@@ -159,7 +174,8 @@ void charge_sprite_bouclier(_vaisseau *vaisseau){
     for(i=0;i<NB_SPRITES_BOUCLIER;i++)
         test_surface(vaisseau->bouclier.sprite[i], 100); ///Verif chargement.
 }
-void charge_sprite_vie(_vaisseau *vaisseau){
+void charge_sprite_vie(_vaisseau *vaisseau)
+{
     int i;
     switch (vaisseau->intelligence) {
         case IA:
@@ -169,9 +185,6 @@ void charge_sprite_vie(_vaisseau *vaisseau){
         case JOUEUR:
             for (i=0;i<NB_SPRITES_VIE;i++)
                 vaisseau->vie.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
-            break;
-        default:
-            exit(10000);
             break;
     }
     for (i=0;i<NB_SPRITES_VIE;i++)
@@ -184,12 +197,14 @@ void charge_sprite_vie(_vaisseau *vaisseau){
 }
 
 /// Les deux fonctions suivantes ne sont pas forcément très utiles, mais permettent une sorte de centralisation...
-void decharge_sprite_vie(_vaisseau *vaisseau){
+void decharge_sprite_vie(_vaisseau *vaisseau)
+{
     int i;
     for (i=0;i<NB_SPRITES_VIE;i++)
         SDL_FreeSurface(vaisseau->vie.sprite[i]);
 }
-void decharge_sprite_bouclier(_vaisseau *vaisseau){
+void decharge_sprite_bouclier(_vaisseau *vaisseau)
+{
     int i;
     for (i=0;i<NB_SPRITES_BOUCLIER;i++)
         SDL_FreeSurface(vaisseau->bouclier.sprite[i]);
@@ -198,6 +213,7 @@ void decharge_sprite_bouclier(_vaisseau *vaisseau){
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
     int i, taux, taille, couleur;
     SDL_Surface **rectangle_degrade;
+
     switch (prop_deg.sens) {
         case HORIZONTAL:
             taille = prop_deg.taille_x;
@@ -256,12 +272,9 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
     init_pos(&pos_texte, (int)pos_to_up.x, (int)pos_to_up.y);
     SDL_BlitSurface(save_screen, &pos_to_up, ecran, &pos_texte);
 
-//    sprintf(texte_infosup[1], "%d", (int)vaisseau.angle);
-
     for (i=0; i<NB_STATS_CONSOLE ; i++) {
         strcat(texte_info[i], texte_infosup[i]);
         info[i] = TTF_RenderText_Blended(police_texte, texte_info[i], rouge);
-        test_surface(info[i], 106+i);
         pos_texte.y += 30;
         SDL_BlitSurface(info[i], NULL, ecran, &pos_texte);
         SDL_FreeSurface(info[i]);
