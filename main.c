@@ -20,7 +20,7 @@
 int main ( int argc, char** argv ){
     SDL_Surface *ecran=NULL;
     FILE* ctt = NULL;
-    int action;
+    int action, continuer=1;
 
     freopen( "CON", "w", stdout );
     if (SDL_Init(SDL_INIT_VIDEO) == -1) {
@@ -37,22 +37,26 @@ int main ( int argc, char** argv ){
         fprintf(stderr, "Erreur lors du chargement du mode video %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
-    action = menu(ecran);
-    switch (action) {
-        case -1:
-            exit(301);
-            break;
-        case JOUER:
-            play(ecran);
-            break;
-        case SAUVEGARDER:
-            break;
-        case CHARGER:
-            break;
-        case QUITTER:
-            break;
-        default:
-            break;
+    while (continuer) {
+        action = menu(ecran);
+        switch (action) {
+            case -1:
+                exit(301);
+                break;
+            case JOUER:
+                play(ecran);
+                break;
+            case SAUVEGARDER:
+                progression(ecran);
+                break;
+            case CHARGER:
+                break;
+            case QUITTER:
+                continuer=0;
+                break;
+            default:
+                break;
+        }
     }
 
     TTF_Quit();

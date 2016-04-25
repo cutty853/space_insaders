@@ -391,3 +391,14 @@ void play(SDL_Surface *ecran) {
     decharge_sprite_bouclier(&v_player);
     decharge_sprite_vie(&v_player);
 }
+
+void progression(SDL_Surface *ecran) {
+    SDL_Surface *map;
+
+    map = IMG_Load("images/map_fond_campagne.jpg");
+    test_surface(map, 106);
+    SDL_BlitSurface(map, NULL, ecran, NULL);
+    SDL_Flip(ecran);
+
+    pause();
+}
