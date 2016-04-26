@@ -17,30 +17,26 @@
     #include "constantes.h"
 #endif
 
-void test_surface(SDL_Surface* surface, int ref_err)
-{
+void test_surface(SDL_Surface* surface, int ref_err){
     if (surface==NULL) {
         fprintf(stderr, "[ images ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
 
-void test_police(TTF_Font* police, int ref_err)
-{
+void test_police(TTF_Font* police, int ref_err){
     if (police==NULL) {
         fprintf(stderr, "[ polices ] Erreur n°%d\n Veuillez vous réferer au tableau des erreurs s'il vous plait.\n", ref_err);
         exit(EXIT_FAILURE);
     }
 }
 
-void init_pos(SDL_Rect* position, int x, int y)
-{
+void init_pos(SDL_Rect* position, int x, int y){
     position->x=x;
     position->y=y;
 }
 
-void pause()
-{
+void pause(){
     int continuer=1;
     SDL_Event choix;
 
@@ -164,18 +160,24 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 
-void charge_sprite_bouclier(_vaisseau *vaisseau)
-{
+void charge_sprite_bouclier(_vaisseau *vaisseau){
+    /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
+    SDL_Surface *tmp_boom;
+    SDL_Rect case_courante;
     int i;
-    vaisseau->bouclier.sprite[0] = IMG_Load("images/ia_bouclier_VIDE.png");
-    vaisseau->bouclier.sprite[1] = IMG_Load("images/ia_bouclier_BAS.png");
-    vaisseau->bouclier.sprite[2] = IMG_Load("images/ia_bouclier_MOYEN.png");
-    vaisseau->bouclier.sprite[3] = IMG_Load("images/ia_bouclier_HAUT.png");
-    for(i=0;i<NB_SPRITES_BOUCLIER;i++)
-        test_surface(vaisseau->bouclier.sprite[i], 100); ///Verif chargement.
+
+    tmp_boom = IMG_Load("images/ia_bouclier.jpg");
+    test_surface(tmp_boom, 106);
+    init_pos (&case_courante, 0, 0);
+    case_courante.w = LARGEUR_BOUCLIER;
+    case_courante.h = HAUTEUR_BOUCLIER;
+    for(i=0; i<NB_SPRITES_BOUCLIER; i++){ /// sprite[0] = bouclier vide.
+        vaisseau->bouclier.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, case_courante.w, case_courante.h, 32, 0, 0, 0, 0)
+        SDL_BlitSurface(tmp_boom, &case_courante, vaisseau->bouclier.sprite[i], NULL);
+        case_courante.y += 5;
+    }
 }
-void charge_sprite_vie(_vaisseau *vaisseau)
-{
+void charge_sprite_vie(_vaisseau *vaisseau){
     int i;
     switch (vaisseau->intelligence) {
         case IA:
@@ -197,14 +199,12 @@ void charge_sprite_vie(_vaisseau *vaisseau)
 }
 
 /// Les deux fonctions suivantes ne sont pas forcément très utiles, mais permettent une sorte de centralisation...
-void decharge_sprite_vie(_vaisseau *vaisseau)
-{
+void decharge_sprite_vie(_vaisseau *vaisseau){
     int i;
     for (i=0;i<NB_SPRITES_VIE;i++)
         SDL_FreeSurface(vaisseau->vie.sprite[i]);
 }
-void decharge_sprite_bouclier(_vaisseau *vaisseau)
-{
+void decharge_sprite_bouclier(_vaisseau *vaisseau){
     int i;
     for (i=0;i<NB_SPRITES_BOUCLIER;i++)
         SDL_FreeSurface(vaisseau->bouclier.sprite[i]);

@@ -43,8 +43,7 @@ void vitesse_joueur(_vaisseau *v_joueur, int sens) {
     }
 }
 
-void charge_sprite_explosion (_explosion *boom)
-{
+void charge_sprite_explosion (_explosion *boom){
     /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
     SDL_Surface *tmp_boom;
     SDL_Rect case_courante;
