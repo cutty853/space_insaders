@@ -217,14 +217,16 @@ void play(SDL_Surface *ecran) {
     int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0};
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
-    SDL_Rect pos_to_up_ecran[9]; /// 9 = nombre actuel de nouvelles positions.
+    SDL_Rect pos_to_up_ecran[9], pos_to_up_tir[2]; /// 9 = nombre actuel de nouvelles positions.
     _vaisseau v_player, v_ia1;
     _explosion boom;
+    _tir pew;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
         /// Chargement de la map
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
+    charge_sprite_tir(&pew);
         /// ia:
     init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8,  HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
@@ -242,6 +244,7 @@ void play(SDL_Surface *ecran) {
     barre_bouclier_joueur(ecran, v_player);
         /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
+    init_tir(&pew, v_player);
 
 
     /// boucle du jeu:
@@ -376,6 +379,12 @@ void play(SDL_Surface *ecran) {
         if (etat_console[0] && etat_console[1]) {
             pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
+        }
+
+        if (1) {
+            pos_to_up_tir[0] = eff_tir(ecran, save_screen, &pew);
+            pos_to_up_tir[1] = aff_tir(ecran, &pew);
+            SDL_UpdateRects(ecran, 2, pos_to_up_tir);
         }
 
         /// AFFICHAGE:

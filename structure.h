@@ -29,6 +29,14 @@ typedef struct {
     SDL_Rect position;
     int phase;
 } _explosion;
+typedef struct {
+    SDL_Surface *sprite;
+    SDL_Rect position;
+    _arme type;
+    float vitesse;
+    int angle;
+} _tir;
+
 
 typedef struct {
     int poid;

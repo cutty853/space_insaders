@@ -4,3 +4,8 @@ void aff_player(SDL_Surface *ecran, SDL_Surface *surface_player, _vaisseau *v_pl
 void charge_sprite_explosion (_explosion *boom);
 SDL_Rect aff_explosion (SDL_Surface *ecran, _explosion *boom, _vaisseau vaisseau);
 void decharge_sprite_explosion (_explosion *boom);
+
+void charge_sprite_tir (_tir *pew);
+void init_tir (_tir *pew, _vaisseau vaisseau);
+SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _tir *pew);
+SDL_Rect aff_tir (SDL_Surface *ecran, _tir *pew);
