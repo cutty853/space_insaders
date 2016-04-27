@@ -15,8 +15,7 @@
     #include "constantes.h"
 #endif
 
-void cadre(SDL_Surface *ecran, int pos_x, int pos_y)
-{
+void cadre(SDL_Surface *ecran, int pos_x, int pos_y){
     SDL_Surface *cadre[12]={NULL};
     SDL_Rect pos_cadre;
     int largeur, hauteur, i;
@@ -48,8 +47,7 @@ void cadre(SDL_Surface *ecran, int pos_x, int pos_y)
         SDL_FreeSurface(cadre[i]);
 }
 
-int menu(SDL_Surface *ecran)
-{
+int menu(SDL_Surface *ecran){
     /** Fonction servant a afficher un menu et attendant l'action du joueur.
       * La fonction retour JOUER si le joueur clique sur "jouer", SAUVEGARDER si le joueur clique sur "Sauvegarder...",
       * CHARGER si le joueur clique sur "Charger...", QUITTER si le joueur clique sur "Quitter"
@@ -228,7 +226,7 @@ void play(SDL_Surface *ecran) {
     charge_sprite_explosion(&boom);
     charge_sprite_tir(&pew);
         /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8,  BAS, HAUT, TIR_LASER, 900, 300, 4, 90);
+    init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
         /// joueur:
@@ -248,8 +246,6 @@ void play(SDL_Surface *ecran) {
 
     /// boucle du jeu:
     while (continuer) {
-
-
         /// L'ia joue en première:
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
@@ -257,7 +253,16 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
+        if (etat_tir) {
+            pos_to_up_tir[0] = eff_tir(ecran, save_screen, &pew);
+            pos_to_up_tir[1] = aff_tir(ecran, &pew);
+        }
+
         tour_ia(&v_ia1, &v_player, ecran);
+
+        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
+        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
 
         /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
 
@@ -354,9 +359,7 @@ void play(SDL_Surface *ecran) {
 
 
         /// Zone pour placer les commandes a faire après la pause du jeu
-        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
-        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+
 
         nb_pos_to_up_ecran = 7;
         switch (v_player.vie.charge) {
@@ -384,15 +387,9 @@ void play(SDL_Surface *ecran) {
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
 
-        if (etat_tir) {
-            pos_to_up_tir[0] = eff_tir(ecran, save_screen, &pew);
-            pos_to_up_tir[1] = aff_tir(ecran, &pew);
-            SDL_UpdateRects(ecran, 2, pos_to_up_tir);
-        }
-
         /// AFFICHAGE:
+        SDL_UpdateRects(ecran, 2, pos_to_up_tir); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
-
     }
 
     decharge_sprite_explosion(&boom);
