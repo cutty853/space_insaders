@@ -149,7 +149,6 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
-    //SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     if (vaisseau->etat_rotation == 1) {/// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
@@ -162,18 +161,18 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 
 void charge_sprite_bouclier(_vaisseau *vaisseau){
     /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
-    SDL_Surface *tmp_boom;
+    SDL_Surface *tmp_bouclier;
     SDL_Rect case_courante;
     int i;
 
-    tmp_boom = IMG_Load("images/ia_bouclier.jpg");
-    test_surface(tmp_boom, 106);
+    tmp_bouclier = IMG_Load("images/ia_bouclier.jpg");
+    test_surface(tmp_bouclier, 106);
     init_pos (&case_courante, 0, 0);
     case_courante.w = LARGEUR_BOUCLIER;
     case_courante.h = HAUTEUR_BOUCLIER;
     for(i=0; i<NB_SPRITES_BOUCLIER; i++){ /// sprite[0] = bouclier vide.
-        vaisseau->bouclier.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, case_courante.w, case_courante.h, 32, 0, 0, 0, 0)
-        SDL_BlitSurface(tmp_boom, &case_courante, vaisseau->bouclier.sprite[i], NULL);
+        vaisseau->bouclier.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, case_courante.w, case_courante.h, 32, 0, 0, 0, 0);
+        SDL_BlitSurface(tmp_bouclier, &case_courante, vaisseau->bouclier.sprite[i], NULL);
         case_courante.y += 5;
     }
 }

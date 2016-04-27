@@ -214,7 +214,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0};
+    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0}, etat_tir = 0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[9], pos_to_up_tir[2]; /// 9 = nombre actuel de nouvelles positions.
@@ -244,7 +244,6 @@ void play(SDL_Surface *ecran) {
     barre_bouclier_joueur(ecran, v_player);
         /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
-    init_tir(&pew, v_player);
 
 
     /// boucle du jeu:
@@ -302,6 +301,10 @@ void play(SDL_Surface *ecran) {
                     case SDLK_KP1:
                         v_player.vie.charge = VIDE;
                         boom.phase=0;
+                        break;
+                    case SDLK_SPACE:
+                        etat_tir=1;
+                        init_tir(&pew, v_player);
                         break;
                     default:
                         break;
@@ -381,7 +384,7 @@ void play(SDL_Surface *ecran) {
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
 
-        if (1) {
+        if (etat_tir) {
             pos_to_up_tir[0] = eff_tir(ecran, save_screen, &pew);
             pos_to_up_tir[1] = aff_tir(ecran, &pew);
             SDL_UpdateRects(ecran, 2, pos_to_up_tir);

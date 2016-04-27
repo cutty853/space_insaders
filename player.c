@@ -87,17 +87,16 @@ void decharge_sprite_explosion (_explosion *boom)
 void charge_sprite_tir (_tir *pew)
 {
     pew->sprite = IMG_Load("images/tir_laser.png");
-    pew->vitesse = 3.5;
+    pew->vitesse = 15;
 }
 
 void init_tir (_tir *pew, _vaisseau vaisseau)
 {
-    // Initialisation de tous les parametres du tir
-    init_pos(&(pew->position), vaisseau.position.x+TAILLE_JOUEUR, vaisseau.position.y+(TAILLE_JOUEUR/2.0)-5);
+    /// Initialisation de tous les parametres du tir
+    init_pos(&(pew->position), vaisseau.position.x+(TAILLE_JOUEUR/2.0), vaisseau.position.y+(TAILLE_JOUEUR/2.0));
     pew->type = vaisseau.arme;
     pew->angle = vaisseau.angle;
 }
-
 SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _tir *pew)
 {
     SDL_BlitSurface(save_screen, &(pew->position), ecran, &(pew->position));
@@ -106,17 +105,18 @@ SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _tir *pew)
 
 SDL_Rect aff_tir (SDL_Surface *ecran, _tir *pew)
 {
+    /// tourne le laser en fonction de l'angle du vaisseau:
+    SDL_Surface *tir;
+    tir = rotozoomSurface(pew->sprite, pew->angle-90, 1.0, 1); // CHANGER L'IMAGE DE DEPART - DANS LE MEME SENS DES VAISSEAU.
+
     // Calcul du mouvement
     pew->position.x += pew->vitesse * (-sin(RADIANATION(pew->angle)));
     pew->position.y += pew->vitesse * (-cos(RADIANATION(pew->angle)));
 
-    printf("=====================================\n");
-    printf("            Etats du tir\n");
-    printf("angle : %d\n", pew->angle);
-    printf("=====================================\n");
-
     // Blit de la surface avec ces nouvelles position
-    SDL_BlitSurface(pew->sprite, NULL, ecran, &(pew->position));
+    SDL_BlitSurface(tir, NULL, ecran, &(pew->position));
+
+    SDL_FreeSurface(tir);
     return pew->position;
 }
 
