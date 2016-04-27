@@ -65,7 +65,6 @@ void charge_sprite_explosion (_explosion *boom){
         test_surface(boom->sprite[i], 103);
         SDL_BlitSurface(tmp_boom, &case_courante, boom->sprite[i], NULL);
         test_surface(boom->sprite[i], 302+i);
-        SDL_SetAlpha(boom->sprite[i], SDL_SRCALPHA, 255);
     }
     SDL_FreeSurface(tmp_boom);
 }
@@ -84,3 +83,45 @@ void decharge_sprite_explosion (_explosion *boom)
     for (i=0;i<NB_SPRITES_EXPLOSION;i++)
         SDL_FreeSurface(boom->sprite[i]);
 }
+
+void charge_sprite_tir (_tir *pew)
+{
+    pew->sprite = IMG_Load("images/tir_laser.png");
+    pew->vitesse = 3.5;
+}
+
+void init_tir (_tir *pew, _vaisseau vaisseau)
+{
+    // Initialisation de tous les parametres du tir
+    init_pos(&(pew->position), vaisseau.position.x+TAILLE_JOUEUR, vaisseau.position.y+(TAILLE_JOUEUR/2.0)-5);
+    pew->type = vaisseau.arme;
+    pew->angle = vaisseau.angle;
+}
+
+SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _tir *pew)
+{
+    SDL_BlitSurface(save_screen, &(pew->position), ecran, &(pew->position));
+    return pew->position;
+}
+
+SDL_Rect aff_tir (SDL_Surface *ecran, _tir *pew)
+{
+    // Calcul du mouvement
+    pew->position.x += pew->vitesse * (-sin(RADIANATION(pew->angle)));
+    pew->position.y += pew->vitesse * (-cos(RADIANATION(pew->angle)));
+
+    printf("=====================================\n");
+    printf("            Etats du tir\n");
+    printf("angle : %d\n", pew->angle);
+    printf("=====================================\n");
+
+    // Blit de la surface avec ces nouvelles position
+    SDL_BlitSurface(pew->sprite, NULL, ecran, &(pew->position));
+    return pew->position;
+}
+
+
+
+
+
+
