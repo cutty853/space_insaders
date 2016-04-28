@@ -160,8 +160,7 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 }
 
 void charge_sprite_bouclier(_vaisseau *vaisseau){
-    /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
-    SDL_Surface *tmp_bouclier;
+    SDL_Surface *tmp_bouclier = NULL;
     SDL_Rect case_courante;
     int i;
 
@@ -175,6 +174,7 @@ void charge_sprite_bouclier(_vaisseau *vaisseau){
         SDL_BlitSurface(tmp_bouclier, &case_courante, vaisseau->bouclier.sprite[i], NULL);
         case_courante.y += 5;
     }
+    SDL_FreeSurface(tmp_bouclier);
 }
 void charge_sprite_vie(_vaisseau *vaisseau){
     int i;

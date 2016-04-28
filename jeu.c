@@ -226,7 +226,7 @@ void play(SDL_Surface *ecran) {
     charge_sprite_explosion(&boom);
     charge_sprite_tir(&pew);
         /// ia:
-    init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8, HAUT, HAUT, TIR_LASER, 900, 300, 4, 90);
+    init_vaisseau(&v_ia1, IA, 100, 0, 0.1,8, HAUT, HAUT, TIR_LASER, 1000, 300, 4, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
         /// joueur:
@@ -243,10 +243,8 @@ void play(SDL_Surface *ecran) {
         /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
 
-
     /// boucle du jeu:
     while (continuer) {
-        /// L'ia joue en première:
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
@@ -258,13 +256,12 @@ void play(SDL_Surface *ecran) {
             pos_to_up_tir[1] = aff_tir(ecran, &pew);
         }
 
-        tour_ia(&v_ia1, &v_player, ecran);
-
         pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
         pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
         pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
 
-        /// ZONE POUR PLACER LES COMMANDES A FAIRE AVANT L'ENREGISTREMENT DE L'ACTION DU JOUEUR
+        /// L'ia joue en première:
+        tour_ia(&v_ia1, &v_player, ecran);
 
         /// Test de l'action du joueur
         SDL_PollEvent(&action);
@@ -346,8 +343,6 @@ void play(SDL_Surface *ecran) {
 
         }
 
-        /// Zone pour placer les commandes a faires après les actions du joueur, mais avant la pause du jeu
-
 
         /// Gestion du temps pour éviter la surexploitation du CPU
         temps_actuel=SDL_GetTicks();
@@ -381,7 +376,7 @@ void play(SDL_Surface *ecran) {
                 break;
         }
 
-        // console de test
+        /// console de test
         if (etat_console[0] && etat_console[1]) {
             pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
