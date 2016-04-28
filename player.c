@@ -66,7 +66,6 @@ void charge_sprite_explosion (_explosion *boom)
         test_surface(boom->sprite[i], 103);
         SDL_BlitSurface(tmp_boom, &case_courante, boom->sprite[i], NULL);
         test_surface(boom->sprite[i], 302+i);
-        SDL_SetAlpha(boom->sprite[i], SDL_SRCALPHA, 255);
     }
     SDL_FreeSurface(tmp_boom);
 }

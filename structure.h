@@ -13,6 +13,7 @@ typedef enum{JOUEUR, IA} _intelligence;
 typedef enum {VIDE, BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 //typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
+typedef enum {ENFER, VERT, BLEU, JAUNE, ROSE} _pnature;
 
 typedef struct{
     SDL_Surface *sprite[NB_SPRITES_BOUCLIER];
@@ -29,6 +30,14 @@ typedef struct {
     SDL_Rect position;
     int phase;
 } _explosion;
+
+// Structure de map progression
+typedef struct {
+    SDL_Surface *sprite;
+    SDL_Rect position;
+    _pnature type;
+    int numero;
+} _planete;
 
 typedef struct {
     int poid;

@@ -40,6 +40,8 @@
     #define DEGAT_TIR_LASER 30
     #define DEGAT_RAYON_LASER 200
     #define DEGAT_OBUS 50
+    /// MAP PROGRESSION
+    #define NB_PLANETES 9
     /// GENERAL
     #define NB_SPRITES_EXPLOSION 25
     #define NB_SPRITES_BOUCLIER 4

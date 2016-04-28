@@ -206,7 +206,7 @@
 
 1460123105 D
 
-1461579619 source:c:\users\antoine\documents\github\space_insaders\main.c
+1461670627 source:c:\users\antoine\documents\github\space_insaders\main.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
@@ -278,12 +278,12 @@
 	"player.h"
 	"constantes.h"
 
-1461351903 c:\users\antoine\documents\github\space_insaders\structure.h
+1461707083 c:\users\antoine\documents\github\space_insaders\structure.h
 	"constantes.h"
 
 1461517286 c:\users\antoine\documents\github\space_insaders\utilitaire.h
 
-1461522251 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+1461587334 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
 	<math.h>
@@ -298,12 +298,13 @@
 	"player.h"
 	"constantes.h"
 
-1461579581 source:c:\users\antoine\documents\github\space_insaders\jeu.c
+1461670821 source:c:\users\antoine\documents\github\space_insaders\jeu.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
@@ -313,7 +314,7 @@
 
 1461518878 c:\users\antoine\documents\github\space_insaders\jeu.h
 
-1461517568 c:\users\antoine\documents\github\space_insaders\constantes.h
+1461706585 c:\users\antoine\documents\github\space_insaders\constantes.h
 
 1460922206 source:c:\users\antoine\documents\github\space_insaders\ia.c
 	<stdlib.h>
@@ -333,9 +334,9 @@
 
 1460922191 c:\users\antoine\documents\github\space_insaders\ia.h
 
-1461517343 c:\users\antoine\documents\github\space_insaders\player.h
+1461670627 c:\users\antoine\documents\github\space_insaders\player.h
 
-1461518902 source:c:\users\antoine\documents\github\space_insaders\player.c
+1461708125 source:c:\users\antoine\documents\github\space_insaders\player.c
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>

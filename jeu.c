@@ -5,6 +5,7 @@
     #include <SDL/SDL.h>
     #include <SDL/SDL_image.h>
     #include <SDL/SDL_ttf.h>
+    #include <SDL/SDL_rotozoom.h>
     #include "structure.h"
     #include "utilitaire.h"
     #include "jeu.h"
@@ -392,13 +393,56 @@ void play(SDL_Surface *ecran) {
     decharge_sprite_vie(&v_player);
 }
 
+void charge_sprite_systeme (_planete **systeme, int nb_planetes)
+{
+    SDL_Surface *tmp_planetes = NULL;
+    SDL_Rect case_courante;
+    int i;
+
+    tmp_planetes = IMG_Load("images/planetes2.png");
+    //tmp_planetes = rotozoomSurface(tmp_planetes, 0, 0.25, 1);
+    SDL_SetAlpha(tmp_planetes, 0, 0);
+    init_pos(&case_courante, 0, 0);
+    case_courante.w = 75;
+    case_courante.h = 75;
+    test_surface(tmp_planetes, 110); /// Modifier le code d'erreur pour concorder avec le tableau d'erreur
+    for (i=0 ; i<nb_planetes ; i++) {
+        // Décalage de la lecture de l'image
+        if ((i%3==0) && (i!=0)) {
+            case_courante.x = 0;
+            case_courante.y += 75;
+        } else {
+            case_courante.x =+ 75;
+        }
+        // Collage de chaque planetes dans sa case
+        systeme[i]->sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 75, 75, 32, 0, 0, 0, 0);
+        SDL_BlitSurface(tmp_planetes, &case_courante, (systeme[i])->sprite, NULL);
+    }
+}
+
+void init_planete(_planete *planete, char *src_sprite, char *etat_planete)
+{
+}
+
 void progression(SDL_Surface *ecran) {
     SDL_Surface *map;
+    float zoom;
+    _planete *systeme;
 
+    systeme = malloc(sizeof(_planete));
+    // Affichage de la map de fond de campagne en fonction de l'écran du joueur
     map = IMG_Load("images/map_fond_campagne.jpg");
+    zoom = (ecran->h*1.0)/(map->h*1.0);
+    map = rotozoomSurface(map, 0, zoom, 1);
     test_surface(map, 106);
     SDL_BlitSurface(map, NULL, ecran, NULL);
     SDL_Flip(ecran);
 
+    // Placement et établissement des entités : Planètes
+    charge_sprite_systeme(&systeme, 1);
+    SDL_BlitSurface(systeme[0].sprite, NULL, ecran, NULL);
+    SDL_Flip(ecran);
+
+    // Pause permettant les tests.
     pause();
 }
