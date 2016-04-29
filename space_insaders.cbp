@@ -44,21 +44,29 @@
 			<Add directory="C:/Program Files (x86)/CodeBlocks/SDL/lib" />
 		</Linker>
 		<Unit filename="constantes.h" />
-		<Unit filename="ia.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="ia.h" />
-		<Unit filename="jeu.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="jeu.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="player.c">
+		<Unit filename="mode_campagne.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="player.h" />
+		<Unit filename="mode_campagne.h" />
+		<Unit filename="mode_combat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mode_combat.h" />
+		<Unit filename="moteur_affichage.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="moteur_affichage.h" />
+		<Unit filename="moteur_ia.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="moteur_ia.h" />
+		<Unit filename="moteur_joueur.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="moteur_joueur.h" />
 		<Unit filename="structure.h" />
 		<Unit filename="utilitaire.c">
 			<Option compilerVar="CC" />
