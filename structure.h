@@ -1,4 +1,9 @@
+#ifndef DEF_INCLUDE7
+#define DEF_INCLUDE7
+
 #include "constantes.h"
+
+#endif // DEF_INCLUDE7
 
 typedef enum{HORIZONTAL, VERTICAL} _sens;
 
@@ -30,6 +35,14 @@ typedef struct {
     SDL_Rect position;
     int phase;
 } _explosion;
+typedef struct {
+    SDL_Surface *sprite;
+    SDL_Rect position;
+    _arme type;
+    float vitesse;
+    int angle;
+} _tir;
+
 
 // Structure de map progression
 typedef struct {
