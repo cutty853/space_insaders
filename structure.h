@@ -1,9 +1,9 @@
-#ifndef DEF_INCLUDE
-#define DEF_INCLUDE
+#ifndef DEF_INCLUDE7
+#define DEF_INCLUDE7
 
-    #include "constantes.h"
+#include "constantes.h"
 
-#endif // DEF_INCLUDE
+#endif // DEF_INCLUDE7
 
 typedef enum{HORIZONTAL, VERTICAL} _sens;
 

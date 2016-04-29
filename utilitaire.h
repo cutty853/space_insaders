@@ -1,9 +1,3 @@
-#ifndef DEF_INCLUDE5
-#define DEF_INCLUDE5
-
-#include "structure.h"
-
-#endif // DEF_INCLUDE
 
 void test_surface(SDL_Surface* surface, int ref_err);
 void test_police(TTF_Font* police, int ref_err);

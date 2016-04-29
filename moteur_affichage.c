@@ -10,14 +10,15 @@
     #include <SDL/SDL_ttf.h>
     #include <SDL/SDL_rotozoom.h>
 
+    #include "constantes.h"
+    #include "structure.h"
+
+    #include "moteur_affichage.h"
     #include "utilitaire.h"
     #include "mode_combat.h"
     #include "mode_campagne.h"
     #include "moteur_ia.h"
     #include "moteur_joueur.h"
-
-    #include "structure.h"
-    #include "constantes.h"
 #endif
 
 
