@@ -41,6 +41,7 @@ typedef struct{
     _arme type;
     float vitesse;
     int angle;
+    int etat;
 } _tir;
 
 
@@ -55,6 +56,7 @@ typedef struct {
     _bouclier bouclier;
     _vie vie;
     _arme arme;
+    _tir tir;
     int vitesse_rotation;
     int angle;
     int etat_rotation;
@@ -64,4 +66,5 @@ typedef struct {
 
 
     int angle_de_decalage; // TEST
+
 } _vaisseau;

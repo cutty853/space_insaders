@@ -21,44 +21,37 @@
     #include "moteur_affichage.h"
 #endif
 
-_comportement ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le joueur à partir d'une certaine distance si non se balade aléatoirement.
-    int distance_detection_horizontale = 250; /// En pixels.
-    int distance_detection_verticale = 250; /// En pixels.
+_comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le joueur à partir d'une certaine distance si non se balade aléatoirement.
+    int distance_detection_horizontale = 300; /// En pixels.
+    int distance_detection_verticale = 300; /// En pixels.
     if((v_ia->position.x - distance_detection_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_detection_horizontale)){
-        if((v_ia->position.y - distance_detection_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_detection_verticale)){
+        if((v_ia->position.y - distance_detection_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_detection_verticale))
             return ATTAQUE; /// Le joueur est dans le carré de detection.
-        }
-    }
-    else{/// Le vaisseau "cherche": avance en permanence et tourne de manière aléatoire.
-        int action = 0, direction = 0;
-        action = aleatoire(1, 5);
-        if(action >= 4){ /// permet de ne pas trop le faire tourner souvent.
-            direction = aleatoire(1, 20); /// random entre 1 et 40. Permet qu'il ne change pas trop souvent de sens de rotation.
-            if(direction <= 10)
-                mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
-            else
-                mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
-        }else{/// il avance mes pas trop vite car il ne fait que "chercher".
-            if(v_ia->vitesse <= (v_ia->vitesse_max/4))
-                mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
-            else
-                mouvement_ia (RECUL, DROIT, v_ia, v_joueur);
-        }
     }
     return CHERCHE;
 }
 
-_comportement ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){
-    int nouv_pos_relative = 0, sens_de_rotation = 0;
-    int tourne = 0, accelere = 0, ralenti = 0;
+void ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "cherche": il avance en permanence et tourne de manière aléatoire.
+    int action = 0, direction = 0;
+    action = aleatoire(1, 5);
+    if(action >= 4){ /// permet de ne pas trop le faire tourner souvent.
+        direction = aleatoire(1, 20); /// random entre 1 et 40. Permet qu'il ne change pas trop souvent de sens de rotation.
+        if(direction <= 10)
+            mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
+        else
+            mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
+    }else{/// il avance mes pas trop vite car il ne fait que "chercher".
+        if(v_ia->vitesse <= (v_ia->vitesse_max/4))
+            mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
+        else
+            mouvement_ia (RECUL, DROIT, v_ia, v_joueur);
+    }
+}
+void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque": il suit le joueur et tir dès qu'il n'a plus à tourner.
+    int pos_relative = 0, sens_de_rotation = 0;
 
-    if(v_ia->angle >= 360) /// un tour complet a été fait.
-        v_ia->angle -= 360;
-    else if(v_ia->angle < 0)
-        v_ia->angle += 359;
-
-    nouv_pos_relative = compare_position(v_ia, v_joueur);
-    switch (nouv_pos_relative){
+    pos_relative = compare_position(v_ia, v_joueur);
+    switch (pos_relative){
         case BAS_DROITE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
             v_ia->angle_de_decalage += 0; /// décalage de l'arctan.
@@ -77,45 +70,46 @@ _comportement ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){
             break;
     }
 
-    if((v_ia->angle+2) < v_ia->angle_de_decalage || (v_ia->angle-2) > v_ia->angle_de_decalage){ /// +2 et -2 = imprecision, OBLIGATOIRE dans le cas où v_ratation != 1.
-        tourne ++;
-        accelere --;
-        ralenti --;
-    }
-    if(v_ia->vitesse < v_joueur->vitesse){
-        accelere ++;
-        ralenti --;
-    }
-    if(v_ia->vitesse > v_joueur->vitesse){
-        ralenti ++;
-        accelere --;
-    }
-
-    int max = trouve_max(tourne, accelere, ralenti);/// Trouve la plus haute valeur (importance) de mouvement.
-    if(max == TOURNE){
-        sens_de_rotation = choix_sens_de_rotation(v_ia, nouv_pos_relative);
-        mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
-    }else if(max == AVANCE){
+    if(v_ia->vitesse <= v_joueur->vitesse){/// atteint sa vitesse et essaye de la dépasser.
         mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-        tir_ia(v_ia);
-    }else if(max == RECUL){
+    }else{ /// a trop dépaasé sa vitsse
         mouvement_ia(RECUL, DROIT, v_ia, v_joueur);
-        tir_ia(v_ia);
-    }else{
-        mouvement_ia(RIEN, DROIT, v_ia, v_joueur);
     }
-    return(ATTAQUE);
+    if(v_ia->angle != v_ia->angle_de_decalage){
+        sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
+        mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
+    }else{
+        if(v_ia->tir.etat != 1){
+            tir_ia(v_ia);
+        }
+    }
+}
+void ia_fuit(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "fuit": il va se caher derrière les obstacles de la carte.
+    exit(00000); // Pas encore fait, il faudrait déjà qu'elle est un quelque part où fuire (obstacle).
 }
 
 void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
+    if(v_ia->angle >= 360) /// un tour complet a été fait.
+        v_ia->angle -= 360;
+    else if(v_ia->angle < 0)
+        v_ia->angle += 359;
+
     switch(v_ia->comportement){
         case CHERCHE:
-            v_ia->comportement = ia_cherche(v_ia, v_joueur);
+            ia_cherche(v_ia, v_joueur);
+            v_ia->comportement = recherche_ia(v_ia, v_joueur);
+            if(v_ia->comportement != CHERCHE){/// l'ia a trouvé et choisi de d'engager le combat ou non.
+                if(v_ia->vie.charge == BAS && v_ia->bouclier.charge == VIDE)
+                    v_ia->comportement = FUIT;
+                else
+                    v_ia->comportement = ATTAQUE;
+            }
             break;
         case ATTAQUE:
-            v_ia->comportement = ia_attaque(v_ia, v_joueur);
+            ia_attaque(v_ia, v_joueur);
             break;
         case FUIT:
+            ia_fuit(v_ia, v_joueur);
             break;
         default:
             exit(666);
@@ -145,39 +139,11 @@ int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vais
     else
         return 666;
 }
-int choix_sens_de_rotation(_vaisseau *v_ia, int nouv_pos_relative){ /// Choix du sens de rotation: positif = sens trigo.
+int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens de rotation: positif = sens trigo.
     if(v_ia->angle < v_ia->angle_de_decalage)
         return POSITIF;
     else
         return NEGATIF;
-}
-int trouve_max(int tourne, int accelere, int ralenti){
-    if(tourne > accelere && tourne > ralenti)
-        return TOURNE;
-    else if(accelere > tourne && accelere > ralenti)
-        return AVANCE;
-    else if(ralenti > tourne && ralenti > accelere)
-        return RECUL;
-    else if(tourne == accelere || tourne == ralenti){
-        srand(time(NULL)); /// initialisation de rand
-        int direction = (rand()%2)+1; /// random entre 1 et 2.
-        switch (direction){
-            case 1:
-                return TOURNE;
-                break;
-            case 2:
-                if(tourne == accelere)
-                    return AVANCE;
-                else
-                    return RECUL;
-                break;
-            default:
-                exit(666);
-                break;
-        }
-    }
-    else
-        return RIEN;
 }
 
 void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
@@ -192,8 +158,6 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
             break;
         case TOURNE:
             v_ia->etat_rotation = 1;
-            if (v_ia->vitesse > (v_ia->vitesse_max/2)) /// utilié 0, ia plus dur à contourner
-                v_ia->vitesse -= v_ia->acceleration;
             if(sens == POSITIF){
                 if(v_ia->angle <= v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
                     v_ia->angle = v_ia->angle_de_decalage;
@@ -214,22 +178,6 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
 }
 
 void tir_ia(_vaisseau *v_ia){
-    // Comment on fait ? est ce que on fairait pas 3 fonctions de tir communes ia/joueur pour les 3 modes de tir différend ?
-    // Si oui, l'orientation du tir se calcul dns chacune des fonctions ou on en fait une autre commune ?
-    // Moi, j'imagine (faudra y réfléchir plus profondemment) le truc comme ça:
-
-    switch (v_ia->arme){// les fonctions calcul l'orientation elles mêmes:
-        case TIR_LASER:
-            // appelle de la fonction commune de tir en mode tir_laser.
-            break;
-        case OBUS:
-            // appelle de la fonction communne de tir en mode obus.
-            break;
-        case RAYON_LASER:
-            // appelle de la fonction commune de tir en mode rayon_laser.
-            break;
-        default:
-            exit(666); /// le chiffre du mal pour une erreur impossible, ça te va ? x)
-            break;
-    }
+    v_ia->tir.etat = 1;
+    init_tir (v_ia);
 }

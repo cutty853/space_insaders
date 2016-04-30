@@ -25,27 +25,27 @@
 void play(SDL_Surface *ecran) {
     SDL_Event action;
     TTF_Font *police_texte=NULL;
-    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0}, etat_tir = 0;
+    int continuer=1, temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_console[2]={0}/*, etat_tir = 0*/;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
-    SDL_Rect pos_to_up_ecran[9], pos_to_up_tir[2]; /// 9 = nombre actuel de nouvelles positions.
+    SDL_Rect pos_to_up_ecran[9], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2]; /// 9 = nombre actuel de nouvelles positions.
     _vaisseau v_player, v_ia1;
     _explosion boom;
-    _tir pew;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
         /// Chargement de la map
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
-    charge_sprite_tir(&pew);
         /// ia:
-    init_vaisseau(&v_ia1, IA, CHERCHE, 100, 0, 0.1,8, HAUT, HAUT, TIR_LASER, 1000, 300, 4, 90);
+    init_vaisseau(&v_ia1, IA, CHERCHE, 100, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 1000, 300, 3, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
+    charge_sprite_tir(&v_ia1);
         /// joueur:
-    init_vaisseau(&v_player, JOUEUR, INDEPENDENT, 100, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 100, 300, 4, 270);
+    init_vaisseau(&v_player, JOUEUR, INDEPENDENT, 100, 0, 0.1, 8, HAUT, HAUT, OBUS, 100, 300, 3, 270);
     charge_sprite_bouclier(&v_player);
     charge_sprite_vie(&v_player);
+    charge_sprite_tir(&v_player);
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
@@ -57,16 +57,34 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
 
     /// boucle du jeu:
+    int temps_passe = 0;//TEST création d'une valeur qui compte le nbr de tour pour avoir un équivalent du temps "passé"
     while (continuer) {
+        temps_passe ++;//TEST création d'une valeur qui compte le nbr de tour pour avoir un équivalent du temps "passé"
+        if(temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
+            v_player.tir.etat = 0;
+            v_ia1.tir.etat = 0;
+
+            decharge_sprite_tir(&v_player);
+            decharge_sprite_tir(&v_ia1);
+
+            charge_sprite_tir(&v_player);
+            charge_sprite_tir(&v_ia1);
+        } // apporte une erreur: le laser s'arrête dès que on repasse dans cette condition, ce qui est norml vu le code. (peut peut être être (lol) utilisé comme une "portée max" du lasez ?)
+
+
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
-        if (etat_tir) {
-            pos_to_up_tir[0] = eff_tir(ecran, save_screen, &pew);
-            pos_to_up_tir[1] = aff_tir(ecran, &pew);
+        if (v_ia1.tir.etat == 1) {
+            pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
+            pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
+        }
+        if (v_player.tir.etat == 1) {
+            pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
+            pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
         }
 
         pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
@@ -104,7 +122,12 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_c:
                         v_player.vitesse=0;
-                        //v_player.rotation=0;
+                        break;
+                    case SDLK_SPACE:
+                        if(v_player.tir.etat != 1){
+                            v_player.tir.etat = 1;
+                            init_tir(&v_player);
+                        }
                         break;
                     case SDLK_F3:
                         if (etat_console[1]==0)
@@ -116,10 +139,6 @@ void play(SDL_Surface *ecran) {
                     case SDLK_KP1:
                         v_player.vie.charge = VIDE;
                         boom.phase=0;
-                        break;
-                    case SDLK_SPACE:
-                        etat_tir=1;
-                        init_tir(&pew, v_player);
                         break;
                     default:
                         break;
@@ -196,15 +215,18 @@ void play(SDL_Surface *ecran) {
         }
 
         /// AFFICHAGE:
-        SDL_UpdateRects(ecran, 2, pos_to_up_tir); // Pas optimisé, affichage permanant même quand pas de tir
+        SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
+        SDL_UpdateRects(ecran, 2, pos_to_up_tir_joueur); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
     }
 
     decharge_sprite_explosion(&boom);
     decharge_sprite_bouclier(&v_ia1);
     decharge_sprite_vie(&v_ia1);
+    decharge_sprite_tir(&v_ia1);
     SDL_FreeSurface(v_ia1.sprite);
     SDL_FreeSurface(v_player.sprite);
     decharge_sprite_bouclier(&v_player);
     decharge_sprite_vie(&v_player);
+    decharge_sprite_tir(&v_player);
 }

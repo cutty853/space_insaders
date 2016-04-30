@@ -173,9 +173,9 @@ SDL_Rect eff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     SDL_BlitSurface(save_screen, &(vaisseau->position), ecran, &(vaisseau->position));
     return vaisseau->position;
 }
-SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _tir *pew){
-    SDL_BlitSurface(save_screen, &(pew->position), ecran, &(pew->position));
-    return pew->position;
+SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _vaisseau *vaisseau){
+    SDL_BlitSurface(save_screen, &(vaisseau->tir.position), ecran, &(vaisseau->tir.position));
+    return vaisseau->tir.position;
 }
 
 SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
@@ -237,20 +237,14 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     SDL_FreeSurface(tmp_rotation);
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
-SDL_Rect aff_tir (SDL_Surface *ecran, _tir *pew){
- /// tourne le laser en fonction de l'angle du vaisseau:
-    SDL_Surface *tir;
-    tir = rotozoomSurface(pew->sprite, pew->angle-90, 1.0, 1); // CHANGER L'IMAGE DE DEPART - DANS LE MEME SENS DES VAISSEAU.
+SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
+    /// Calcul du mouvement:
+    vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
+    vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
+    /// Blit de la surface avec ces nouvelles positions:
+    SDL_BlitSurface(vaisseau->tir.sprite, NULL, ecran, &(vaisseau->tir.position));
 
-    // Calcul du mouvement
-    pew->position.x += pew->vitesse * (-sin(RADIANATION(pew->angle)));
-    pew->position.y += pew->vitesse * (-cos(RADIANATION(pew->angle)));
-
-    // Blit de la surface avec ces nouvelles position
-    SDL_BlitSurface(tir, NULL, ecran, &(pew->position));
-
-    SDL_FreeSurface(tir);
-    return pew->position;
+    return vaisseau->tir.position;
 }
 SDL_Rect aff_explosion (SDL_Surface *ecran, _explosion *boom, _vaisseau vaisseau){
     init_pos(&(boom->position), vaisseau.position.x, vaisseau.position.y);
@@ -295,9 +289,23 @@ void charge_sprite_vie(_vaisseau *vaisseau){
     SDL_FillRect(vaisseau->vie.sprite[2], NULL, SDL_MapRGB((vaisseau->vie.sprite[1])->format, 255, 165, 0)); ///Orange
     SDL_FillRect(vaisseau->vie.sprite[3], NULL, SDL_MapRGB((vaisseau->vie.sprite[2])->format, 0, 255, 0)); ///Bleu
 }
-void charge_sprite_tir (_tir *pew){
-    pew->sprite = IMG_Load("images/tir_laser.png");
-    pew->vitesse = 15;
+void charge_sprite_tir (_vaisseau *vaisseau){
+    switch(vaisseau->arme){
+        case TIR_LASER:
+            vaisseau->tir.sprite = IMG_Load("images/tir_laser.png");
+            vaisseau->tir.vitesse = 20;
+            break;
+        case OBUS:
+            vaisseau->tir.sprite = IMG_Load("images/obus.png");
+            vaisseau->tir.vitesse = 15;
+            break;
+        case RAYON_LASER:
+            vaisseau->tir.sprite = IMG_Load("images/rayon_laser.png");
+            vaisseau->tir.vitesse = 0; // Je sais pas combien mettre car on n'a pas vraiment besoin de vitesse pour un gros trait, tout dépend de comment on fait l'affichage de se type de tir.
+            break;
+        default:
+            break;
+    }
 }
 void charge_sprite_explosion (_explosion *boom){
 /// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
@@ -340,6 +348,9 @@ void decharge_sprite_explosion (_explosion *boom){
     int i;
     for (i=0;i<NB_SPRITES_EXPLOSION;i++)
         SDL_FreeSurface(boom->sprite[i]);
+}
+void decharge_sprite_tir (_vaisseau *vaisseau){
+    SDL_FreeSurface(vaisseau->tir.sprite);
 }
 
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade) {
@@ -414,7 +425,6 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
 
     return pos_to_up;
 }
-
 
 void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Surface *barre_vie=NULL;

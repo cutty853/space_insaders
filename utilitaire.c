@@ -64,7 +64,7 @@ int aleatoire(int mini, int maxi){
     return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
 }
 
-void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, _arme arme, int position_x, int position_y, int v_rotation, int angle){
     vaisseau->intelligence = intelligence;
     vaisseau->comportement = comportement;
     vaisseau->poid = poid;
@@ -75,6 +75,7 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
     vaisseau->bouclier.charge = bouclier;
     vaisseau->vie.charge = vie;
     vaisseau->arme = arme;
+    vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
     //vaisseau.capacite=CAPA1;
     vaisseau->vitesse_rotation = v_rotation;
     vaisseau->angle = angle;
@@ -93,11 +94,11 @@ void init_pos(SDL_Rect* position, int x, int y){
     position->x=x;
     position->y=y;
 }
-void init_tir (_tir *pew, _vaisseau vaisseau){
-    /// Initialisation de tous les parametres du tir
-    init_pos(&(pew->position), vaisseau.position.x+(TAILLE_JOUEUR/2.0), vaisseau.position.y+(TAILLE_JOUEUR/2.0));
-    pew->type = vaisseau.arme;
-    pew->angle = vaisseau.angle;
+void init_tir (_vaisseau *vaisseau){/// Initialisation de tous les parametres du tir
+    init_pos(&(vaisseau->tir.position), vaisseau->position.x+(TAILLE_JOUEUR/2.0), vaisseau->position.y+(TAILLE_JOUEUR/2.0));
+    vaisseau->tir.type = vaisseau->arme;
+    vaisseau->tir.angle = vaisseau->angle;
+    vaisseau->tir.sprite = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
 }
 
 
