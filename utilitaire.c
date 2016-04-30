@@ -99,7 +99,6 @@ void init_tir (_vaisseau *vaisseau){/// Initialisation de tous les parametres du
     init_pos(&(vaisseau->tir.position), vaisseau->position.x+(TAILLE_JOUEUR/2.0), vaisseau->position.y+(TAILLE_JOUEUR/2.0));
     vaisseau->tir.type = vaisseau->arme;
     vaisseau->tir.angle = vaisseau->angle;
-    vaisseau->tir.sprite = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
 }
 
 

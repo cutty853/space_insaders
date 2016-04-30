@@ -47,25 +47,31 @@ typedef struct{
 
 
 typedef struct {
+    SDL_Surface *sprite;
     int poid;
-    float vitesse; // En pixel par seconde
-    float acceleration; // En prixel par seconde*pow(-2)
-    int vitesse_max; // En pixel par seconde
-    int vitesse_min;
+    float vitesse, acceleration; // En prixel par seconde*pow(-2)
+    int vitesse_max, vitesse_min;
+    int vitesse_rotation, angle;
+    int etat_rotation;
     _intelligence intelligence;
     _comportement comportement;
     _bouclier bouclier;
     _vie vie;
     _arme arme;
     _tir tir;
-    int vitesse_rotation;
-    int angle;
-    int etat_rotation;
     //_capacite capacite;
     SDL_Rect position;
-    SDL_Surface *sprite;
 
 
     int angle_de_decalage; // TEST
 
 } _vaisseau;
+
+
+typedef struct {
+    char key[SDLK_LAST];
+    int mousex, mousey;
+    int mousexrel, mouseyrel;
+    char mousebuttons[8];
+    char quit;
+} _input;

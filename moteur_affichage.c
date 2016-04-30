@@ -238,11 +238,14 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
+    SDL_Surface *tir;
     /// Calcul du mouvement:
     vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
     vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
     /// Blit de la surface avec ces nouvelles positions:
-    SDL_BlitSurface(vaisseau->tir.sprite, NULL, ecran, &(vaisseau->tir.position));
+
+    tir = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
+    SDL_BlitSurface(tir, NULL, ecran, &(vaisseau->tir.position));
 
     return vaisseau->tir.position;
 }
