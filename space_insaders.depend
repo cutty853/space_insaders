@@ -204,18 +204,58 @@
 
 1459186234 source:c:\users\antoine\documents\github\space_insaders\structure.c
 
-1460123105 D
+1460922191 D
 
-<<<<<<< HEAD
-1461670627 source:c:\users\antoine\documents\github\space_insaders\main.c
-=======
-1461588140 source:c:\users\antoine\documents\github\space_insaders\main.c
->>>>>>> f6f4654b45cee523af2e345f10e8be57529ef505
+1461970353 source:c:\users\antoine\documents\github\space_insaders\main.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1461670131 4654b45cee523af2e345f10e8be57529ef505
 	<stdlib.h>
 	<stdio.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+	"constantes.h"
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"structure.h"
+	"utilitaire.h"
+	"jeu.h"
+	"ia.h"
+	"player.h"
+	"constantes.h"
+	<stdlib.h>
+	<stdio.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	<math.h>
 	"structure.h"
 	"utilitaire.h"
 	"jeu.h"
@@ -282,51 +322,34 @@
 	"player.h"
 	"constantes.h"
 
-<<<<<<< HEAD
-1461707083 c:\users\antoine\documents\github\space_insaders\structure.h
-=======
-1461668241 c:\users\antoine\documents\github\space_insaders\structure.h
->>>>>>> f6f4654b45cee523af2e345f10e8be57529ef505
+1461970353 c:\users\antoine\documents\github\space_insaders\structure.h
 	"constantes.h"
 
-1461517286 c:\users\antoine\documents\github\space_insaders\utilitaire.h
+1461970353 c:\users\antoine\documents\github\space_insaders\utilitaire.h
 
-1461587334 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+1461970353 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
+	<time.h>
 	<math.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
 	<SDL/SDL_rotozoom.h>
 	"structure.h"
-	"utilitaire.h"
-	"jeu.h"
-	"ia.h"
-	"player.h"
 	"constantes.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
 
-<<<<<<< HEAD
-1461670821 source:c:\users\antoine\documents\github\space_insaders\jeu.c
-=======
 1461669479 source:c:\users\antoine\documents\github\space_insaders\jeu.c
->>>>>>> f6f4654b45cee523af2e345f10e8be57529ef505
-	<stdlib.h>
-	<stdio.h>
-	<SDL/SDL.h>
-	<SDL/SDL_image.h>
-	<SDL/SDL_ttf.h>
-	<SDL/SDL_rotozoom.h>
-	"structure.h"
-	"utilitaire.h"
-	"jeu.h"
-	"ia.h"
-	"player.h"
-	"constantes.h"
 
 1461518878 c:\users\antoine\documents\github\space_insaders\jeu.h
 
-1461706585 c:\users\antoine\documents\github\space_insaders\constantes.h
+1461970353 c:\users\antoine\documents\github\space_insaders\constantes.h
 
 1460922206 source:c:\users\antoine\documents\github\space_insaders\ia.c
 	<stdlib.h>
@@ -346,28 +369,9 @@
 
 1460922191 c:\users\antoine\documents\github\space_insaders\ia.h
 
-<<<<<<< HEAD
-1461670627 c:\users\antoine\documents\github\space_insaders\player.h
-
-1461708125 source:c:\users\antoine\documents\github\space_insaders\player.c
-=======
 1461669519 c:\users\antoine\documents\github\space_insaders\player.h
 
 1461670131 source:c:\users\antoine\documents\github\space_insaders\player.c
->>>>>>> f6f4654b45cee523af2e345f10e8be57529ef505
-	<stdlib.h>
-	<stdio.h>
-	<SDL/SDL.h>
-	<SDL/SDL_image.h>
-	<SDL/SDL_ttf.h>
-	<SDL/SDL_rotozoom.h>
-	<math.h>
-	"structure.h"
-	"utilitaire.h"
-	"jeu.h"
-	"ia.h"
-	"player.h"
-	"constantes.h"
 
 1461843580 source:c:\users\administrateur\documents\space_insaders\jeu.c
 	<stdlib.h>
@@ -453,4 +457,104 @@
 	"ia.h"
 	"player.h"
 	"constantes.h"
+
+1461970353 c:\users\antoine\documents\github\space_insaders\mode_combat.h
+
+1461977850 c:\users\antoine\documents\github\space_insaders\mode_campagne.h
+
+1461970353 c:\users\antoine\documents\github\space_insaders\moteur_ia.h
+
+1461970353 c:\users\antoine\documents\github\space_insaders\moteur_joueur.h
+
+1461970353 c:\users\antoine\documents\github\space_insaders\moteur_affichage.h
+
+1462031381 source:c:\users\antoine\documents\github\space_insaders\mode_campagne.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"mode_campagne.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1461970353 source:c:\users\antoine\documents\github\space_insaders\mode_combat.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"mode_campagne.h"
+	"utilitaire.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1462025296 source:c:\users\antoine\documents\github\space_insaders\moteur_affichage.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_affichage.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+
+1461970353 source:c:\users\antoine\documents\github\space_insaders\moteur_ia.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_ia.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1461970353 source:c:\users\antoine\documents\github\space_insaders\moteur_joueur.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_joueur.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_affichage.h"
 

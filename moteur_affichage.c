@@ -300,7 +300,6 @@ void charge_sprite_tir (_tir *pew){
     pew->vitesse = 15;
 }
 void charge_sprite_explosion (_explosion *boom){
-/// le pointeur sur boom peut etre mis a NULL pour que le chargement de boom ne soit pas effectué (sert a la fonction charge_niveau)
     SDL_Surface *tmp_boom;
     SDL_Rect case_courante;
     int i;
@@ -318,8 +317,12 @@ void charge_sprite_explosion (_explosion *boom){
             case_courante.x += 65;
         }
         boom->sprite[i] = IMG_Load("images/transparent_explosion.png");
+        printf("bpp : %d,  : %d, %d\n", (int)boom->sprite[i]->format->BytesPerPixel, boom->sprite[i]->format->BitsPerPixel, (int)boom->sprite[i]->flags);
+        printf("%d, %d, %d\n", (int)boom->sprite[i]->format->alpha, (int)boom->sprite[i]->format->Gmask, (int)boom->sprite[i]->format->Bmask);
+        printf("%d\n", (int)boom->sprite[i]->format->Ashift);
         test_surface(boom->sprite[i], 103);
         SDL_BlitSurface(tmp_boom, &case_courante, boom->sprite[i], NULL);
+        printf("%d, %d, %d\n", (int)boom->sprite[i]->format->BytesPerPixel, boom->sprite[i]->format->BitsPerPixel, (int)boom->sprite[i]->flags);
         test_surface(boom->sprite[i], 302+i);
     }
     SDL_FreeSurface(tmp_boom);
