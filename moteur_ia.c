@@ -72,14 +72,14 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
 
     if(v_ia->vitesse <= v_joueur->vitesse){/// atteint sa vitesse et essaye de la dépasser.
         mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
-    }else{ /// a trop dépaasé sa vitsse
+    }else{ /// a trop dépassé sa vitsse
         mouvement_ia(RECUL, DROIT, v_ia, v_joueur);
     }
     if(v_ia->angle != v_ia->angle_de_decalage){
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
         mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
     }else{
-        if(v_ia->tir.etat != 1){
+        if(v_ia->tir.etat != 1){/// Si pas déjà entrain de tirer alors tir.
             tir_ia(v_ia);
         }
     }
@@ -178,6 +178,7 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
 }
 
 void tir_ia(_vaisseau *v_ia){
+    v_ia->tir.temps_passe = 0;
     v_ia->tir.etat = 1;
     init_tir (v_ia);
 }

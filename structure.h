@@ -42,6 +42,7 @@ typedef struct{
     float vitesse;
     int angle;
     int etat;
+    int temps_passe;
 } _tir;
 
 

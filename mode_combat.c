@@ -57,18 +57,25 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
 
     /// boucle du jeu:
-    int temps_passe = 0;//TEST création d'une valeur qui compte le nbr de tour pour avoir un équivalent du temps "passé"
     while (continuer) {
-        temps_passe ++;//TEST création d'une valeur qui compte le nbr de tour pour avoir un équivalent du temps "passé"
-        if(temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
-            v_player.tir.etat = 0;
+        if(v_ia1.tir.etat == 1)
+            v_ia1.tir.temps_passe ++;
+        if(v_ia1.tir.temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
             v_ia1.tir.etat = 0;
 
-            decharge_sprite_tir(&v_player);
+            eff_tir(ecran, save_screen, &v_ia1);
             decharge_sprite_tir(&v_ia1);
-
-            charge_sprite_tir(&v_player);
             charge_sprite_tir(&v_ia1);
+        } // apporte une erreur: le laser s'arrête dès que on repasse dans cette condition, ce qui est norml vu le code. (peut peut être être (lol) utilisé comme une "portée max" du lasez ?)
+
+        if(v_player.tir.etat == 1)
+            v_player.tir.temps_passe ++;
+        if(v_player.tir.temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
+            v_player.tir.etat = 0;
+
+            eff_tir(ecran, save_screen, &v_player);
+            decharge_sprite_tir(&v_player);
+            charge_sprite_tir(&v_player);
         } // apporte une erreur: le laser s'arrête dès que on repasse dans cette condition, ce qui est norml vu le code. (peut peut être être (lol) utilisé comme une "portée max" du lasez ?)
 
 
@@ -78,11 +85,11 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
-        if (v_ia1.tir.etat == 1) {
+        if (v_ia1.tir.etat == 1){
             pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
             pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
         }
-        if (v_player.tir.etat == 1) {
+        if (v_player.tir.etat == 1){
             pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
             pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
         }
@@ -125,6 +132,7 @@ void play(SDL_Surface *ecran) {
                         break;
                     case SDLK_SPACE:
                         if(v_player.tir.etat != 1){
+                            v_player.tir.temps_passe = 0;
                             v_player.tir.etat = 1;
                             init_tir(&v_player);
                         }

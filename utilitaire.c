@@ -76,6 +76,7 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
     vaisseau->vie.charge = vie;
     vaisseau->arme = arme;
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
+    vaisseau->tir.temps_passe = 0;
     //vaisseau.capacite=CAPA1;
     vaisseau->vitesse_rotation = v_rotation;
     vaisseau->angle = angle;
