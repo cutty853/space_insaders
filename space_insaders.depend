@@ -363,10 +363,10 @@
 	"player.h"
 	"constantes.h"
 
-1461694267 c:\users\administrateur\documents\space_insaders\structure.h
+1462030171 c:\users\administrateur\documents\space_insaders\structure.h
 	"constantes.h"
 
-1461490884 c:\users\administrateur\documents\space_insaders\utilitaire.h
+1462032076 c:\users\administrateur\documents\space_insaders\utilitaire.h
 
 1461490884 c:\users\administrateur\documents\space_insaders\jeu.h
 
@@ -376,18 +376,23 @@
 
 1461666658 c:\users\administrateur\documents\space_insaders\constantes.h
 
-1461490884 source:c:\users\administrateur\documents\space_insaders\main.c
+1462028442 source:c:\users\administrateur\documents\space_insaders\main.c
 	<stdlib.h>
 	<stdio.h>
+	<time.h>
+	<math.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
 	"structure.h"
 	"utilitaire.h"
-	"jeu.h"
-	"ia.h"
-	"player.h"
-	"constantes.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
 
 1461790528 source:c:\users\administrateur\documents\space_insaders\player.c
 	<stdlib.h>
@@ -404,20 +409,23 @@
 	"player.h"
 	"constantes.h"
 
-1461843623 source:c:\users\administrateur\documents\space_insaders\utilitaire.c
+1462032076 source:c:\users\administrateur\documents\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
+	<time.h>
 	<math.h>
 	<SDL/SDL.h>
 	<SDL/SDL_image.h>
 	<SDL/SDL_ttf.h>
 	<SDL/SDL_rotozoom.h>
 	"structure.h"
-	"utilitaire.h"
-	"jeu.h"
-	"ia.h"
-	"player.h"
 	"constantes.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
 
 1461490884 source:c:\users\administrateur\documents\space_insaders\ia.c
 	<stdlib.h>
@@ -434,4 +442,104 @@
 	"ia.h"
 	"player.h"
 	"constantes.h"
+
+1461954346 c:\users\administrateur\documents\space_insaders\mode_combat.h
+
+1461956326 c:\users\administrateur\documents\space_insaders\mode_campagne.h
+
+1462032218 c:\users\administrateur\documents\space_insaders\moteur_ia.h
+
+1461954659 c:\users\administrateur\documents\space_insaders\moteur_joueur.h
+
+1461954566 c:\users\administrateur\documents\space_insaders\moteur_affichage.h
+
+1462028442 source:c:\users\administrateur\documents\space_insaders\mode_campagne.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"mode_campagne.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1462030171 source:c:\users\administrateur\documents\space_insaders\mode_combat.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"mode_campagne.h"
+	"utilitaire.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1462028442 source:c:\users\administrateur\documents\space_insaders\moteur_affichage.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_affichage.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+
+1462032144 source:c:\users\administrateur\documents\space_insaders\moteur_ia.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_ia.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+
+1462028442 source:c:\users\administrateur\documents\space_insaders\moteur_joueur.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_joueur.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_affichage.h"
 

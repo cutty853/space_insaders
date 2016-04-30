@@ -15,6 +15,7 @@ typedef struct {
 } _degrade;
 
 typedef enum{JOUEUR, IA} _intelligence;
+typedef enum{CHERCHE, ATTAQUE, FUIT, INDEPENDENT} _comportement;
 typedef enum {VIDE, BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 //typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
@@ -29,12 +30,12 @@ typedef struct{
     SDL_Rect position;
     _charge charge;
 } _vie;
-typedef struct {
+typedef struct{
     SDL_Surface *sprite[NB_SPRITES_EXPLOSION];
     SDL_Rect position;
     int phase;
 } _explosion;
-typedef struct {
+typedef struct{
     SDL_Surface *sprite;
     SDL_Rect position;
     _arme type;
@@ -50,6 +51,7 @@ typedef struct {
     int vitesse_max; // En pixel par seconde
     int vitesse_min;
     _intelligence intelligence;
+    _comportement comportement;
     _bouclier bouclier;
     _vie vie;
     _arme arme;

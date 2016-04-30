@@ -59,9 +59,14 @@ void pause(){
         }
     }
 }
+int aleatoire(int mini, int maxi){
+    srand(time(NULL)); /// initialisation de rand
+    return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
+}
 
-void init_vaisseau(_vaisseau *vaisseau, int intelligence, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, int arme, int position_x, int position_y, int v_rotation, int angle){
     vaisseau->intelligence = intelligence;
+    vaisseau->comportement = comportement;
     vaisseau->poid = poid;
     vaisseau->vitesse = vitesse;
     vaisseau->acceleration = acceleration;

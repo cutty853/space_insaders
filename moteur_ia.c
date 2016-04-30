@@ -21,8 +21,34 @@
     #include "moteur_affichage.h"
 #endif
 
+_comportement ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le joueur à partir d'une certaine distance si non se balade aléatoirement.
+    int distance_detection_horizontale = 250; /// En pixels.
+    int distance_detection_verticale = 250; /// En pixels.
+    if((v_ia->position.x - distance_detection_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_detection_horizontale)){
+        if((v_ia->position.y - distance_detection_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_detection_verticale)){
+            return ATTAQUE; /// Le joueur est dans le carré de detection.
+        }
+    }
+    else{/// Le vaisseau "cherche": avance en permanence et tourne de manière aléatoire.
+        int action = 0, direction = 0;
+        action = aleatoire(1, 5);
+        if(action >= 4){ /// permet de ne pas trop le faire tourner souvent.
+            direction = aleatoire(1, 20); /// random entre 1 et 40. Permet qu'il ne change pas trop souvent de sens de rotation.
+            if(direction <= 10)
+                mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
+            else
+                mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
+        }else{/// il avance mes pas trop vite car il ne fait que "chercher".
+            if(v_ia->vitesse <= (v_ia->vitesse_max/4))
+                mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
+            else
+                mouvement_ia (RECUL, DROIT, v_ia, v_joueur);
+        }
+    }
+    return CHERCHE;
+}
 
-void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
+_comportement ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){
     int nouv_pos_relative = 0, sens_de_rotation = 0;
     int tourne = 0, accelere = 0, ralenti = 0;
 
@@ -78,6 +104,23 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
     }else{
         mouvement_ia(RIEN, DROIT, v_ia, v_joueur);
     }
+    return(ATTAQUE);
+}
+
+void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
+    switch(v_ia->comportement){
+        case CHERCHE:
+            v_ia->comportement = ia_cherche(v_ia, v_joueur);
+            break;
+        case ATTAQUE:
+            v_ia->comportement = ia_attaque(v_ia, v_joueur);
+            break;
+        case FUIT:
+            break;
+        default:
+            exit(666);
+            break;
+    }
 }
 
 int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vaisseau ia par rapport au vaisseau joueur.
@@ -117,7 +160,7 @@ int trouve_max(int tourne, int accelere, int ralenti){
         return RECUL;
     else if(tourne == accelere || tourne == ralenti){
         srand(time(NULL)); /// initialisation de rand
-        int direction = (rand()%2)+1; /// random entre 1 et 4.
+        int direction = (rand()%2)+1; /// random entre 1 et 2.
         switch (direction){
             case 1:
                 return TOURNE;
