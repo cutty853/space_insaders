@@ -239,6 +239,7 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 }
 SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
     SDL_Surface *tir;
+
     /// Calcul du mouvement:
     vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
     vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));

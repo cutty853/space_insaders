@@ -171,15 +171,15 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
         case TOURNE:
             v_ia->etat_rotation = 1;
             if(sens == POSITIF){
-//                if(v_ia->angle <= v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
-//                    v_ia->angle = v_ia->angle_de_decalage;
-//                else
+                if(v_ia->angle <= v_ia->vitesse_rotation && v_ia->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
+                    v_ia->angle = v_ia->angle_de_decalage;
+                else
                     v_ia->angle += v_ia->vitesse_rotation;
             }
             if(sens == NEGATIF){
-//                if(v_ia->angle >= 360-v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
-//                    v_ia->angle = v_ia->angle_de_decalage;
-//                else
+                if(v_ia->angle >= 360-v_ia->vitesse_rotation && v_ia->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
+                    v_ia->angle = v_ia->angle_de_decalage;
+                else
                     v_ia->angle -= v_ia->vitesse_rotation;
             }
             break;
