@@ -21,6 +21,10 @@
     #include "moteur_affichage.h"
 #endif
 
+/// Creation de variables globales:
+int direction = 0;
+int duree = 0;
+
 _comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le joueur à partir d'une certaine distance si non se balade aléatoirement.
     int distance_detection_horizontale = 300; /// En pixels.
     int distance_detection_verticale = 300; /// En pixels.
@@ -32,19 +36,27 @@ _comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le 
 }
 
 void ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "cherche": il avance en permanence et tourne de manière aléatoire.
-    int action = 0, direction = 0;
-    action = aleatoire(1, 5);
-    if(action >= 4){ /// permet de ne pas trop le faire tourner souvent.
-        direction = aleatoire(1, 20); /// random entre 1 et 40. Permet qu'il ne change pas trop souvent de sens de rotation.
-        if(direction <= 10)
-            mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
-        else
-            mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
-    }else{/// il avance mes pas trop vite car il ne fait que "chercher".
-        if(v_ia->vitesse <= (v_ia->vitesse_max/4))
-            mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
-        else
-            mouvement_ia (RECUL, DROIT, v_ia, v_joueur);
+    if(v_ia->vitesse <= (v_ia->vitesse_max/3.0))
+        mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
+    else{
+        if(duree == 0){
+            direction = aleatoire(1, 5);
+            duree = aleatoire(50, 100);
+        }
+        switch(direction){
+            case 1:
+                mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
+                duree --;
+                break;
+            case 2:
+                mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
+                duree --;
+                break;
+            default:
+                mouvement_ia (RIEN, DROIT, v_ia, v_joueur);
+                duree --;
+                break;
+        }
     }
 }
 void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque": il suit le joueur et tir dès qu'il n'a plus à tourner.
@@ -159,15 +171,15 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
         case TOURNE:
             v_ia->etat_rotation = 1;
             if(sens == POSITIF){
-                if(v_ia->angle <= v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
-                    v_ia->angle = v_ia->angle_de_decalage;
-                else
+//                if(v_ia->angle <= v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
+//                    v_ia->angle = v_ia->angle_de_decalage;
+//                else
                     v_ia->angle += v_ia->vitesse_rotation;
             }
             if(sens == NEGATIF){
-                if(v_ia->angle >= 360-v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
-                    v_ia->angle = v_ia->angle_de_decalage;
-                else
+//                if(v_ia->angle >= 360-v_ia->vitesse_rotation)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
+//                    v_ia->angle = v_ia->angle_de_decalage;
+//                else
                     v_ia->angle -= v_ia->vitesse_rotation;
             }
             break;

@@ -297,12 +297,12 @@ void charge_sprite_tir (_vaisseau *vaisseau){
         case TIR_LASER:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, 20, 32, 0, 0, 0, 0);
             SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 0, 0)); ///Rouge
-            vaisseau->tir.vitesse = 20;
+            vaisseau->tir.vitesse = 5;
             break;
         case OBUS:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);
             SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 165, 0));///Orange
-            vaisseau->tir.vitesse = 15;
+            vaisseau->tir.vitesse = 5;
             break;
         case RAYON_LASER:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);

@@ -60,7 +60,6 @@ void pause(){
     }
 }
 int aleatoire(int mini, int maxi){
-    srand(time(NULL)); /// initialisation de rand
     return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
 }
 

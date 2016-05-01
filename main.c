@@ -25,6 +25,7 @@
 
 
 int main ( int argc, char** argv ){
+    srand(time(NULL)); /// initialisation de rand
     SDL_Surface *ecran=NULL;
     FILE* ctt = NULL;
     int action;
