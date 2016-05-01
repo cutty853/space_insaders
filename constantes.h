@@ -43,6 +43,7 @@
     #define NB_ETAT_INTERFACE 1
     enum {CONSOLE=0};
     /// GENERAL
+    #define TAILLE_VAISSEAU 60
     #define NB_SPRITES_EXPLOSION 25
     #define NB_SPRITES_BOUCLIER 4
     #define LARGEUR_BOUCLIER 40

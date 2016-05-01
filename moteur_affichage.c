@@ -180,7 +180,7 @@ SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _vaisseau *vaisse
 
 SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
     vaisseau->bouclier.position.x = vaisseau->position.x;
-    vaisseau->bouclier.position.y = (vaisseau->position.y)+60; /// +60 = taille verticale du vaisseau.
+    vaisseau->bouclier.position.y = (vaisseau->position.y)+60+10; /// +60 = taille verticale du vaisseau, +10 pou la taille de rotation.
     switch (vaisseau->bouclier.charge) {
         case VIDE:
             SDL_BlitSurface(vaisseau->bouclier.sprite[0], NULL, ecran, &(vaisseau->bouclier.position));
@@ -225,6 +225,15 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     /// Calcul des positions
     vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
     vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
+    /// Vérification des sorties d'écran:
+    if(vaisseau->position.x > TAILLE_ECRAN_X)
+        vaisseau->position.x = 0;
+    if(vaisseau->position.x < 0)
+        vaisseau->position.x = TAILLE_ECRAN_X;
+    if(vaisseau->position.y > TAILLE_ECRAN_Y)
+        vaisseau->position.y = 0;
+    if(vaisseau->position.y < 0)
+        vaisseau->position.y = TAILLE_ECRAN_Y;
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));

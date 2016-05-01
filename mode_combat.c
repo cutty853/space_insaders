@@ -39,7 +39,7 @@ void play(SDL_Surface *ecran) {
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
         /// ia:
-    init_vaisseau(&v_ia1, IA, CHERCHE, 100, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 1000, 300, 3, 90);
+    init_vaisseau(&v_ia1, IA, CHERCHE, 25, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 1000, 300, 3, 90);
     charge_sprite_bouclier(&v_ia1);
     charge_sprite_vie(&v_ia1);
     charge_sprite_tir(&v_ia1);

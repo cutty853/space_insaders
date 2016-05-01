@@ -36,27 +36,26 @@ _comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le 
 }
 
 void ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "cherche": il avance en permanence et tourne de manière aléatoire.
-    if(v_ia->vitesse <= (v_ia->vitesse_max/3.0))
-        mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
-    else{
-        if(duree == 0){
-            direction = aleatoire(1, 5);
-            duree = aleatoire(50, 100);
-        }
-        switch(direction){
-            case 1:
-                mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
-                duree --;
-                break;
-            case 2:
-                mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
-                duree --;
-                break;
-            default:
+    if(duree == 0){
+        direction = aleatoire(1, 5);
+        duree = aleatoire(50, 80);
+    }
+    switch(direction){
+        case 1:
+            mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
+            duree --;
+            break;
+        case 2:
+            mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
+            duree --;
+            break;
+        default:
+            if(v_ia->vitesse <= (v_ia->vitesse_max/3.0))
+                mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
+            else
                 mouvement_ia (RIEN, DROIT, v_ia, v_joueur);
-                duree --;
-                break;
-        }
+            duree --;
+            break;
     }
 }
 void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque": il suit le joueur et tir dès qu'il n'a plus à tourner.
@@ -184,7 +183,7 @@ void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
             }
             break;
         case RIEN:
-            /// L'ia choisi de ne pas bouger.
+            /// L'ia choisi de ne rien changer à sa trajectoire.
             break;
     }
 }
