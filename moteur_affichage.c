@@ -295,16 +295,19 @@ void charge_sprite_vie(_vaisseau *vaisseau){
 void charge_sprite_tir (_vaisseau *vaisseau){
     switch(vaisseau->arme){
         case TIR_LASER:
-            vaisseau->tir.sprite = IMG_Load("images/tir_laser.png");
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, 20, 32, 0, 0, 0, 0);
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 0, 0)); ///Rouge
             vaisseau->tir.vitesse = 20;
             break;
         case OBUS:
-            vaisseau->tir.sprite = IMG_Load("images/obus.png");
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 165, 0));///Orange
             vaisseau->tir.vitesse = 15;
             break;
         case RAYON_LASER:
-            vaisseau->tir.sprite = IMG_Load("images/rayon_laser.png");
-            vaisseau->tir.vitesse = 0; // Je sais pas combien mettre car on n'a pas vraiment besoin de vitesse pour un gros trait, tout dépend de comment on fait l'affichage de se type de tir.
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 0, 0, 255));///Bleu
+            vaisseau->tir.vitesse = 40; // Il nous faut une très grande vitesse pour que cela apparaisse comme un trait.
             break;
         default:
             break;
