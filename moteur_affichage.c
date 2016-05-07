@@ -68,6 +68,7 @@ int menu(SDL_Surface *ecran){
     SDL_Color couleur_titre = {240, 170, 23}, couleur_option = {242, 242, 242};
     SDL_Event choix;
     TTF_Font *police_titre=NULL, *police_option=NULL;
+    double zoom;
     char texte_option[NB_OPTION_MENU][16]=ENUM_TITRE_OPTION_MENU();
     int i, continuer=1, ret[NB_OPTION_MENU]=ENUM_RETURN_OPTION_MENU();
 
@@ -76,6 +77,8 @@ int menu(SDL_Surface *ecran){
 
     //Placement d'un image de fond PS: La taille de l'image ne s'ajuste pas a l'écran (pour l'instant)
     fond = IMG_Load("images/background.jpg");
+    zoom = (ecran->w*1.0)/(fond->w*1.0);
+    fond = rotozoomSurface(fond, 0, zoom, 1);
     test_surface(fond, 100);
     SDL_BlitSurface(fond, NULL, ecran, &pos_fond);
     SDL_Flip(ecran);
@@ -151,10 +154,13 @@ int menu(SDL_Surface *ecran){
 void charge_niveau (SDL_Surface *ecran) {
     SDL_Surface *fond_combat=NULL;
     SDL_Rect pos_fond;
+    double zoom;
     init_pos(&pos_fond, 0, 0);
 
     /// Affichage du fond de combat:
     fond_combat = IMG_Load("images/map_fond_combat.jpg");
+    zoom = (ecran->w*1.0)/(fond_combat->w*1.0);
+    fond_combat = rotozoomSurface(fond_combat, 0, zoom, 1);
     test_surface(fond_combat, 101);
     SDL_BlitSurface(fond_combat, NULL, ecran, &pos_fond);
     SDL_FreeSurface(fond_combat);
@@ -226,14 +232,14 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
     vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
     /// Vérification des sorties d'écran:
-    if(vaisseau->position.x > TAILLE_ECRAN_X)
+    if(vaisseau->position.x > ecran->w)
         vaisseau->position.x = 0;
     if(vaisseau->position.x < 0)
-        vaisseau->position.x = TAILLE_ECRAN_X;
-    if(vaisseau->position.y > TAILLE_ECRAN_Y)
+        vaisseau->position.x = ecran->w;
+    if(vaisseau->position.y > ecran->h)
         vaisseau->position.y = 0;
     if(vaisseau->position.y < 0)
-        vaisseau->position.y = TAILLE_ECRAN_Y;
+        vaisseau->position.y = ecran->h;
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
@@ -253,9 +259,11 @@ SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
     vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
     vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
     /// Blit de la surface avec ces nouvelles positions:
-
+    // NB : Il est important de mettre le rotozoom ici, car le tir est tourné au moment de lancer, de plus \
+    le rotozoom ne fais pas ce qu'il faut des qu'on le met au chargement du sprite de tir..
     tir = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
     SDL_BlitSurface(tir, NULL, ecran, &(vaisseau->tir.position));
+    SDL_FreeSurface(tir);
 
     return vaisseau->tir.position;
 }
@@ -446,7 +454,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Surface *barre_vie=NULL;
     SDL_Rect pos_barre_vie;
     pos_barre_vie.x=5;
-    pos_barre_vie.y=TAILLE_ECRAN_Y-25;
+    pos_barre_vie.y=(ecran->h)-25;
 
     /// Affichage de la barre de vie
     barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
@@ -474,7 +482,7 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Surface *barre_bouclier=NULL;
     SDL_Rect pos_barre_bouclier;
     pos_barre_bouclier.x=5;
-    pos_barre_bouclier.y=TAILLE_ECRAN_Y-50;
+    pos_barre_bouclier.y=(ecran->h)-50;
 
     /// Affichage de la barre du bouclier
     switch (v_joueur.bouclier.charge) {

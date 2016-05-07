@@ -60,6 +60,12 @@ void play(SDL_Surface *ecran) {
 
     /// boucle du jeu:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
+        /** SUGGESTION
+        * Plutot que d'utilisé des tableaux pour mettre a jour l'écran on pourrait utiliser les listes chainés
+        * ainsi on pourrait plus facilement ajouter et enlever des cases a ce tableau de mises a jour, ceci
+        * afin d'éviter de faire des optimisation inutile (a cause de l'allocation de tableau dynamique a chaque
+        * tour de boucle)
+        */
         if(v_ia1.tir.etat == 1)
             v_ia1.tir.temps_passe ++;
         if(v_ia1.tir.temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
@@ -85,7 +91,8 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
-        pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
+        if (v_player.vitesse!=0)
+            pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
         if (v_ia1.tir.etat == 1){
             pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
@@ -196,6 +203,7 @@ void play(SDL_Surface *ecran) {
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
     }
 
+    TTF_CloseFont(police_texte);
     decharge_sprite_explosion(&boom);
     decharge_sprite_bouclier(&v_ia1);
     decharge_sprite_vie(&v_ia1);
