@@ -14,6 +14,7 @@
     #include "structure.h"
 
     #include "moteur_affichage.h"
+    #include "moteur_physique.h"
     #include "utilitaire.h"
     #include "mode_combat.h"
     #include "mode_campagne.h"
@@ -259,8 +260,8 @@ SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
     vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
     vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
     /// Blit de la surface avec ces nouvelles positions:
-    // NB : Il est important de mettre le rotozoom ici, car le tir est tourné au moment de lancer, de plus \
-    le rotozoom ne fais pas ce qu'il faut des qu'on le met au chargement du sprite de tir..
+    // NB : Il est important de mettre le rotozoom ici, car le tir est tourné au moment de lancer, de plus
+    //le rotozoom ne fais pas ce qu'il faut des qu'on le met au chargement du sprite de tir..
     tir = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
     SDL_BlitSurface(tir, NULL, ecran, &(vaisseau->tir.position));
     SDL_FreeSurface(tir);

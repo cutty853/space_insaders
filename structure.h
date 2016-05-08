@@ -75,3 +75,6 @@ typedef struct {
     char mousebuttons[8];
     char quit;
 } _input;
+typedef struct {
+    int x, y, rayon;
+} _cercle;

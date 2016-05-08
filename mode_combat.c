@@ -19,6 +19,7 @@
     #include "moteur_ia.h"
     #include "moteur_joueur.h"
     #include "moteur_affichage.h"
+    #include "moteur_physique.h"
 #endif
 
 

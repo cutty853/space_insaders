@@ -67,6 +67,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="moteur_joueur.h" />
+		<Unit filename="moteur_physique.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="moteur_physique.h" />
 		<Unit filename="structure.h" />
 		<Unit filename="utilitaire.c">
 			<Option compilerVar="CC" />
