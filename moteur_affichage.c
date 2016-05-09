@@ -493,7 +493,6 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_FreeSurface(barre_vie);
 }
 void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
-    SDL_Surface *barre_bouclier=NULL;
     SDL_Rect pos_barre_bouclier;
     pos_barre_bouclier.x=5;
     pos_barre_bouclier.y=(ecran->h)-50;
