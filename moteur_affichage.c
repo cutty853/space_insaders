@@ -234,7 +234,7 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
-    SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
+    //SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     if (vaisseau->etat_rotation == 1) {/// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;

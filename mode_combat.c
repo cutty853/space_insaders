@@ -113,31 +113,7 @@ void play(SDL_Surface *ecran) {
 
 
         /// Test de l'action du joueur
-        //tour_joueur(&action, v_player, &etat_interface, save_screen, ecran, police_texte, boom); // Ne fonctionne pas ((((a travailler))))
-        etat_action_joueur(&action);
-            // Gestion du clavier
-        if (action.key[SDLK_w]) {
-            vitesse_joueur(&v_player, AVANT);
-        }
-        if (action.key[SDLK_s]) {
-            vitesse_joueur(&v_player, ARRIERE);
-        }
-        if (action.key[SDLK_a]) {
-            v_player.angle+= v_player.vitesse_rotation;
-            v_player.etat_rotation = 1;
-        }
-        if (action.key[SDLK_d]) {
-            v_player.angle-= v_player.vitesse_rotation;
-            v_player.etat_rotation = 1;
-        }
-        if (action.key[SDLK_c]) {
-            v_player.vitesse = 0;
-        }
-        if (action.key[SDLK_SPACE] && !v_player.tir.etat) {
-            v_player.tir.temps_passe = 0;
-            v_player.tir.etat = 1;
-            init_tir(&v_player);
-        }
+        tour_joueur(&action, &v_player, &boom);
         if (action.key[SDLK_F3]) {
             if (etat_interface[CONSOLE]) {
                 etat_interface[CONSOLE]=0;
@@ -149,16 +125,6 @@ void play(SDL_Surface *ecran) {
                 action.key[SDLK_F3] = 0; // Ici on fait remonter la touche du joueur de façon manuelle
             }
         }
-        if (action.key[SDLK_KP1]) {
-            v_player.vie.charge = VIDE;
-            boom.phase=0;
-//            action.key[SDLK_KP1]=0;
-        }
-            // Gestion de la souris
-        if (action.mousebuttons[SDL_BUTTON_LEFT]) {
-            charge_niveau(ecran);
-            init_pos(&(v_player.position), action.mousex, action.mousey);
-        }
 
 
         /// Gestion du temps pour éviter la surexploitation du CPU
@@ -168,8 +134,6 @@ void play(SDL_Surface *ecran) {
         } else {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
-
-
         /// Zone pour placer les commandes a faire après la pause du jeu
 
 
