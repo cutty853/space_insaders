@@ -39,22 +39,22 @@ _comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le 
 void ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "cherche": il avance en permanence et tourne de manière aléatoire.
     if(duree == 0){
         direction = aleatoire(1, 5);
-        duree = aleatoire(50, 80);
+        duree = aleatoire(30, 60);
     }
     switch(direction){
         case 1:
-            mouvement_vaisseau (TOURNE, POSITIF, v_ia);
+            mouvement_vaisseau(TOURNE, POSITIF, v_ia);
             duree --;
             break;
         case 2:
-            mouvement_vaisseau (TOURNE, NEGATIF, v_ia);
+            mouvement_vaisseau(TOURNE, NEGATIF, v_ia);
             duree --;
             break;
         default:
             if(v_ia->vitesse <= (v_ia->vitesse_max/3.0))
-                mouvement_vaisseau (AVANCE, DROIT, v_ia);
+                mouvement_vaisseau(AVANCE, DROIT, v_ia);
             else
-                mouvement_vaisseau (RIEN, DROIT, v_ia);
+                mouvement_vaisseau(RIEN, DROIT, v_ia);
             duree --;
             break;
     }
@@ -157,7 +157,6 @@ int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens
     else
         return NEGATIF;
 }
-
 
 void tir_ia(_vaisseau *v_ia){
     v_ia->tir.temps_passe = 0;

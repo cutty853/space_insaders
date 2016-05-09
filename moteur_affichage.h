@@ -7,6 +7,11 @@ SDL_Rect eff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 SDL_Rect eff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen);
 SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _vaisseau *vaisseau);
 
+void calcul_pos_bouclier(_vaisseau *vaisseau);
+void calcul_pos_vie(_vaisseau *vaisseau);
+void calcul_pos_vaisseau(_vaisseau *vaisseau, SDL_Surface *ecran);
+void calcul_pos_tir(_vaisseau *vaisseau);
+
 SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau);
 SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau);
 SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen);

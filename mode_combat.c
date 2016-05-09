@@ -75,7 +75,7 @@ void play(SDL_Surface *ecran) {
             eff_tir(ecran, save_screen, &v_ia1);
             decharge_sprite_tir(&v_ia1);
             charge_sprite_tir(&v_ia1);
-        } // apporte une erreur: le laser s'arrête dès que on repasse dans cette condition, ce qui est norml vu le code. (peut peut être être (lol) utilisé comme une "portée max" du lasez ?)
+        }
 
         if(v_player.tir.etat == 1)
             v_player.tir.temps_passe ++;
@@ -85,8 +85,7 @@ void play(SDL_Surface *ecran) {
             eff_tir(ecran, save_screen, &v_player);
             decharge_sprite_tir(&v_player);
             charge_sprite_tir(&v_player);
-        } // apporte une erreur: le laser s'arrête dès que on repasse dans cette condition, ce qui est norml vu le code. (peut peut être être (lol) utilisé comme une "portée max" du lasez ?)
-
+        }
 
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
@@ -97,19 +96,28 @@ void play(SDL_Surface *ecran) {
 
         if (v_ia1.tir.etat == 1){
             pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
+            calcul_pos_tir(&v_ia1);
             pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
         }
         if (v_player.tir.etat == 1){
             pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
+            calcul_pos_tir(&v_player);
             pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
         }
+
+
+
+        /// L'ia joue en première:
+        tour_ia(&v_ia1, &v_player, ecran);
+        /// Calcul des nouvelles positions dépendants des actions de l'ia:
+        calcul_pos_bouclier(&v_ia1);
+        calcul_pos_vie(&v_ia1);
+        calcul_pos_vaisseau(&v_ia1, ecran);
 
         pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
         pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
         pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
 
-        /// L'ia joue en première:
-        tour_ia(&v_ia1, &v_player, ecran);
 
 
         /// Test de l'action du joueur
@@ -154,12 +162,6 @@ void play(SDL_Surface *ecran) {
             boom.phase=0;
 //            action.key[SDLK_KP1]=0;
         }
-            // Gestion de la souris
-        if (action.mousebuttons[SDL_BUTTON_LEFT]) {
-            charge_niveau(ecran);
-            init_pos(&(v_player.position), action.mousex, action.mousey);
-        }
-
 
         /// Gestion du temps pour éviter la surexploitation du CPU
         temps_actuel=SDL_GetTicks();
@@ -179,6 +181,7 @@ void play(SDL_Surface *ecran) {
             case MOYEN:
             case HAUT:
                 if ((v_player.vitesse !=0)/* || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d) || (action.button.button == SDL_BUTTON_LEFT)*/) {
+                    calcul_pos_vaisseau(&v_player, ecran);
                     pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
                     nb_pos_to_up_ecran = 8;
                 }
@@ -195,7 +198,7 @@ void play(SDL_Surface *ecran) {
 
         /// CONSOLE
         if (etat_interface[CONSOLE]) {
-            pos_to_up_console[0] = aff_console(ecran, v_player, save_screen, police_texte);
+            pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
         /// AFFICHAGE:

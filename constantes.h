@@ -33,12 +33,12 @@
     #define DEGAT_OBUS 50
     /// INTERFACE
     #define NB_ETAT_INTERFACE 1
-        /// AFF_CONSOLE()
+    /// AFF_CONSOLE()
     #define NB_STATS_CONSOLE 5
     #define TAILLE_CONSOLE_X 200
     #define TAILLE_CONSOLE_Y 180
     #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Angle : ", "Position en y : ", "Angle de decalage : ", "Hauteur : "}
-    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%lf", vaisseau.vitesse), \
+    #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%i", vaisseau.angle), \
     sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%i", (int)vaisseau.angle_de_decalage), \
     sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}}
     enum {CONSOLE=0};

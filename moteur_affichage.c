@@ -185,9 +185,39 @@ SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _vaisseau *vaisse
     return vaisseau->tir.position;
 }
 
-SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
+void calcul_pos_bouclier(_vaisseau *vaisseau){
     vaisseau->bouclier.position.x = vaisseau->position.x;
     vaisseau->bouclier.position.y = (vaisseau->position.y)+60+10; /// +60 = taille verticale du vaisseau, +10 pou la taille de rotation.
+}
+void calcul_pos_vie(_vaisseau *vaisseau){
+    vaisseau->vie.position.x = vaisseau->bouclier.position.x;
+    vaisseau->vie.position.y = (vaisseau->bouclier.position.y)+5; /// +5 = epaisseur de la barre de bouclier.
+}
+void calcul_pos_vaisseau(_vaisseau *vaisseau, SDL_Surface *ecran){
+    SDL_Surface *tmp_rotation = NULL;
+
+    /// Calcul des positions:
+    vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
+    vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
+
+    /// Vérification des sorties d'écran:
+    if(vaisseau->position.x >= ecran->w)
+        vaisseau->position.x = TAILLE_VAISSEAU;
+    else if(vaisseau->position.x <= 0)
+        vaisseau->position.x = ecran->w-TAILLE_VAISSEAU;
+    if(vaisseau->position.y >= ecran->h)
+        vaisseau->position.y = TAILLE_VAISSEAU;
+    else if(vaisseau->position.y <= 0)
+        vaisseau->position.y = ecran->h-TAILLE_VAISSEAU;
+
+    SDL_FreeSurface(tmp_rotation);
+}
+void calcul_pos_tir(_vaisseau *vaisseau){
+    vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
+    vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
+}
+
+SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
     switch (vaisseau->bouclier.charge) {
         case VIDE:
             SDL_BlitSurface(vaisseau->bouclier.sprite[0], NULL, ecran, &(vaisseau->bouclier.position));
@@ -205,8 +235,6 @@ SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
     return vaisseau->bouclier.position;
 }
 SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau){
-    vaisseau->vie.position.x = vaisseau->bouclier.position.x;
-    vaisseau->vie.position.y = (vaisseau->bouclier.position.y)+5; /// +5 = epaisseur de la barre de bouclier.
     switch (vaisseau->vie.charge) {
         case VIDE:
             SDL_BlitSurface(vaisseau->vie.sprite[0], NULL, ecran, &(vaisseau->vie.position));
@@ -224,41 +252,26 @@ SDL_Rect aff_vie(SDL_Surface *ecran, _vaisseau *vaisseau){
     return vaisseau->vie.position;
 }
 SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save_screen){
+    SDL_Surface *tmp_rotation = NULL;
     SDL_Rect pre_pos_vaisseau;
-    SDL_Surface *tmp_rotation=NULL;
-    /// Sauvegarde des anciennes positions
+
+    /// La condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite:
     pre_pos_vaisseau.w = vaisseau->position.w;
     pre_pos_vaisseau.h = vaisseau->position.h;
-    /// Calcul des positions
-    vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
-    vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
-    /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
-    if (vaisseau->etat_rotation == 1) {/// Cette condition permet le décalage du joueur lors de son angle, afin que la rotation se fasse réellement par rapport au centre du sprite
+    if (vaisseau->etat_rotation == 1) {
         vaisseau->position.x -= ((vaisseau->position.w - TAILLE_JOUEUR)-(pre_pos_vaisseau.w - TAILLE_JOUEUR))/2;
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
         vaisseau->etat_rotation = 0;
     }
-    /// Vérification des sorties d'écran:
-    if(vaisseau->position.x >= ecran->w)
-        vaisseau->position.x = 1;
-    if(vaisseau->position.x <= 0)
-        vaisseau->position.x = ecran->w-1;
-    if(vaisseau->position.y >= ecran->h)
-        vaisseau->position.y = 1;
-    if(vaisseau->position.y <= 0)
-        vaisseau->position.y = ecran->h-1;
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
+
     SDL_FreeSurface(tmp_rotation);
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
 SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
     SDL_Surface *tir;
-
-    /// Calcul du mouvement:
-    vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
-    vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
     /// Blit de la surface avec ces nouvelles positions:
     // NB : Il est important de mettre le rotozoom ici, car le tir est tourné au moment de lancer, de plus
     //le rotozoom ne fais pas ce qu'il faut des qu'on le met au chargement du sprite de tir..
