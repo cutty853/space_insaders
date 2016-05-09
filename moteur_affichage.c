@@ -232,15 +232,6 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
     /// Calcul des positions
     vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
     vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
-    /// Vérification des sorties d'écran:
-    if(vaisseau->position.x > ecran->w)
-        vaisseau->position.x = 0;
-    if(vaisseau->position.x < 0)
-        vaisseau->position.x = ecran->w;
-    if(vaisseau->position.y > ecran->h)
-        vaisseau->position.y = 0;
-    if(vaisseau->position.y < 0)
-        vaisseau->position.y = ecran->h;
     /// Affichage du vaisseau
     tmp_rotation = rotozoomSurface(vaisseau->sprite, vaisseau->angle, 1.0, 1);
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
@@ -249,6 +240,15 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
         vaisseau->position.y -= ((vaisseau->position.h - TAILLE_JOUEUR)-(pre_pos_vaisseau.h - TAILLE_JOUEUR))/2;
         vaisseau->etat_rotation = 0;
     }
+    /// Vérification des sorties d'écran:
+    if(vaisseau->position.x >= ecran->w)
+        vaisseau->position.x = 1;
+    if(vaisseau->position.x <= 0)
+        vaisseau->position.x = ecran->w-1;
+    if(vaisseau->position.y >= ecran->h)
+        vaisseau->position.y = 1;
+    if(vaisseau->position.y <= 0)
+        vaisseau->position.y = ecran->h-1;
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
     SDL_FreeSurface(tmp_rotation);
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
@@ -314,19 +314,19 @@ void charge_sprite_vie(_vaisseau *vaisseau){
 void charge_sprite_tir (_vaisseau *vaisseau){
     switch(vaisseau->arme){
         case TIR_LASER:
-            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, 20, 32, 0, 0, 0, 0);
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, 20, 32, 255, 0, 0, 255);
             SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 0, 0)); ///Rouge
-            vaisseau->tir.vitesse = 5;
+            vaisseau->tir.vitesse = 20;
             break;
         case OBUS:
-            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 255, 165, 0, 255);
             SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 165, 0));///Orange
-            vaisseau->tir.vitesse = 5;
+            vaisseau->tir.vitesse = 10;
             break;
         case RAYON_LASER:
-            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 0, 0);
+            vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 255, 255);
             SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 0, 0, 255));///Bleu
-            vaisseau->tir.vitesse = 40; // Il nous faut une très grande vitesse pour que cela apparaisse comme un trait.
+            vaisseau->tir.vitesse = 40;
             break;
         default:
             break;

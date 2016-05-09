@@ -43,18 +43,18 @@ void ia_cherche(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "cherche":
     }
     switch(direction){
         case 1:
-            mouvement_ia (TOURNE, POSITIF, v_ia, v_joueur);
+            mouvement_vaisseau (TOURNE, POSITIF, v_ia);
             duree --;
             break;
         case 2:
-            mouvement_ia (TOURNE, NEGATIF, v_ia, v_joueur);
+            mouvement_vaisseau (TOURNE, NEGATIF, v_ia);
             duree --;
             break;
         default:
             if(v_ia->vitesse <= (v_ia->vitesse_max/3.0))
-                mouvement_ia (AVANCE, DROIT, v_ia, v_joueur);
+                mouvement_vaisseau (AVANCE, DROIT, v_ia);
             else
-                mouvement_ia (RIEN, DROIT, v_ia, v_joueur);
+                mouvement_vaisseau (RIEN, DROIT, v_ia);
             duree --;
             break;
     }
@@ -83,13 +83,13 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     }
 
     if(v_ia->vitesse <= v_joueur->vitesse){/// atteint sa vitesse et essaye de la dépasser.
-        mouvement_ia(AVANCE, DROIT, v_ia, v_joueur);
+        mouvement_vaisseau(AVANCE, DROIT, v_ia);
     }else{ /// a trop dépassé sa vitsse
-        mouvement_ia(RECUL, DROIT, v_ia, v_joueur);
+        mouvement_vaisseau(RECUL, DROIT, v_ia);
     }
     if(v_ia->angle != v_ia->angle_de_decalage){
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
-        mouvement_ia(TOURNE, sens_de_rotation, v_ia, v_joueur);
+        mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
     }else{
         if(v_ia->tir.etat != 1){/// Si pas déjà entrain de tirer alors tir.
             tir_ia(v_ia);
@@ -158,36 +158,6 @@ int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens
         return NEGATIF;
 }
 
-void mouvement_ia (int action, int sens, _vaisseau *v_ia, _vaisseau *v_joueur){
-    switch (action){
-        case AVANCE:
-            if (v_ia->vitesse < v_ia->vitesse_max)
-                v_ia->vitesse += v_ia->acceleration;
-            break;
-        case RECUL:
-            if (v_ia->vitesse > v_ia->vitesse_min)
-                v_ia->vitesse -= v_ia->acceleration;
-            break;
-        case TOURNE:
-            v_ia->etat_rotation = 1;
-            if(sens == POSITIF){
-                if(v_ia->angle <= v_ia->vitesse_rotation && v_ia->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
-                    v_ia->angle = v_ia->angle_de_decalage;
-                else
-                    v_ia->angle += v_ia->vitesse_rotation;
-            }
-            if(sens == NEGATIF){
-                if(v_ia->angle >= 360-v_ia->vitesse_rotation && v_ia->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
-                    v_ia->angle = v_ia->angle_de_decalage;
-                else
-                    v_ia->angle -= v_ia->vitesse_rotation;
-            }
-            break;
-        case RIEN:
-            /// L'ia choisi de ne rien changer à sa trajectoire.
-            break;
-    }
-}
 
 void tir_ia(_vaisseau *v_ia){
     v_ia->tir.temps_passe = 0;

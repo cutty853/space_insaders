@@ -7,3 +7,4 @@ void init_tir (_vaisseau *vaisseau);
 
 void pause();
 int aleatoire(int mini, int maxi);
+void mouvement_ia (int action, int sens, _vaisseau *vaisseau);

@@ -101,4 +101,34 @@ void init_tir (_vaisseau *vaisseau){/// Initialisation de tous les parametres du
     vaisseau->tir.angle = vaisseau->angle;
 }
 
+void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
+    switch (action){
+        case AVANCE:
+            if (vaisseau->vitesse < vaisseau->vitesse_max)
+                vaisseau->vitesse += vaisseau->acceleration;
+            break;
+        case RECUL:
+            if (vaisseau->vitesse > vaisseau->vitesse_min)
+                vaisseau->vitesse -= vaisseau->acceleration;
+            break;
+        case TOURNE:
+            vaisseau->etat_rotation = 1;
+            if(sens == POSITIF){
+                if(vaisseau->angle <= vaisseau->vitesse_rotation && vaisseau->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
+                    vaisseau->angle = vaisseau->angle_de_decalage;
+                else
+                    vaisseau->angle += vaisseau->vitesse_rotation;
+            }
+            if(sens == NEGATIF){
+                if(vaisseau->angle >= 360-vaisseau->vitesse_rotation && vaisseau->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
+                    vaisseau->angle = vaisseau->angle_de_decalage;
+                else
+                    vaisseau->angle -= vaisseau->vitesse_rotation;
+            }
+            break;
+        case RIEN:
+            /// L'ia choisi de ne rien changer à sa trajectoire.
+            break;
+    }
+}
 

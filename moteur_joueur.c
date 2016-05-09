@@ -112,7 +112,6 @@ void tour_joueur(_input *action, _vaisseau *v_joueur, int **etat_interface, SDL_
 */
 
 void vitesse_joueur(_vaisseau *v_joueur, int sens) {
-    /// Suggestion : ajouté
     if (sens == AVANT) {
         if (v_joueur->vitesse == 0) {
             v_joueur->vitesse = VITESSE_MINI_COS;
@@ -124,7 +123,6 @@ void vitesse_joueur(_vaisseau *v_joueur, int sens) {
             v_joueur->vitesse = 0;
         }
     }
-    // A modifié la vitesse minimum est désormais un champ de la structure vaisseau
     if (sens == ARRIERE) {
         if (v_joueur->vitesse == 0) {
             v_joueur->vitesse = -VITESSE_MINI_COS;
