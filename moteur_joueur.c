@@ -60,7 +60,7 @@ void etat_action_joueur(_input* in)
 }
 
 // La fcontion n'est pas efficace et ne fonctionne pas
-void tour_joueur(_input *action, _vaisseau *v_joueur /*, int **etat_interface, SDL_Surface *save_screen, SDL_Surface *ecran, TTF_Font *police_texte*/, _explosion *boom)
+void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom)
 {
     etat_action_joueur(action);
         // Gestion du clavier
@@ -86,18 +86,6 @@ void tour_joueur(_input *action, _vaisseau *v_joueur /*, int **etat_interface, S
         v_joueur->tir.etat = 1;
         init_tir(v_joueur);
     }
-//    if (action->key[SDLK_F3]) {
-//        if ((*etat_interface)[CONSOLE]) {
-//            (*etat_interface)[CONSOLE]=0;
-//            SDL_BlitSurface(save_screen, &(pos_to_up_console[0]), ecran, &(pos_to_up_console[0]));
-//            SDL_UpdateRects(ecran, 1, pos_to_up_console);
-//        } else {
-//            (*etat_interface)[CONSOLE]=1;
-//            pos_to_up_console[0] = aff_console(ecran, *v_joueur, save_screen, police_texte);
-//            SDL_UpdateRects(ecran, 1, pos_to_up_console);
-//            action->key[SDLK_F3] = 0; // Ici on fait remonter la touche du joueur de façon manuelle
-//        }
-//    }
     if (action->key[SDLK_KP1]) {
         v_joueur->vie.charge = VIDE;
         boom->phase=0;

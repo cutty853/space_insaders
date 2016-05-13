@@ -266,7 +266,6 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
         vaisseau->etat_rotation = 0;
     }
     SDL_BlitSurface(tmp_rotation, NULL, ecran, &(vaisseau->position));
-
     SDL_FreeSurface(tmp_rotation);
     return vaisseau->position; /// La fonction retourne un tableau de 2 positions qui servira a update une région spécifique de la carte (se tableau a été malloc il est donc à free)
 }
@@ -494,6 +493,7 @@ void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
 }
 void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Rect pos_barre_bouclier;
+    SDL_Surface *barre_bouclier=NULL;
     pos_barre_bouclier.x=5;
     pos_barre_bouclier.y=(ecran->h)-50;
 

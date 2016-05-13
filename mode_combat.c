@@ -58,6 +58,8 @@ void play(SDL_Surface *ecran) {
     barre_bouclier_joueur(ecran, v_player);
         /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
+    pos_to_up_ecran[0] = aff_vaisseau(ecran, &v_player, save_screen);
+    SDL_UpdateRect(ecran, pos_to_up_ecran[0].x, pos_to_up_ecran[0].y, pos_to_up_ecran[0].w, pos_to_up_ecran[0].y);
 
     /// boucle du jeu:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
@@ -105,8 +107,6 @@ void play(SDL_Surface *ecran) {
             pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
         }
 
-
-
         /// L'ia joue en première:
         tour_ia(&v_ia1, &v_player, ecran);
         /// Calcul des nouvelles positions dépendants des actions de l'ia:
@@ -117,7 +117,6 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
         pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
         pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
-
 
 
         /// Test de l'action du joueur
@@ -142,15 +141,17 @@ void play(SDL_Surface *ecran) {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
         /// Zone pour placer les commandes a faire après la pause du jeu
-
-
         nb_pos_to_up_ecran = 7;
         switch (v_player.vie.charge) {
             case BAS:
             case MOYEN:
             case HAUT:
                 if ((v_player.vitesse !=0)/* || (action.key.keysym.sym == SDLK_a) || (action.key.keysym.sym == SDLK_d) || (action.button.button == SDL_BUTTON_LEFT)*/) {
-                    calcul_pos_vaisseau(&v_player, ecran);
+                    if (col_boite_boite(&(v_ia1.position), &(v_player.position))==1) {
+                        calcul_pos_vaisseau(&v_player, ecran);
+                    } else {
+                        v_player.vie.charge=VIDE;
+                    }
                     pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
                     nb_pos_to_up_ecran = 8;
                 }
