@@ -61,7 +61,7 @@ void play(SDL_Surface *ecran) {
     pos_to_up_ecran[0] = aff_vaisseau(ecran, &v_player, save_screen);
     SDL_UpdateRect(ecran, pos_to_up_ecran[0].x, pos_to_up_ecran[0].y, pos_to_up_ecran[0].w, pos_to_up_ecran[0].y);
 
-    /// boucle du jeu:
+    /// BOUCLE DU JEU:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
         /** SUGGESTION
         * Plutot que d'utilisé des tableaux pour mettre a jour l'écran on pourrait utiliser les listes chainés

@@ -1,0 +1,31 @@
+GENERALE:
+taux_seconde: 20
+taille_ecran_y: 768
+taille_ecran_x: 1366
+nbr_sprites_explosion: 25
+nbr_sprites_bouclier: 4
+largeur_bouclier: 40
+hauteur_bouclier: 5
+nbr_sprites_vie: 4
+largeur_explosion: 65
+hauteur_explosion: 65
+taux_fps: 60
+pi: 3.14159265358979323846264338327950288419716939937510582
+
+VAISSEAUX:
+taille_vaisseau: 60
+vitess_mini_cos: 2
+degat_tir_laser: 30
+degat_rayon_laser: 200
+degat_obus: 50
+
+MENU:
+largeur_cadre_menu: 300
+hauteur_cadre_menu: 50
+espace_cadre_menu: 30
+nbr_options_menu: 4
+
+CONSOLE:
+nbr_stats_console: 5
+taille_console_x: 200
+taille_console_y: 180

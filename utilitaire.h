@@ -8,3 +8,5 @@ void init_tir (_vaisseau *vaisseau);
 void pause();
 int aleatoire(int mini, int maxi);
 void mouvement_vaisseau(int action, int sens, _vaisseau *vaisseau);
+
+void trouve_RVB_pixel(Uint32 pixel, SDL_Surface *ecran);

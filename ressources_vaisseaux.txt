@@ -1,0 +1,19 @@
+JOEUR:
+intelligence: JOUEUR
+comportement: INDEPENDANT
+poid: 100
+vitesse: 0
+acceleration: 2
+vitesse_max: 20
+vitesse_min = -5
+charge_bouclier: HAUT
+charge_vie: HAUT
+arme: LASER
+etat_tir: 0
+tir.temps_passe: 0
+capacite: 
+vitesse_rotation: 2
+angle: 90
+chemin_sprite: images/vaisseau_ia.png
+position_x: 1000
+position_y 350
