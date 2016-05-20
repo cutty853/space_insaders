@@ -1,0 +1,20 @@
+GENNERAL:
+nbr_ia: 2
+
+IA1:
+position_x: 1000
+position_y: 150
+angle: 135
+arme: LASER
+
+IA2:
+position_x: 1000
+position_y: 450
+angle: 45
+arme: LASER
+
+JOEUR:
+position_x: 150
+position_y: 300
+angle: 270
+arme: LASER
