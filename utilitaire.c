@@ -132,29 +132,9 @@ void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
     }
 }
 
-void trouve_RVB_pixel(Uint32 pixel, SDL_Surface *ecran){
-    Uint32 temp = 0;
-    SDL_PixelFormat *fmt = ecran->format;
-    Uint8 red = 0, green = 0, blue = 0;
-
-    /* Get Red component */
-    temp=pixel&fmt->Rmask; /* Isolate red component */
-    temp=temp>>fmt->Rshift;/* Shift it down to 8-bit */
-    temp=temp<<fmt->Rloss; /* Expand to a full 8-bit number */
-    red=(Uint8)temp;
-
-    /* Get Green component */
-    temp=pixel&fmt->Gmask; /* Isolate green component */
-    temp=temp>>fmt->Gshift;/* Shift it down to 8-bit */
-    temp=temp<<fmt->Gloss; /* Expand to a full 8-bit number */
-    green=(Uint8)temp;
-
-    /* Get Blue component */
-    temp=pixel&fmt->Bmask; /* Isolate blue component */
-    temp=temp>>fmt->Bshift;/* Shift it down to 8-bit */
-    temp=temp<<fmt->Bloss; /* Expand to a full 8-bit number */
-    blue=(Uint8)temp;
-
-    printf("Pixel Color -> R: %d,  G: %d,  B: %d\n", red, green, blue);
+void deplace_curseur(FILE* fichier){
+    char deux_points = ':';
+    do{/// Boucle de lecture des caractères un à un
+        deux_points = fgetc(fichier); /// On lit le caractère
+    } while (deux_points != ':'); /// On continue tant que fgetc n'a pas retourné EOF (fin de fichier)
 }
-
