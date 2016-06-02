@@ -78,13 +78,11 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
     vaisseau->bouclier.charge = tab_init_val[7];
     vaisseau->vie.charge = tab_init_val[8];
 
-    vaisseau->vitesse_min = -2;
+    vaisseau->vitesse_min = 0;
     vaisseau->vitesse = 0.0;
-    vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0;
+    vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
     vaisseau->tir.temps_passe = 0;
-
-
 
     if(intelligence == IA) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
@@ -165,7 +163,7 @@ int recup_string(FILE* fichier){
     }else if(strcmp(val_string, "HAU") == 0){
         return(HAUT);
     }else
-        exit(666);
+        exit(666);/// témoin de chargement.
 }
 
 

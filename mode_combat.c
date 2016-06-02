@@ -26,11 +26,11 @@
 void play(SDL_Surface *ecran) {
     _input action;
     TTF_Font *police_texte=NULL;
-    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_interface[NB_ETAT_INTERFACE];
+    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[9], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2]; /// 9 = nombre actuel de nouvelles positions.
-    _vaisseau v_player, v_ia1;
+    _vaisseau v_player, v_ia1/*, v_ia2*/;
     _explosion boom;
     etat_interface[CONSOLE]=0;
 
@@ -42,21 +42,40 @@ void play(SDL_Surface *ecran) {
 
     ///Chargmement des caractéristiques du niveau joué:
     FILE* fichier = NULL;
-    fichier = fopen("ressources/index_partie1.txt", "r"); /// On ouvre le fichier pour uniquement le lire.
+    switch(niveau){
+        case 1:
+            fichier = fopen("ressources/index_partie1.txt", "r"); /// On ouvre le fichier de lvl 1 pour uniquement le lire.
+            break;
+        case 2:
+            fichier = fopen("ressources/index_partie2.txt", "r"); /// On ouvre le fichier de lvl 2 pour uniquement le lire.
+            break;
+        case 3:
+            fichier = fopen("ressources/index_partie3.txt", "r"); /// On ouvre le fichier de lvl 3 pour uniquement le lire.
+            break;
+        default:
+            exit(6666);
+    }
     if (fichier != NULL){
-        int init_val_int[9];
-        int i;
+        int init_val_int[NBR_VALEURS_TRANSMISES], nbr_ia;
         char titre[] = "IA0";
+        /// GEN:
+        do{
+            fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
+        } while(strcmp(titre, "GEN") != 0);
+        deplace_curseur(fichier);
+        nbr_ia = recup_int(fichier);
+        printf("%i  ", nbr_ia);/// Ecriture témoin pour vérifier les valeurs chargées.
+
         /// IA:
         do{
-            fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
+            fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
         } while(strcmp(titre, "IA1") != 0);
-        for(i=0; i<6; i++){
+        for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_int(fichier);
             printf("%i  ", init_val_int [i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
-        for(i=6; i<9; i++){
+        for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
             printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
@@ -70,12 +89,12 @@ void play(SDL_Surface *ecran) {
         do{
             fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
         } while(strcmp(titre, "JOU") != 0);
-        for(i=0; i<6; i++){
+        for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int [i] = recup_int(fichier);
             printf("%i  ", init_val_int [i]);
         }
-        for(i=6; i<9; i++){
+        for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
             printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
@@ -209,6 +228,7 @@ void play(SDL_Surface *ecran) {
             pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
+
         /// AFFICHAGE:
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_joueur); // Pas optimisé, affichage permanant même quand pas de tir

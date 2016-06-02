@@ -3,8 +3,8 @@ nbr_ia:1
 
 IA1
 position_x:1000
-position_y:150
-angle:135
+position_y:350
+angle:90
 poid:25
 vitesse_max:8
 vitesse_rotation:3
@@ -14,7 +14,7 @@ charge_vie:HAU
 
 JOU
 position_x:150
-position_y:300
+position_y:350
 angle:270
 poid:25
 vitesse_max:8
