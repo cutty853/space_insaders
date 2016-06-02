@@ -13,6 +13,26 @@ typedef struct {
     int taille_y;
     _sens sens;
 } _degrade;
+typedef struct {
+    int x, y;
+} _point;
+typedef struct {
+    int x,y;
+} _vecteur;
+typedef struct {
+    int nb_points;
+    _point* points;
+} _polygone;
+typedef struct {
+    _point centre;
+    int rayon;
+} _cercle;
+
+typedef struct {
+    SDL_Rect aabb;
+    _cercle cercle;
+    _polygone polygone;
+} _hitbox;
 
 typedef enum{JOUEUR, IA} _intelligence;
 typedef enum{CHERCHE, ATTAQUE, FUIT, INDEPENDENT} _comportement;
@@ -43,8 +63,8 @@ typedef struct{
     int angle;
     int etat;
     int temps_passe;
+    _hitbox hitbox;
 } _tir;
-
 
 typedef struct {
     SDL_Surface *sprite;
@@ -61,12 +81,11 @@ typedef struct {
     _tir tir;
     //_capacite capacite;
     SDL_Rect position;
-
+    _hitbox hitbox;
 
     int angle_de_decalage; // TEST
 
 } _vaisseau;
-
 
 typedef struct {
     char key[SDLK_LAST];
@@ -75,6 +94,3 @@ typedef struct {
     char mousebuttons[8];
     char quit;
 } _input;
-typedef struct {
-    int x, y, rayon;
-} _cercle;
