@@ -30,7 +30,7 @@ void play(SDL_Surface *ecran) {
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[9], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2]; /// 9 = nombre actuel de nouvelles positions.
-    _vaisseau v_player, v_ia1, v_ia2;
+    _vaisseau v_player, v_ia1;
     _explosion boom;
     etat_interface[CONSOLE]=0;
 
@@ -40,69 +40,53 @@ void play(SDL_Surface *ecran) {
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
 
-        ///Chargmement du niveau joué:
+    ///Chargmement des caractéristiques du niveau joué:
     FILE* fichier = NULL;
     fichier = fopen("ressources/index_partie1.txt", "r"); /// On ouvre le fichier pour uniquement le lire.
     if (fichier != NULL){
+        int init_val_int[9];
+        int i;
         char titre[] = "IA0";
+        /// IA:
         do{
             fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
         } while(strcmp(titre, "IA1") != 0);
+        for(i=0; i<6; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_int(fichier);
+            printf("%i  ", init_val_int [i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        for(i=6; i<9; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_string(fichier);
+            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        init_vaisseau(&v_ia1, IA, CHERCHE, init_val_int);
+        charge_sprite_bouclier(&v_ia1);
+        charge_sprite_vie(&v_ia1);
+        charge_sprite_tir(&v_ia1);
 
-        deplace_curseur(fichier);
-        int pos_x;
-        fscanf(fichier, "%i", &pos_x);
-        printf("%i  ", pos_x);
+        /// JOUEUR:
+        do{
+            fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
+        } while(strcmp(titre, "JOU") != 0);
+        for(i=0; i<6; i++){
+            deplace_curseur(fichier);
+            init_val_int [i] = recup_int(fichier);
+            printf("%i  ", init_val_int [i]);
+        }
+        for(i=6; i<9; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_string(fichier);
+            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        init_vaisseau(&v_player, JOUEUR, INDEPENDENT, init_val_int);
+        charge_sprite_bouclier(&v_player);
+        charge_sprite_vie(&v_player);
+        charge_sprite_tir(&v_player);
 
-        deplace_curseur(fichier);
-        int pos_y;
-        fscanf(fichier, "%i", &pos_y);
-        printf("%i  ", pos_y);
-
-        deplace_curseur(fichier);
-        int angle;
-        fscanf(fichier, "%i", &angle);
-        printf("%i  ", angle);
-
-        deplace_curseur(fichier);
-        int poid;
-        fscanf(fichier, "%i", &poid);
-        printf("%i  ", poid);
-
-        deplace_curseur(fichier);
-        float vitesse;
-        fscanf(fichier, "%f", &vitesse);
-        printf("%f  ", vitesse);
-
-        deplace_curseur(fichier);
-        float acceleration;
-        fscanf(fichier, "%f", &acceleration);
-        printf("%f  ", acceleration);
-
-        deplace_curseur(fichier);
-        int v_max;
-        fscanf(fichier, "%i", &v_max);
-        printf("%i  ", v_max);
-
-        deplace_curseur(fichier);
-        int v_rotation;
-        fscanf(fichier, "%i", &v_rotation);
-        printf("%i  ", v_rotation);
-
-        init_vaisseau(&v_ia1, IA, CHERCHE, poid, vitesse, acceleration, v_max, HAUT, HAUT, TIR_LASER, pos_x, pos_y, v_rotation, angle);
-        lose(fichier);
+        close(fichier);
     }
-
-        /// ia:
-    //init_vaisseau(&v_ia1, IA, CHERCHE, 25, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 1000, 300, 3, 90);
-    charge_sprite_bouclier(&v_ia1);
-    charge_sprite_vie(&v_ia1);
-    charge_sprite_tir(&v_ia1);
-        /// joueur:
-    init_vaisseau(&v_player, JOUEUR, INDEPENDENT, 100, 0, 0.1, 8, HAUT, HAUT, OBUS, 100, 300, 3, 270);
-    charge_sprite_bouclier(&v_player);
-    charge_sprite_vie(&v_player);
-    charge_sprite_tir(&v_player);
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);

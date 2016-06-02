@@ -1,5 +1,5 @@
 GENNERAL:
-nbr_ia: 3
+nbr_ia: 2
 
 IA1:
 position_x: 1000
