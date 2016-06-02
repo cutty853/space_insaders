@@ -64,22 +64,26 @@ int aleatoire(int mini, int maxi){
     return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
 }
 
-void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int poid, float vitesse, float acceleration, int v_max, int bouclier, int vie, _arme arme, int position_x, int position_y, int v_rotation, int angle){
+void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int tab_init_val[9]){
     vaisseau->intelligence = intelligence;
     vaisseau->comportement = comportement;
-    vaisseau->poid = poid;
-    vaisseau->vitesse = vitesse;
-    vaisseau->acceleration = acceleration;
-    vaisseau->vitesse_max = v_max;
-    vaisseau->vitesse_min = -v_max/3;
-    vaisseau->bouclier.charge = bouclier;
-    vaisseau->vie.charge = vie;
-    vaisseau->arme = arme;
+
+    vaisseau->position.x = tab_init_val[0];
+    vaisseau->position.y = tab_init_val[1];
+    vaisseau->angle = tab_init_val[2];
+    vaisseau->poid = tab_init_val[3];
+    vaisseau->vitesse_max = tab_init_val[4];
+    vaisseau->vitesse_rotation = tab_init_val[5];
+    vaisseau->arme = tab_init_val[6];
+    vaisseau->bouclier.charge = tab_init_val[7];
+    vaisseau->vie.charge = tab_init_val[8];
+
+    vaisseau->vitesse_min = 0;
+    vaisseau->vitesse = 0.0;
+    vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
     vaisseau->tir.temps_passe = 0;
-    //vaisseau.capacite=CAPA1;
-    vaisseau->vitesse_rotation = v_rotation;
-    vaisseau->angle = angle;
+
     if(intelligence == IA) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
@@ -88,8 +92,6 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
         vaisseau->sprite = IMG_Load("images/joueur_ship.png");
         test_surface(vaisseau->sprite, 105);
     }
-    vaisseau->position.x = position_x;
-    vaisseau->position.y = position_y;
 }
 void init_pos(SDL_Rect* position, int x, int y){
     position->x=x;
@@ -131,4 +133,40 @@ void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
             break;
     }
 }
+
+void deplace_curseur(FILE* fichier){
+    char deux_points = ':';
+    do{/// Boucle de lecture des caractères un à un
+        deux_points = fgetc(fichier); /// On lit le caractère
+    } while (deux_points != ':'); /// On continue tant que fgetc n'a pas retourné EOF (fin de fichier)
+}
+int recup_int(FILE* fichier){
+    int val_int = 0;
+    fscanf(fichier, "%i", &val_int);
+    return(val_int);
+}
+int recup_string(FILE* fichier){
+    char val_string[4];
+    fgets(val_string, 4, fichier);
+    if(strcmp(val_string, "TIR") == 0){
+        return(TIR_LASER);
+    }else if(strcmp(val_string, "OBU") == 0){
+        return(OBUS);
+    }else if(strcmp(val_string, "RAY") == 0){
+        return(RAYON_LASER);
+    }else if(strcmp(val_string, "VID") == 0){
+        return(VIDE);
+    }else if(strcmp(val_string, "BAS") == 0){
+        return(BAS);
+    }else if(strcmp(val_string, "MOY") == 0){
+        return(MOYEN);
+    }else if(strcmp(val_string, "HAU") == 0){
+        return(HAUT);
+    }else
+        exit(666);/// témoin de chargement.
+}
+
+
+
+
 

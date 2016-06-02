@@ -26,12 +26,13 @@
 void play(SDL_Surface *ecran) {
     _input action;
     TTF_Font *police_texte=NULL;
-    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_interface[NB_ETAT_INTERFACE];
+    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[9], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2]; /// 9 = nombre actuel de nouvelles positions.
     _vaisseau v_player, v_ia1;
     _explosion boom, boom2;
+    FILE* fichier = NULL;
     etat_interface[CONSOLE]=0;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
@@ -42,19 +43,74 @@ void play(SDL_Surface *ecran) {
     charge_sprite_explosion(&boom2);
     boom.phase=0;
     boom2.phase=0;
-        /// ia:
-    init_vaisseau(&v_ia1, IA, CHERCHE, 25, 0, 0.1, 8, HAUT, HAUT, TIR_LASER, 1000, 300, 3, 90);
-    init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
-    charge_sprite_bouclier(&v_ia1);
-    charge_sprite_vie(&v_ia1);
-    charge_sprite_tir(&v_ia1);
-//    init_hitbox(&(v_ia1.tir.hitbox), 0, 0, 0, 0, v_ia1.tir.position.x+(v_ia1.tir.position.w/4), v_ia1.tir.position.y+(v_ia1.tir.position.h/4), v_ia1.tir.position.w/2, v_ia1.tir.position.h/2);
-        /// joueur:
-    init_vaisseau(&v_player, JOUEUR, INDEPENDENT, 100, 0, 0.1, 8, HAUT, HAUT, OBUS, 100, 300, 3, 270);
-    init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);
-    charge_sprite_bouclier(&v_player);
-    charge_sprite_vie(&v_player);
-    charge_sprite_tir(&v_player);
+
+    ///Chargmement des caractéristiques du niveau joué:
+    switch(niveau){
+        case 1:
+            fichier = fopen("ressources/index_partie1.txt", "r"); /// On ouvre le fichier de lvl 1 pour uniquement le lire.
+            break;
+        case 2:
+            fichier = fopen("ressources/index_partie2.txt", "r"); /// On ouvre le fichier de lvl 2 pour uniquement le lire.
+            break;
+        case 3:
+            fichier = fopen("ressources/index_partie3.txt", "r"); /// On ouvre le fichier de lvl 3 pour uniquement le lire.
+            break;
+        default:
+            exit(6666);
+    }
+    if (fichier != NULL){
+        int init_val_int[NBR_VALEURS_TRANSMISES], nbr_ia;
+        char titre[] = "IA0";
+        /// GEN:
+        do{
+            fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
+        } while(strcmp(titre, "GEN") != 0);
+        deplace_curseur(fichier);
+        nbr_ia = recup_int(fichier);
+        printf("%i  ", nbr_ia);/// Ecriture témoin pour vérifier les valeurs chargées.
+
+        /// IA:
+        do{
+            fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
+        } while(strcmp(titre, "IA1") != 0);
+        for(i=0; i<NBR_VALEURS_INT; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_int(fichier);
+            printf("%i  ", init_val_int [i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_string(fichier);
+            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        init_vaisseau(&v_ia1, IA, CHERCHE, init_val_int);
+        init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
+        charge_sprite_bouclier(&v_ia1);
+        charge_sprite_vie(&v_ia1);
+        charge_sprite_tir(&v_ia1);
+
+        /// JOUEUR:
+        do{
+            fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
+        } while(strcmp(titre, "JOU") != 0);
+        for(i=0; i<NBR_VALEURS_INT; i++){
+            deplace_curseur(fichier);
+            init_val_int [i] = recup_int(fichier);
+            printf("%i  ", init_val_int [i]);
+        }
+        for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
+            deplace_curseur(fichier);
+            init_val_int[i] = recup_string(fichier);
+            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
+        }
+        init_vaisseau(&v_player, JOUEUR, INDEPENDENT, init_val_int);
+        init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);
+        charge_sprite_bouclier(&v_player);
+        charge_sprite_vie(&v_player);
+        charge_sprite_tir(&v_player);
+
+        close(fichier);
+    }
         /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
@@ -66,7 +122,8 @@ void play(SDL_Surface *ecran) {
     save_screen = SDL_DisplayFormat(ecran);
     pos_to_up_ecran[0] = aff_vaisseau(ecran, &v_player, save_screen);
     SDL_UpdateRect(ecran, pos_to_up_ecran[0].x, pos_to_up_ecran[0].y, pos_to_up_ecran[0].w, pos_to_up_ecran[0].y);
-    /// boucle du jeu:
+
+    /// BOUCLE DU JEU:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
         /** SUGGESTION
         * Plutot que d'utilisé des tableaux pour mettre a jour l'écran on pourrait utiliser les listes chainés
@@ -206,6 +263,7 @@ void play(SDL_Surface *ecran) {
             pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
+
         /// AFFICHAGE:
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_joueur); // Pas optimisé, affichage permanant même quand pas de tir

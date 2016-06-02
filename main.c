@@ -22,10 +22,7 @@
     #include "moteur_physique.h"
 #endif
 
-
-
-
-int main ( int argc, char** argv ){
+int main(int argc, char** argv){
     srand(time(NULL)); /// initialisation de rand
     SDL_Surface *ecran=NULL;
     FILE* ctt = NULL;
@@ -69,4 +66,3 @@ int main ( int argc, char** argv ){
     fclose(ctt);
     return 0;
 }
-

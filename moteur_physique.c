@@ -30,13 +30,6 @@ int col_point_boite (_point *x, SDL_Rect *boite) {
         return 0;
 }
 
-int col_boite_boite (SDL_Rect *repere, SDL_Rect *boite) {
-    if ((boite->x >= repere->x + repere->w) || (boite->y >= repere->y + repere->h) || (boite->x + boite->w <= repere->x) || (boite->y + boite->h <= repere->y))
-        return 1;
-    else
-        return 0;
-}
-
 int col_point_cercle (int x, int y, _cercle* c) {
     // La fonction sqrt n'a pas été utilisé, car inutile et trop demandeuse de ressources
     int distance = (x-(c->centre.x))*(x-(c->centre.x)) + (y-(c->centre.y))*(y-(c->centre.y));
@@ -45,6 +38,14 @@ int col_point_cercle (int x, int y, _cercle* c) {
     else
         return 0;
 }
+
+int col_boite_boite (SDL_Rect *repere, SDL_Rect *boite) {
+    if ((boite->x >= repere->x + repere->w) || (boite->y >= repere->y + repere->h) || (boite->x + boite->w <= repere->x) || (boite->y + boite->h <= repere->y))
+        return 1;
+    else
+        return 0;
+}
+
 
 int col_cercle_cercle (_cercle *c1, _cercle *c2) {
     int distance = ((c1->centre.x)-(c2->centre.x))*((c1->centre.x)-(c2->centre.x)) + ((c1->centre.y)-(c2->centre.y))*((c1->centre.y)-(c2->centre.y));
@@ -85,6 +86,13 @@ int col_polygone_point (_polygone *p, _point* x) {
     return 1;
 }
 
+int col_aabb_cercle (SDL_Rect* aabb, _cercle *c) {
+    if(col_point_cercle(aabb->x, aabb->y, c) || col_point_cercle(aabb->x+aabb->w, aabb->y, c) || col_point_cercle(aabb->x+aabb->w, aabb->y+aabb->h, c) || col_point_cercle(aabb->x, aabb->y+aabb->h, c))
+        return 1;
+    else
+        return 0;
+}
+
 void init_hitbox(_hitbox* h, int xCercle, int yCercle, int rCercle, int nb_points, int xAABB, int yAABB, int wAABB, int hAABB) {
     if (nb_points==0)
         h->polygone.points = NULL;
@@ -109,19 +117,6 @@ void calcul_pos_hitbox_tir(_tir* t) {
     t->hitbox.aabb.y += (t->vitesse)*(-cos(RADIANATION(t->angle)));
 }
 
-
-int col_aabb_cercle (SDL_Rect* aabb, _cercle *c) {
-    printf("=============================================\n");
-    printf("position de la premiere collision : %d %d\n", aabb->x, aabb->y);
-    printf("position de la premiere collision : %d %d\n", aabb->x+aabb->w, aabb->y);
-    printf("position de la premiere collision : %d %d\n", aabb->x+aabb->w, aabb->y+aabb->h);
-    printf("position de la premiere collision : %d %d\n", aabb->x, aabb->y+aabb->h);
-    if(col_point_cercle(aabb->x, aabb->y, c) || col_point_cercle(aabb->x+aabb->w, aabb->y, c) || col_point_cercle(aabb->x+aabb->w, aabb->y+aabb->h, c) || col_point_cercle(aabb->x, aabb->y+aabb->h, c))
-        return 1;
-    else
-        return 0;
-}
-
 void transform_aabb_polygone(SDL_Rect* aabb, _polygone *p) {
     p->points = malloc(sizeof(_point)*4);
     p->nb_points = 4;
@@ -133,4 +128,49 @@ void transform_aabb_polygone(SDL_Rect* aabb, _polygone *p) {
     p->points[2].y = aabb->y+aabb->h;
     p->points[3].x = aabb->x;
     p->points[3].y = aabb->y+aabb->h;
+}
+
+/* ********************************************************************* */
+/*obtenirPixel : permet de récupérer la couleur d'un pixel
+Paramètres d'entrée/sortie :
+SDL_Surface *surface : la surface sur laquelle on va récupérer la couleur d'un pixel
+int x : la coordonnée en x du pixel à récupérer
+int y : la coordonnée en y du pixel à récupérer
+
+Uint32 resultat : la fonction renvoie le pixel aux coordonnées (x,y) dans la surface
+*/
+Uint32 obtenirPixel(SDL_Surface *surface, _vaisseau *vaisseau){
+    int x = 5;//vaisseau->tir.position.x+5;
+    int y = 5;//vaisseau->tir.position.y+1;
+
+    /*nbOctetsParPixel représente le nombre d'octets utilisés pour stocker un pixel.
+    En multipliant ce nombre d'octets par 8 (un octet = 8 bits), on obtient la profondeur de couleur
+    de l'image : 8, 16, 24 ou 32 bits.*/
+    int nbOctetsParPixel = surface->format->BytesPerPixel;
+    /* Ici p est l'adresse du pixel que l'on veut connaitre */
+    /*surface->pixels contient l'adresse du premier pixel de l'image*/
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * nbOctetsParPixel;
+
+    /*Gestion différente suivant le nombre d'octets par pixel de l'image*/
+    switch(nbOctetsParPixel){
+        case 1:
+            return *p;
+
+        case 2:
+            return *(Uint16 *)p;
+
+        case 3:
+            /*Suivant l'architecture de la machine*/
+            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                return p[0] << 16 | p[1] << 8 | p[2];
+            else
+                return p[0] | p[1] << 8 | p[2] << 16;
+
+        case 4:
+            return *(Uint32 *)p;
+
+        /*Ne devrait pas arriver, mais évite les erreurs*/
+        default:
+            return 0;
+    }
 }
