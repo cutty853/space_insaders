@@ -82,17 +82,24 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
             break;
     }
 
-    if(v_ia->vitesse <= v_joueur->vitesse){/// atteint sa vitesse et essaye de la dépasser.
+
+    int distance_securite_horizontale = (v_ia->vitesse*20.5)+80; /// En pixels, distance progressive en fonction de la vitesse (20,5 est calculé pour avoir le temps de s'arrêter à vitesse max avec l'obstacle fixe + 80 est quand vitesse nulle taille du sprite vaisseau avec distance de sécurité).
+    int distance_securite_verticale = distance_securite_horizontale; /// En pixels, formation d'un carré.
+    if((v_ia->position.x - distance_securite_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_securite_horizontale)){
+        if((v_ia->position.y - distance_securite_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_securite_verticale))
+            mouvement_vaisseau(RECUL, DROIT, v_ia);; /// L'ia est trop proche est risque de déclencher une colision.
+    }else if(v_ia->vitesse < v_joueur->vitesse){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
         mouvement_vaisseau(AVANCE, DROIT, v_ia);
-    }else{ /// a trop dépassé sa vitsse
-        mouvement_vaisseau(RECUL, DROIT, v_ia);
     }
-    if(v_ia->angle != v_ia->angle_de_decalage){
+    if(v_ia->angle <= (v_ia->angle_de_decalage)-2 || v_ia->angle >= (v_ia->angle_de_decalage)+2){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
-    }else{
+    }else{/// dans le bon axe, déclenche le tir.
         if(v_ia->tir.etat != 1){/// Si pas déjà entrain de tirer alors tir.
-            tir_ia(v_ia);
+            int alea_tir = aleatoire(1, 5);
+            printf("%i", alea_tir);
+            if(alea_tir > 6)
+                tir_ia(v_ia);
         }
     }
 }

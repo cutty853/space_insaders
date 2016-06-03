@@ -46,7 +46,6 @@ int col_boite_boite (SDL_Rect *repere, SDL_Rect *boite) {
         return 0;
 }
 
-
 int col_cercle_cercle (_cercle *c1, _cercle *c2) {
     int distance = ((c1->centre.x)-(c2->centre.x))*((c1->centre.x)-(c2->centre.x)) + ((c1->centre.y)-(c2->centre.y))*((c1->centre.y)-(c2->centre.y));
     if (distance >= (c1->rayon*c1->rayon)+(c2->rayon*c2->rayon))

@@ -67,7 +67,6 @@ void play(SDL_Surface *ecran) {
         } while(strcmp(titre, "GEN") != 0);
         deplace_curseur(fichier);
         nbr_ia = recup_int(fichier);
-        printf("%i  ", nbr_ia);/// Ecriture témoin pour vérifier les valeurs chargées.
 
         /// IA:
         do{
@@ -76,12 +75,10 @@ void play(SDL_Surface *ecran) {
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_int(fichier);
-            printf("%i  ", init_val_int [i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
-            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         init_vaisseau(&v_ia1, IA, CHERCHE, init_val_int);
         init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
@@ -96,12 +93,10 @@ void play(SDL_Surface *ecran) {
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int [i] = recup_int(fichier);
-            printf("%i  ", init_val_int [i]);
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
-            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         init_vaisseau(&v_player, JOUEUR, INDEPENDENT, init_val_int);
         init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);

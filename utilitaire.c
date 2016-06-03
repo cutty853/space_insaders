@@ -60,8 +60,8 @@ void pause(){
         }
     }
 }
-int aleatoire(int mini, int maxi){
-    return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
+int aleatoire(int mini, int maxi){/// random entre le minimum demande et le maximum demande (inclus).
+    return ( (rand()%maxi)+mini );
 }
 
 void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int tab_init_val[9]){
