@@ -82,7 +82,6 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
             break;
     }
 
-
     int distance_securite_horizontale = (v_ia->vitesse*20.5)+80; /// En pixels, distance progressive en fonction de la vitesse (20,5 est calculé pour avoir le temps de s'arrêter à vitesse max avec l'obstacle fixe + 80 est quand vitesse nulle taille du sprite vaisseau avec distance de sécurité).
     int distance_securite_verticale = distance_securite_horizontale; /// En pixels, formation d'un carré.
     if((v_ia->position.x - distance_securite_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_securite_horizontale)){
@@ -96,9 +95,8 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
     }else{/// dans le bon axe, déclenche le tir.
         if(v_ia->tir.etat != 1){/// Si pas déjà entrain de tirer alors tir.
-            int alea_tir = aleatoire(1, 5);
-            printf("%i", alea_tir);
-            if(alea_tir > 6)
+            int alea_tir = aleatoire(1, 100); /// Petit alée pour empêcher la mitraillage.
+            if(alea_tir > 100-v_ia->seuil_intelligence)
                 tir_ia(v_ia);
         }
     }

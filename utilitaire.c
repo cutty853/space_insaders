@@ -64,8 +64,7 @@ int aleatoire(int mini, int maxi){/// random entre le minimum demande et le maxi
     return ( (rand()%maxi)+mini );
 }
 
-void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int tab_init_val[9]){
-    vaisseau->intelligence = intelligence;
+void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init_val[NBR_VALEURS_TRANSMISES]){
     vaisseau->comportement = comportement;
 
     vaisseau->position.x = tab_init_val[0];
@@ -77,17 +76,27 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
     vaisseau->arme = tab_init_val[6];
     vaisseau->bouclier.charge = tab_init_val[7];
     vaisseau->vie.charge = tab_init_val[8];
+    vaisseau->intelligence = tab_init_val[9];
 
     vaisseau->vitesse_min = 0;
     vaisseau->vitesse = 0.0;
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
 
-    if(intelligence == IA) {
+    if(vaisseau->intelligence == IA_NOVICE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
+        vaisseau->seuil_intelligence = 5;
+    }else if(vaisseau->intelligence == IA_NORMAL) {
+        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
+        test_surface(vaisseau->sprite, 104);
+        vaisseau->seuil_intelligence = 15;
+    }else if(vaisseau->intelligence == IA_EXPERTE) {
+        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
+        test_surface(vaisseau->sprite, 104);
+        vaisseau->seuil_intelligence = 50;
     }
-    else {
+    else {/// il s'agit du joueur.
         vaisseau->sprite = IMG_Load("images/joueur_ship.png");
         test_surface(vaisseau->sprite, 105);
     }
@@ -164,6 +173,14 @@ int recup_string(FILE* fichier){
         return(MOYEN);
     }else if(strcmp(val_string, "HAU") == 0){
         return(HAUT);
+    }else if(strcmp(val_string, "JOU") == 0){
+        return(JOUEUR);
+    }else if(strcmp(val_string, "NOV") == 0){
+        return(IA_NOVICE);
+    }else if(strcmp(val_string, "NOR") == 0){
+        return(IA_NORMAL);
+    }else if(strcmp(val_string, "EXP") == 0){
+        return(IA_EXPERTE);
     }else
         exit(666);/// témoin de chargement.
 }

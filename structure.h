@@ -34,7 +34,7 @@ typedef struct {
     _polygone polygone;
 } _hitbox;
 
-typedef enum{JOUEUR, IA} _intelligence;
+typedef enum{JOUEUR, IA_NOVICE, IA_NORMAL, IA_EXPERTE} _intelligence;
 typedef enum{CHERCHE, ATTAQUE, FUIT, INDEPENDENT} _comportement;
 typedef enum {VIDE, BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
@@ -74,6 +74,7 @@ typedef struct {
     int vitesse_max, vitesse_min;
     int vitesse_rotation, angle;
     int etat_rotation;
+    int seuil_intelligence;
     _intelligence intelligence;
     _comportement comportement;
     _bouclier bouclier;

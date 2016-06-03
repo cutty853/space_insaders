@@ -80,7 +80,7 @@ void play(SDL_Surface *ecran) {
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
         }
-        init_vaisseau(&v_ia1, IA, CHERCHE, init_val_int);
+        init_vaisseau(&v_ia1, CHERCHE, init_val_int);
         init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
         charge_sprite_bouclier(&v_ia1);
         charge_sprite_vie(&v_ia1);
@@ -98,7 +98,7 @@ void play(SDL_Surface *ecran) {
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
         }
-        init_vaisseau(&v_player, JOUEUR, INDEPENDENT, init_val_int);
+        init_vaisseau(&v_player, INDEPENDENT, init_val_int);
         init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);
         charge_sprite_bouclier(&v_player);
         charge_sprite_vie(&v_player);

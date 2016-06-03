@@ -11,6 +11,7 @@ vitesse_rotation:3
 type_tir:TIR
 charge_bouclier:HAU
 charge_vie:HAU
+intelligence:NOV
 
 JOU
 position_x:150
@@ -22,3 +23,4 @@ vitesse_rotation:3
 type_tir:TIR
 charge_bouclier:HAU
 charge_vie:HAU
+intelligence:JOU
