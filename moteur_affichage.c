@@ -500,8 +500,8 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     /// Affichage de la barre du bouclier
     switch (v_joueur.bouclier.charge) {
         case VIDE:
-        /// plus de bouclier
-        break;
+            barre_bouclier = IMG_Load("images/bouclier_VIDE.jpg");
+            break;
         case BAS:
             barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
             break;
@@ -517,10 +517,4 @@ void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
     SDL_Flip(ecran);
     SDL_FreeSurface(barre_bouclier);
 }
-
-
-
-
-
-
 
