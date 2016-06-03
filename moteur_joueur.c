@@ -82,8 +82,6 @@ void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom)
         v_joueur->vitesse = 0;
     }
     if (action->key[SDLK_SPACE] && !v_joueur->tir.etat) {
-        v_joueur->tir.temps_passe = 0;
-        v_joueur->tir.etat = 1;
         init_tir(v_joueur);
         init_hitbox(&(v_joueur->tir.hitbox), 0, 0, 0, 0, v_joueur->tir.position.x, v_joueur->tir.position.y, 6, 6);
     }

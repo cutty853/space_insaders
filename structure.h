@@ -62,7 +62,8 @@ typedef struct{
     float vitesse;
     int angle;
     int etat;
-    int temps_passe;
+    int distance_parcourue;
+    int distance_max;
     _hitbox hitbox;
 } _tir;
 

@@ -60,8 +60,8 @@ void pause(){
         }
     }
 }
-int aleatoire(int mini, int maxi){
-    return ( (rand()%maxi)+mini ); /// random entre le minimum demande et le maximum demande.
+int aleatoire(int mini, int maxi){/// random entre le minimum demande et le maximum demande (inclus).
+    return ( (rand()%maxi)+mini );
 }
 
 void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportement comportement, int tab_init_val[9]){
@@ -82,7 +82,6 @@ void init_vaisseau(_vaisseau *vaisseau, _intelligence intelligence, _comportemen
     vaisseau->vitesse = 0.0;
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
-    vaisseau->tir.temps_passe = 0;
 
     if(intelligence == IA) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
@@ -98,9 +97,12 @@ void init_pos(SDL_Rect* position, int x, int y){
     position->y=y;
 }
 void init_tir (_vaisseau *vaisseau){/// Initialisation de tous les parametres du tir
+    vaisseau->tir.etat = 1;
     init_pos(&(vaisseau->tir.position), vaisseau->position.x+(TAILLE_JOUEUR/2.0), vaisseau->position.y+(TAILLE_JOUEUR/2.0));
     vaisseau->tir.type = vaisseau->arme;
     vaisseau->tir.angle = vaisseau->angle;
+    vaisseau->tir.distance_max = 25;
+    vaisseau->tir.distance_parcourue = 0;
 }
 
 void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){

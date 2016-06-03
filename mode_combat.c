@@ -67,7 +67,6 @@ void play(SDL_Surface *ecran) {
         } while(strcmp(titre, "GEN") != 0);
         deplace_curseur(fichier);
         nbr_ia = recup_int(fichier);
-        printf("%i  ", nbr_ia);/// Ecriture témoin pour vérifier les valeurs chargées.
 
         /// IA:
         do{
@@ -76,12 +75,10 @@ void play(SDL_Surface *ecran) {
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_int(fichier);
-            printf("%i  ", init_val_int [i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
-            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         init_vaisseau(&v_ia1, IA, CHERCHE, init_val_int);
         init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
@@ -96,12 +93,10 @@ void play(SDL_Surface *ecran) {
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
             init_val_int [i] = recup_int(fichier);
-            printf("%i  ", init_val_int [i]);
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
             init_val_int[i] = recup_string(fichier);
-            printf("%i  ", init_val_int[i]);/// Ecriture témoin pour vérifier les valeurs chargées.
         }
         init_vaisseau(&v_player, JOUEUR, INDEPENDENT, init_val_int);
         init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);
@@ -125,32 +120,6 @@ void play(SDL_Surface *ecran) {
 
     /// BOUCLE DU JEU:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
-        /** SUGGESTION
-        * Plutot que d'utilisé des tableaux pour mettre a jour l'écran on pourrait utiliser les listes chainés
-        * ainsi on pourrait plus facilement ajouter et enlever des cases a ce tableau de mises a jour, ceci
-        * afin d'éviter de faire des optimisation inutile (a cause de l'allocation de tableau dynamique a chaque
-        * tour de boucle)
-        */
-        if(v_ia1.tir.etat == 1)
-            v_ia1.tir.temps_passe ++;
-        if(v_ia1.tir.temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
-            v_ia1.tir.etat = 0;
-
-            eff_tir(ecran, save_screen, &v_ia1);
-            decharge_sprite_tir(&v_ia1);
-            charge_sprite_tir(&v_ia1);
-        }
-
-        if(v_player.tir.etat == 1)
-            v_player.tir.temps_passe ++;
-        if(v_player.tir.temps_passe%50 == 0){ //Permet de reset le tir, 50 est pris totalement au hasard ! (à cause du rotozoom qui va en fait changer la rotation de l'image source)
-            v_player.tir.etat = 0;
-
-            eff_tir(ecran, save_screen, &v_player);
-            decharge_sprite_tir(&v_player);
-            charge_sprite_tir(&v_player);
-        }
-
         /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
@@ -158,23 +127,41 @@ void play(SDL_Surface *ecran) {
         if (v_player.vitesse!=0)
             pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
+        /// GESTION DES TIRS:
         if (v_ia1.tir.etat == 1){
-            pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
-            calcul_pos_tir(&v_ia1);
-            pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
-            if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1)
-                v_player.vie.charge = VIDE;
+            v_ia1.tir.distance_parcourue ++;
+            if(v_ia1.tir.distance_parcourue > v_ia1.tir.distance_max){
+                v_ia1.tir.etat = 0;
+                eff_tir(ecran, save_screen, &v_ia1);
+                decharge_sprite_tir(&v_ia1);
+                charge_sprite_tir(&v_ia1);
+            }else{
+                pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
+                calcul_pos_tir(&v_ia1);
+                pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
+                if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1)
+                    v_player.vie.charge = VIDE;
+            }
         }
         if (v_player.tir.etat == 1){
-            pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
-            calcul_pos_tir(&v_player);
-            pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
-            if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1)
-                v_ia1.vie.charge = VIDE;
+            v_player.tir.distance_parcourue ++;
+            if(v_player.tir.distance_parcourue > v_player.tir.distance_max){
+                v_player.tir.etat = 0;
+                eff_tir(ecran, save_screen, &v_player);
+                decharge_sprite_tir(&v_player);
+                charge_sprite_tir(&v_player);
+            }else{
+                pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
+                calcul_pos_tir(&v_player);
+                pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
+                if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1)
+                    v_ia1.vie.charge = VIDE;
+            }
         }
 
         /// L'ia joue en première:
         tour_ia(&v_ia1, &v_player, ecran);
+
         /// Calcul des nouvelles positions dépendants des actions de l'ia:
         switch (v_ia1.vie.charge) {
             case BAS:
