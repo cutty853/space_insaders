@@ -159,8 +159,6 @@ int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens
 }
 
 void tir_ia(_vaisseau *v_ia){
-    v_ia->tir.temps_passe = 0;
-    v_ia->tir.etat = 1;
     init_tir (v_ia);
     init_hitbox(&(v_ia->tir.hitbox), 0, 0, 0, 0, v_ia->tir.position.x, v_ia->tir.position.y, 6, 6);
 }
