@@ -26,14 +26,14 @@
 void play(SDL_Surface *ecran) {
     _input action;
     TTF_Font *police_texte=NULL;
-    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran=0, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
+    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran = 14, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
-    SDL_Rect pos_to_up_ecran[9], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2]; /// 9 = nombre actuel de nouvelles positions.
+    SDL_Rect pos_to_up_ecran[14], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2];
     _vaisseau v_player, v_ia1;
     _explosion boom, boom2;
     FILE* fichier = NULL;
-    etat_interface[CONSOLE]=0;
+    etat_interface[CONSOLE] = 0;
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
     memset(&action,0,sizeof(action));
@@ -106,27 +106,17 @@ void play(SDL_Surface *ecran) {
 
         close(fichier);
     }
-        /// test console
+    /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     test_police(police_texte, 202);
-        ///Affichage de la barre de vie & de la barre du bouclier du joueur:
-    barre_vie_joueur(ecran, v_player);
-    barre_bouclier_joueur(ecran, v_player);
-        /// Sauvegarde de l'écran
+    /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
     pos_to_up_ecran[0] = aff_vaisseau(ecran, &v_player, save_screen);
     SDL_UpdateRect(ecran, pos_to_up_ecran[0].x, pos_to_up_ecran[0].y, pos_to_up_ecran[0].w, pos_to_up_ecran[0].y);
 
     /// BOUCLE DU JEU:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
-        /// IL FAUT D'ABORD "CACHER" LES ANCIENNES SURFACES PUIS FAIRE LES ACTIONS (déplacement) PUIS REAFFICHER LES SURFACES AVEC LES NOUVELLES POSITIONS !
-        pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
-        pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
-        pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
-        if (v_player.vitesse!=0)
-            pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
-
         /// GESTION DES TIRS:
         if (v_ia1.tir.etat == 1){
             v_ia1.tir.distance_parcourue ++;
@@ -185,7 +175,11 @@ void play(SDL_Surface *ecran) {
             }
         }
 
-        /// L'ia joue en première:
+        /// IA:
+        pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
+        pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
+        pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
+
         tour_ia(&v_ia1, &v_player, ecran);
 
         /// Calcul des nouvelles positions dépendants des actions de l'ia:
@@ -200,34 +194,55 @@ void play(SDL_Surface *ecran) {
                                 calcul_pos_vie(&v_ia1);
                                 calcul_pos_hitbox_vaisseau(&v_ia1);
                                 calcul_pos_hitbox_tir(&(v_ia1.tir));
-                    } else {
+                    }else
                         v_ia1.vie.charge=VIDE;
-                    }
-                    pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_ia1, save_screen);
-                    nb_pos_to_up_ecran = 8;
+                        pos_to_up_ecran[3] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+                        pos_to_up_ecran[4] = aff_bouclier(ecran, &v_ia1);
+                        pos_to_up_ecran[5] = aff_vie(ecran, &v_ia1);
                 }
                 break;
             case VIDE:
                 if (boom2.phase < NB_SPRITES_EXPLOSION) {
-                    pos_to_up_ecran[7] = eff_vaisseau(ecran, &v_ia1, save_screen);
-                    pos_to_up_ecran[8] = aff_explosion(ecran, &boom2, v_ia1);
+                    pos_to_up_ecran[6] = aff_explosion(ecran, &boom2, v_ia1);
                     boom2.phase++;
-                    nb_pos_to_up_ecran = 9;
                 }
                 break;
         }
 
-//        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
-        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+        /// JOUEUR:
+        pos_to_up_ecran[7] = eff_bouclier(ecran, &v_player, save_screen);
+        pos_to_up_ecran[8] = eff_vie(ecran, &v_player, save_screen);
+        pos_to_up_ecran[9] = eff_vaisseau(ecran, &v_player, save_screen);
 
-//        //Affichage de la barre de vie & de la barre du bouclier du joueur: A ARRENGER !
-//        barre_vie_joueur(ecran, v_player);
-//        barre_bouclier_joueur(ecran, v_player);
-
-
-        /// Test de l'action du joueur
         tour_joueur(&action, &v_player, &boom);
+
+        switch (v_player.vie.charge) {
+            case BAS:
+            case MOYEN:
+            case HAUT:
+                if ((v_player.vitesse !=0)) {
+                    if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle))==1) {
+                        calcul_pos_vaisseau(&v_player, ecran);
+                        calcul_pos_bouclier(&v_player);
+                            calcul_pos_vie(&v_player);
+                        calcul_pos_hitbox_vaisseau(&v_player);
+                        calcul_pos_hitbox_tir(&(v_player.tir));
+                    }else
+                        v_player.vie.charge=VIDE;
+                        pos_to_up_ecran[10] = aff_vaisseau(ecran, &v_player, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+                        pos_to_up_ecran[11] = aff_bouclier(ecran, &v_player);
+                        pos_to_up_ecran[12] = aff_vie(ecran, &v_player);
+                }
+                break;
+            case VIDE:
+                if (boom.phase < NB_SPRITES_EXPLOSION) {
+                    pos_to_up_ecran[13] = aff_explosion(ecran, &boom, v_player);
+                    boom.phase++;
+                }
+                break;
+        }
+
+        /// CONSOLE
         if (action.key[SDLK_F3]) {
             if (etat_interface[CONSOLE]) {
                 etat_interface[CONSOLE]=0;
@@ -239,44 +254,6 @@ void play(SDL_Surface *ecran) {
                 action.key[SDLK_F3] = 0; // Ici on fait remonter la touche du joueur de façon manuelle
             }
         }
-
-        /// Gestion du temps pour éviter la surexploitation du CPU
-        temps_actuel=SDL_GetTicks();
-        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
-            temps_precedent=temps_actuel;
-        } else {
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
-        }
-
-        /// Zone pour placer les commandes a faire après la pause du jeu
-        nb_pos_to_up_ecran = 7;
-        switch (v_player.vie.charge) {
-            case BAS:
-            case MOYEN:
-            case HAUT:
-                if ((v_player.vitesse !=0)) {
-                    if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle))==1) {
-                        calcul_pos_vaisseau(&v_player, ecran);
-                        calcul_pos_hitbox_vaisseau(&v_player);
-                        calcul_pos_hitbox_tir(&(v_player.tir));
-                    } else {
-                        v_player.vie.charge=VIDE;
-                    }
-                    pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
-                    nb_pos_to_up_ecran = 8;
-                }
-                break;
-            case VIDE:
-                if (boom.phase < NB_SPRITES_EXPLOSION) {
-                    pos_to_up_ecran[7] = eff_vaisseau(ecran, &v_player, save_screen);
-                    pos_to_up_ecran[8] = aff_explosion(ecran, &boom, v_player);
-                    boom.phase++;
-                    nb_pos_to_up_ecran = 9;
-                }
-                break;
-        }
-
-        /// CONSOLE
         if (etat_interface[CONSOLE]) {
             pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
@@ -286,11 +263,19 @@ void play(SDL_Surface *ecran) {
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_joueur); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
-//        SDL_Flip(ecran);
         v_player.etat_rotation = 0;
         v_ia1.etat_rotation = 0;
+
+        /// GESTION DU TEMPS: (pour éviter la surexploitation du CPU)
+        temps_actuel=SDL_GetTicks();
+        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
+            temps_precedent=temps_actuel;
+        } else {
+            SDL_Delay(30 - (temps_actuel - temps_precedent));
+        }
     }
 
+    /// LIBERATION:
     TTF_CloseFont(police_texte);
     decharge_sprite_explosion(&boom);
     decharge_sprite_bouclier(&v_ia1);

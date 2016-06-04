@@ -31,6 +31,3 @@ void decharge_sprite_explosion (_explosion *boom);
 void degrade(_degrade prop_deg, SDL_Surface *ecran, SDL_Rect pos_degrade);
 
 SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save_screen, TTF_Font *police_texte);
-
-void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur);
-void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur);

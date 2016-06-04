@@ -128,6 +128,8 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
         case FUIT:
             ia_fuit(v_ia, v_joueur);
             break;
+        case INDEPENDENT:
+            break;
         default:
             exit(666);
             break;

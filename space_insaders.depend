@@ -284,12 +284,12 @@
 	"player.h"
 	"constantes.h"
 
-1464852803 c:\users\antoine\documents\github\space_insaders\structure.h
+1464985571 c:\users\antoine\documents\github\space_insaders\structure.h
 	"constantes.h"
 
-1464901308 c:\users\antoine\documents\github\space_insaders\utilitaire.h
+1464985571 c:\users\antoine\documents\github\space_insaders\utilitaire.h
 
-1464901308 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
+1464985571 source:c:\users\antoine\documents\github\space_insaders\utilitaire.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -323,7 +323,7 @@
 
 1461518878 c:\users\antoine\documents\github\space_insaders\jeu.h
 
-1464901308 c:\users\antoine\documents\github\space_insaders\constantes.h
+1464985571 c:\users\antoine\documents\github\space_insaders\constantes.h
 
 1460922206 source:c:\users\antoine\documents\github\space_insaders\ia.c
 	<stdlib.h>
@@ -463,7 +463,7 @@
 
 1462821150 c:\users\administrateur\documents\space_insaders\moteur_joueur.h
 
-1462817956 c:\users\administrateur\documents\space_insaders\moteur_affichage.h
+1465057243 c:\users\administrateur\documents\space_insaders\moteur_affichage.h
 
 1462812624 source:c:\users\administrateur\documents\space_insaders\mode_campagne.c
 	<stdlib.h>
@@ -484,7 +484,7 @@
 	"moteur_affichage.h"
 	"moteur_physique.h"
 
-1465052133 source:c:\users\administrateur\documents\space_insaders\mode_combat.c
+1465057126 source:c:\users\administrateur\documents\space_insaders\mode_combat.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -503,7 +503,7 @@
 	"moteur_affichage.h"
 	"moteur_physique.h"
 
-1465051609 source:c:\users\administrateur\documents\space_insaders\moteur_affichage.c
+1465056530 source:c:\users\administrateur\documents\space_insaders\moteur_affichage.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -522,7 +522,7 @@
 	"moteur_ia.h"
 	"moteur_joueur.h"
 
-1464988421 source:c:\users\administrateur\documents\space_insaders\moteur_ia.c
+1465054188 source:c:\users\administrateur\documents\space_insaders\moteur_ia.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -589,7 +589,7 @@
 	"moteur_affichage.h"
 	"moteur_physique.h"
 
-1464901721 source:c:\users\antoine\documents\github\space_insaders\mode_combat.c
+1465045124 source:c:\users\antoine\documents\github\space_insaders\mode_combat.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -608,66 +608,7 @@
 	"moteur_affichage.h"
 	"moteur_physique.h"
 
-1464904099 source:c:\users\antoine\documents\github\space_insaders\moteur_affichage.c
-	<stdlib.h>
-	<stdio.h>
-	<time.h>
-	<math.h>
-	<SDL/SDL.h>
-	<SDL/SDL_image.h>
-	<SDL/SDL_ttf.h>
-	<SDL/SDL_rotozoom.h>
-	"constantes.h"
-	"structure.h"
-	"moteur_affichage.h"
-	"moteur_physique.h"
-	"utilitaire.h"
-	"mode_combat.h"
-	"mode_campagne.h"
-	"moteur_ia.h"
-	"moteur_joueur.h"
-
-1464891336 source:c:\users\antoine\documents\github\space_insaders\moteur_ia.c
-	<stdlib.h>
-	<stdio.h>
-	<time.h>
-	<math.h>
-	<SDL/SDL.h>
-	<SDL/SDL_image.h>
-	<SDL/SDL_ttf.h>
-	<SDL/SDL_rotozoom.h>
-	"constantes.h"
-	"structure.h"
-	"moteur_ia.h"
-	"utilitaire.h"
-	"mode_combat.h"
-	"mode_campagne.h"
-	"moteur_joueur.h"
-	"moteur_affichage.h"
-	"moteur_physique.h"
-
-1464890697 source:c:\users\antoine\documents\github\space_insaders\moteur_joueur.c
-	<stdlib.h>
-	<stdio.h>
-	<time.h>
-	<math.h>
-	<SDL/SDL.h>
-	<SDL/SDL_image.h>
-	<SDL/SDL_ttf.h>
-	<SDL/SDL_rotozoom.h>
-	"constantes.h"
-	"structure.h"
-	"moteur_joueur.h"
-	"utilitaire.h"
-	"mode_combat.h"
-	"mode_campagne.h"
-	"moteur_ia.h"
-	"moteur_affichage.h"
-	"moteur_physique.h"
-
-1464902363 c:\users\antoine\documents\github\space_insaders\moteur_physique.h
-
-1464902103 source:c:\users\antoine\documents\github\space_insaders\moteur_physique.c
+1464985571 source:c:\users\antoine\documents\github\space_insaders\moteur_affichage.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>
@@ -686,9 +627,68 @@
 	"moteur_ia.h"
 	"moteur_joueur.h"
 
-1464954526 c:\users\administrateur\documents\space_insaders\moteur_physique.h
+1465044990 source:c:\users\antoine\documents\github\space_insaders\moteur_ia.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_ia.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_joueur.h"
+	"moteur_affichage.h"
+	"moteur_physique.h"
 
-1464978048 source:c:\users\administrateur\documents\space_insaders\moteur_physique.c
+1464979914 source:c:\users\antoine\documents\github\space_insaders\moteur_joueur.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_joueur.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_affichage.h"
+	"moteur_physique.h"
+
+1465043099 c:\users\antoine\documents\github\space_insaders\moteur_physique.h
+
+1465044457 source:c:\users\antoine\documents\github\space_insaders\moteur_physique.c
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<math.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+	<SDL/SDL_ttf.h>
+	<SDL/SDL_rotozoom.h>
+	"constantes.h"
+	"structure.h"
+	"moteur_affichage.h"
+	"moteur_physique.h"
+	"utilitaire.h"
+	"mode_combat.h"
+	"mode_campagne.h"
+	"moteur_ia.h"
+	"moteur_joueur.h"
+
+1465054188 c:\users\administrateur\documents\space_insaders\moteur_physique.h
+
+1465054188 source:c:\users\administrateur\documents\space_insaders\moteur_physique.c
 	<stdlib.h>
 	<stdio.h>
 	<time.h>

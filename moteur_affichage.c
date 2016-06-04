@@ -272,8 +272,6 @@ SDL_Rect aff_vaisseau(SDL_Surface *ecran, _vaisseau *vaisseau, SDL_Surface *save
 SDL_Rect aff_tir (SDL_Surface *ecran, _vaisseau *vaisseau){
     SDL_Surface *tir;
     /// Blit de la surface avec ces nouvelles positions:
-    // NB : Il est important de mettre le rotozoom ici, car le tir est tourné au moment de lancer, de plus
-    //le rotozoom ne fais pas ce qu'il faut des qu'on le met au chargement du sprite de tir..
     tir = rotozoomSurface(vaisseau->tir.sprite, vaisseau->tir.angle, 1.0, 1);
     SDL_BlitSurface(tir, NULL, ecran, &(vaisseau->tir.position));
     SDL_FreeSurface(tir);
@@ -464,59 +462,3 @@ SDL_Rect aff_console (SDL_Surface *ecran, _vaisseau vaisseau,  SDL_Surface* save
 
     return pos_to_up;
 }
-
-void barre_vie_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
-    SDL_Surface *barre_vie=NULL;
-    SDL_Rect pos_barre_vie;
-    pos_barre_vie.x=5;
-    pos_barre_vie.y=(ecran->h)-25;
-
-    /// Affichage de la barre de vie
-    barre_vie = SDL_CreateRGBSurface(SDL_HWSURFACE, 150, 20, 32, 0, 0, 0, 0);
-    test_surface(barre_vie, 100); ///Verif chargement.
-    switch (v_joueur.vie.charge) {
-        case VIDE:
-            /// plus de vie
-            break;
-        case BAS:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 0, 0)); //Rouge
-            break;
-        case MOYEN:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 255, 165, 0)); //Orange
-            break;
-        case HAUT:
-            SDL_FillRect(barre_vie, NULL, SDL_MapRGB(barre_vie->format, 0, 255, 0)); //Bleu
-            break;
-    }
-
-    SDL_BlitSurface(barre_vie, NULL, ecran, &pos_barre_vie);
-    SDL_Flip(ecran);
-    SDL_FreeSurface(barre_vie);
-}
-void barre_bouclier_joueur(SDL_Surface *ecran, _vaisseau v_joueur) {
-    SDL_Rect pos_barre_bouclier;
-    SDL_Surface *barre_bouclier=NULL;
-    pos_barre_bouclier.x=5;
-    pos_barre_bouclier.y=(ecran->h)-50;
-
-    /// Affichage de la barre du bouclier
-    switch (v_joueur.bouclier.charge) {
-        case VIDE:
-            barre_bouclier = IMG_Load("images/bouclier_VIDE.jpg");
-            break;
-        case BAS:
-            barre_bouclier = IMG_Load("images/bouclier_BAS.jpg");
-            break;
-        case MOYEN:
-            barre_bouclier = IMG_Load("images/bouclier_MOYEN.jpg");
-            break;
-        case HAUT:
-            barre_bouclier = IMG_Load("images/bouclier_HAUT.jpg");
-            break;
-    }
-    test_surface(barre_bouclier, 101); ///Verif chargement.
-    SDL_BlitSurface(barre_bouclier, NULL, ecran, &pos_barre_bouclier);
-    SDL_Flip(ecran);
-    SDL_FreeSurface(barre_bouclier);
-}
-
