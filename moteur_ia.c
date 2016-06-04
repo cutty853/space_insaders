@@ -90,7 +90,7 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     }else if(v_ia->vitesse < v_joueur->vitesse){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
         mouvement_vaisseau(AVANCE, DROIT, v_ia);
     }
-    if(v_ia->angle <= (v_ia->angle_de_decalage)-2 || v_ia->angle >= (v_ia->angle_de_decalage)+2){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
+    if(v_ia->angle <= (v_ia->angle_de_decalage)-((50-v_ia->seuil_intelligence)/10) || v_ia->angle >= (v_ia->angle_de_decalage)+((50-v_ia->seuil_intelligence)/10)){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
     }else{/// dans le bon axe, déclenche le tir.
