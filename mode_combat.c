@@ -139,8 +139,21 @@ void play(SDL_Surface *ecran) {
                 pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
                 calcul_pos_tir(&v_ia1);
                 pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
-                if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1)
-                    v_player.vie.charge = VIDE;
+                if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1 && v_ia1.tir.etat == 1){
+                    if(v_player.bouclier.charge == VIDE){
+                        v_player.vie.charge = VIDE;
+                        v_ia1.tir.etat = 0;
+                        eff_tir(ecran, save_screen, &v_ia1);
+                        decharge_sprite_tir(&v_ia1);
+                        charge_sprite_tir(&v_ia1);
+                    }else{
+                        v_player.bouclier.charge = VIDE;
+                        v_ia1.tir.etat = 0;
+                        eff_tir(ecran, save_screen, &v_ia1);
+                        decharge_sprite_tir(&v_ia1);
+                        charge_sprite_tir(&v_ia1);
+                    }
+                }
             }
         }
         if (v_player.tir.etat == 1){
@@ -154,8 +167,21 @@ void play(SDL_Surface *ecran) {
                 pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
                 calcul_pos_tir(&v_player);
                 pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
-                if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1)
-                    v_ia1.vie.charge = VIDE;
+                if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1 && v_player.tir.etat == 1){
+                    if(v_ia1.bouclier.charge == VIDE){
+                        v_ia1.vie.charge = VIDE;
+                        v_player.tir.etat = 0;
+                        eff_tir(ecran, save_screen, &v_player);
+                        decharge_sprite_tir(&v_player);
+                        charge_sprite_tir(&v_player);
+                    }else{
+                        v_ia1.bouclier.charge = VIDE;
+                        v_player.tir.etat = 0;
+                        eff_tir(ecran, save_screen, &v_player);
+                        decharge_sprite_tir(&v_player);
+                        charge_sprite_tir(&v_player);
+                    }
+                }
             }
         }
 
@@ -192,8 +218,12 @@ void play(SDL_Surface *ecran) {
         }
 
 //        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-//        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
-//        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
+        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+
+//        //Affichage de la barre de vie & de la barre du bouclier du joueur: A ARRENGER !
+//        barre_vie_joueur(ecran, v_player);
+//        barre_bouclier_joueur(ecran, v_player);
 
 
         /// Test de l'action du joueur
@@ -217,6 +247,7 @@ void play(SDL_Surface *ecran) {
         } else {
             SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
+
         /// Zone pour placer les commandes a faire après la pause du jeu
         nb_pos_to_up_ecran = 7;
         switch (v_player.vie.charge) {
