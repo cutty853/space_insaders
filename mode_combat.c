@@ -169,11 +169,11 @@ void play(SDL_Surface *ecran) {
             case HAUT:
                 if ((v_ia1.vitesse !=0)) {
                     if (col_cercle_cercle(&(v_player.hitbox.cercle), &(v_ia1.hitbox.cercle))==1) {
-                                calcul_pos_vaisseau(&v_ia1, ecran);
-                                calcul_pos_bouclier(&v_ia1);
-                                calcul_pos_vie(&v_ia1);
-                                calcul_pos_hitbox_vaisseau(&v_ia1);
-                                calcul_pos_hitbox_tir(&(v_ia1.tir));
+                            calcul_pos_vaisseau(&v_ia1, ecran);
+                            calcul_pos_bouclier(&v_ia1);
+                            calcul_pos_vie(&v_ia1);
+                            calcul_pos_hitbox_vaisseau(&v_ia1);
+                            calcul_pos_hitbox_tir(&(v_ia1.tir));
                     } else {
                         v_ia1.vie.charge=VIDE;
                     }
@@ -187,6 +187,10 @@ void play(SDL_Surface *ecran) {
                     pos_to_up_ecran[8] = aff_explosion(ecran, &boom2, v_ia1);
                     boom2.phase++;
                     nb_pos_to_up_ecran = 9;
+                } else {
+                    supprime_hitbox(&(v_ia1.tir.hitbox));
+                    supprime_hitbox(&(v_ia1.hitbox));
+                    supprime_vaisseau(&v_ia1);
                 }
                 break;
         }
@@ -241,6 +245,10 @@ void play(SDL_Surface *ecran) {
                     pos_to_up_ecran[8] = aff_explosion(ecran, &boom, v_player);
                     boom.phase++;
                     nb_pos_to_up_ecran = 9;
+                } else {
+                    supprime_hitbox(&(v_player.tir.hitbox));
+                    supprime_hitbox(&(v_player.hitbox));
+                    supprime_vaisseau(&v_player);
                 }
                 break;
         }
@@ -255,7 +263,9 @@ void play(SDL_Surface *ecran) {
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_joueur); // Pas optimisé, affichage permanant même quand pas de tir
         SDL_UpdateRects(ecran, nb_pos_to_up_ecran, pos_to_up_ecran);
-//        SDL_Flip(ecran);
+//        eff_hitbox_aabb(&(v_player.tir.hitbox.aabb), save_screen, ecran);
+//        aff_hitbox_aabb(&(v_player.tir.hitbox.aabb), ecran);
+        SDL_Flip(ecran);
         v_player.etat_rotation = 0;
         v_ia1.etat_rotation = 0;
     }

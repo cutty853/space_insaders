@@ -9,4 +9,7 @@ void init_hitbox(_hitbox* h, int xCercle, int yCercle, int rCercle, int nb_point
 void calcul_pos_hitbox_vaisseau(_vaisseau *v);
 void calcul_pos_hitbox_tir(_tir* t);
 void transform_aabb_polygone(SDL_Rect* aabb, _polygone *p);
+SDL_Rect eff_hitbox_aabb(SDL_Rect *aabb, SDL_Surface *save_screen, SDL_Surface *ecran);
+SDL_Rect aff_hitbox_aabb (SDL_Rect *aabb, SDL_Surface *ecran);
+SDL_Rect aff_hitbox_cercle (_cercle *c, SDL_Surface* ecran, int x, int y);
 Uint32 obtenirPixel(SDL_Surface *surface, _vaisseau *vaisseau);
