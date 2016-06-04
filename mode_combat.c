@@ -124,8 +124,7 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
-        if (v_player.vitesse!=0)
-            pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
+        pos_to_up_ecran[3] = eff_vaisseau(ecran, &v_player, save_screen);
 
         /// GESTION DES TIRS:
         if (v_ia1.tir.etat == 1){
@@ -167,19 +166,17 @@ void play(SDL_Surface *ecran) {
             case BAS:
             case MOYEN:
             case HAUT:
-                if ((v_ia1.vitesse !=0)) {
-                    if (col_cercle_cercle(&(v_player.hitbox.cercle), &(v_ia1.hitbox.cercle))==1) {
-                            calcul_pos_vaisseau(&v_ia1, ecran);
-                            calcul_pos_bouclier(&v_ia1);
-                            calcul_pos_vie(&v_ia1);
-                            calcul_pos_hitbox_vaisseau(&v_ia1);
-                            calcul_pos_hitbox_tir(&(v_ia1.tir));
-                    } else {
-                        v_ia1.vie.charge=VIDE;
-                    }
-                    pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_ia1, save_screen);
-                    nb_pos_to_up_ecran = 8;
+                if (col_cercle_cercle(&(v_player.hitbox.cercle), &(v_ia1.hitbox.cercle))==1) {
+                        calcul_pos_vaisseau(&v_ia1, ecran);
+                        calcul_pos_bouclier(&v_ia1);
+                        calcul_pos_vie(&v_ia1);
+                        calcul_pos_hitbox_vaisseau(&v_ia1);
+                        calcul_pos_hitbox_tir(&(v_ia1.tir));
+                } else {
+                    v_ia1.vie.charge=VIDE;
                 }
+                pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_ia1, save_screen);
+                nb_pos_to_up_ecran = 8;
                 break;
             case VIDE:
                 if (boom2.phase < NB_SPRITES_EXPLOSION) {
@@ -195,11 +192,6 @@ void play(SDL_Surface *ecran) {
                 break;
         }
 
-//        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-//        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
-//        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
-
-
         /// Test de l'action du joueur
         tour_joueur(&action, &v_player, &boom);
         if (action.key[SDLK_F3]) {
@@ -213,31 +205,19 @@ void play(SDL_Surface *ecran) {
                 action.key[SDLK_F3] = 0; // Ici on fait remonter la touche du joueur de façon manuelle
             }
         }
-
-        /// Gestion du temps pour éviter la surexploitation du CPU
-        temps_actuel=SDL_GetTicks();
-        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
-            temps_precedent=temps_actuel;
-        } else {
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
-        }
-        /// Zone pour placer les commandes a faire après la pause du jeu
-        nb_pos_to_up_ecran = 7;
         switch (v_player.vie.charge) {
             case BAS:
             case MOYEN:
             case HAUT:
-                if ((v_player.vitesse !=0)) {
-                    if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle))==1) {
-                        calcul_pos_vaisseau(&v_player, ecran);
-                        calcul_pos_hitbox_vaisseau(&v_player);
-                        calcul_pos_hitbox_tir(&(v_player.tir));
-                    } else {
-                        v_player.vie.charge=VIDE;
-                    }
-                    pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
-                    nb_pos_to_up_ecran = 8;
+                if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle))==1) {
+                    calcul_pos_vaisseau(&v_player, ecran);
+                    calcul_pos_hitbox_vaisseau(&v_player);
+                    calcul_pos_hitbox_tir(&(v_player.tir));
+                } else {
+                    v_player.vie.charge=VIDE;
                 }
+                pos_to_up_ecran[7] = aff_vaisseau(ecran, &v_player, save_screen);
+                nb_pos_to_up_ecran = 8;
                 break;
             case VIDE:
                 if (boom.phase < NB_SPRITES_EXPLOSION) {
@@ -253,11 +233,27 @@ void play(SDL_Surface *ecran) {
                 break;
         }
 
+//        pos_to_up_ecran[4] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+
+        /// Gestion du temps pour éviter la surexploitation du CPU
+        temps_actuel=SDL_GetTicks();
+        if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
+            temps_precedent=temps_actuel;
+        } else {
+            SDL_Delay(30 - (temps_actuel - temps_precedent));
+        }
+        /// Zone pour placer les commandes a faire après la pause du jeu
+
+
         /// CONSOLE
         if (etat_interface[CONSOLE]) {
             pos_to_up_console[0] = aff_console(ecran, v_ia1, save_screen, police_texte);
             SDL_UpdateRects(ecran, 1, pos_to_up_console);
         }
+
+        pos_to_up_ecran[5] = aff_bouclier(ecran, &v_ia1);
+        pos_to_up_ecran[6] = aff_vie(ecran, &v_ia1);
+        nb_pos_to_up_ecran = 7;
 
         /// AFFICHAGE:
         SDL_UpdateRects(ecran, 2, pos_to_up_tir_ia); // Pas optimisé, affichage permanant même quand pas de tir
