@@ -82,6 +82,7 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     vaisseau->vitesse = 0.0;
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
+    vaisseau->etat_rotation = 0; /// à l'initialisation, aucun des vaisseaux ne tourne.
 
     if(vaisseau->intelligence == IA_NOVICE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
