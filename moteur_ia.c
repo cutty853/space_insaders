@@ -63,7 +63,7 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     int pos_relative = 0, sens_de_rotation = 0;
 
     pos_relative = compare_position(v_ia, v_joueur);
-    switch (pos_relative){
+    switch (pos_relative){// Mieux optimisé avec des puissances 2 plutot que des valeurs absolues.
         case BAS_DROITE:
             v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
             v_ia->angle_de_decalage += 0; /// décalage de l'arctan.
