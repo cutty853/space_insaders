@@ -12,3 +12,5 @@ void mouvement_vaisseau(int action, int sens, _vaisseau *vaisseau);
 void deplace_curseur(FILE* fichier);
 int recup_int(FILE* fichier);
 int recup_string(FILE* fichier);
+
+void degat_tir(_vaisseau *vaisseau);

@@ -187,6 +187,13 @@ int recup_string(FILE* fichier){
         exit(666);/// témoin de chargement.
 }
 
+void degat_tir(_vaisseau *vaisseau){
+    if(vaisseau->bouclier.charge == VIDE){
+        vaisseau->vie.charge --;
+    } else{
+        vaisseau->bouclier.charge --;
+    }
+}
 
 
 

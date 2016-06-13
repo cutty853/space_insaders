@@ -138,19 +138,11 @@ void play(SDL_Surface *ecran) {
                 calcul_pos_tir(&v_ia1);
                 pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
                 if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1 && v_ia1.tir.etat == 1){
-                    if(v_player.bouclier.charge == VIDE){
-                        v_player.vie.charge = VIDE;
-                        v_ia1.tir.etat = 0;
-                        eff_tir(ecran, save_screen, &v_ia1);
-                        decharge_sprite_tir(&v_ia1);
-                        charge_sprite_tir(&v_ia1);
-                    }else{
-                        v_player.bouclier.charge = VIDE;
-                        v_ia1.tir.etat = 0;
-                        eff_tir(ecran, save_screen, &v_ia1);
-                        decharge_sprite_tir(&v_ia1);
-                        charge_sprite_tir(&v_ia1);
-                    }
+                    degat_tir(&v_player);
+                    v_ia1.tir.etat = 0;
+                    eff_tir(ecran, save_screen, &v_ia1);
+                    decharge_sprite_tir(&v_ia1);
+                    charge_sprite_tir(&v_ia1);
                 }
             }
         }
@@ -166,19 +158,11 @@ void play(SDL_Surface *ecran) {
                 calcul_pos_tir(&v_player);
                 pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
                 if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1 && v_player.tir.etat == 1){
-                    if(v_ia1.bouclier.charge == VIDE){
-                        v_ia1.vie.charge = VIDE;
-                        v_player.tir.etat = 0;
-                        eff_tir(ecran, save_screen, &v_player);
-                        decharge_sprite_tir(&v_player);
-                        charge_sprite_tir(&v_player);
-                    }else{
-                        v_ia1.bouclier.charge = VIDE;
-                        v_player.tir.etat = 0;
-                        eff_tir(ecran, save_screen, &v_player);
-                        decharge_sprite_tir(&v_player);
-                        charge_sprite_tir(&v_player);
-                    }
+                    degat_tir(&v_ia1);
+                    v_player.tir.etat = 0;
+                    eff_tir(ecran, save_screen, &v_player);
+                    decharge_sprite_tir(&v_player);
+                    charge_sprite_tir(&v_player);
                 }
             }
         }
