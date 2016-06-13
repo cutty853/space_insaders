@@ -27,6 +27,7 @@ void play(SDL_Surface *ecran) {
     _input action;
     TTF_Font *police_texte=NULL;
     int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran = 14, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
+    float vitesse_jeu = 1.0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[14], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2];
@@ -213,7 +214,7 @@ void play(SDL_Surface *ecran) {
         }
 
         /// JOUEUR:
-        tour_joueur(&action, &v_player, &boom);
+        tour_joueur(&action, &v_player, &boom, &vitesse_jeu);
         switch (v_player.vie.charge) {
             case BAS:
             case MOYEN:
@@ -269,7 +270,8 @@ void play(SDL_Surface *ecran) {
         if (temps_actuel - temps_precedent > CALCUL_FPS(FPS)) {
             temps_precedent=temps_actuel;
         } else {
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
+            SDL_Delay(30*vitesse_jeu - (temps_actuel - temps_precedent));
+            printf("%f    ", vitesse_jeu);
         }
     }
 

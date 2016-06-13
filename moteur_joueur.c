@@ -60,8 +60,7 @@ void etat_action_joueur(_input* in)
 }
 
 // La fcontion n'est pas efficace et ne fonctionne pas
-void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom)
-{
+void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom, float *vitesse_jeu){
     etat_action_joueur(action);
         // Gestion du clavier
     if (action->key[SDLK_w]) {
@@ -87,6 +86,13 @@ void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom)
     }
     if (action->key[SDLK_KP1]) {
         v_joueur->vie.charge = VIDE;
+    }
+    ///CHANGEMENT DU TEMPS:
+    if (action->key[SDLK_KP_MINUS]) {///Ralenti le temps.
+        *vitesse_jeu += 0.1;
+    }else if (action->key[SDLK_KP_PLUS]) {///Accélère le temps.
+        if (*vitesse_jeu > 0.6)/// à partir de 0.5, le jeu crash.
+            *vitesse_jeu -= 0.1;
     }
 }
 
