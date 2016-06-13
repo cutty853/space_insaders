@@ -88,11 +88,11 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     if(vaisseau->intelligence == IA_NOVICE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 5;
+        vaisseau->seuil_intelligence = 25;
     }else if(vaisseau->intelligence == IA_NORMAL) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 25;
+        vaisseau->seuil_intelligence = 50;
     }else if(vaisseau->intelligence == IA_EXPERTE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);

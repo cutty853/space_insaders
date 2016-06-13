@@ -116,7 +116,7 @@ void play(SDL_Surface *ecran) {
 
     /// BOUCLE DU JEU:
     while (!action.key[SDLK_ESCAPE] && !action.quit) {
-        /// EFFACE
+        /// EFFACEMENT:
         pos_to_up_ecran[0] = eff_bouclier(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[1] = eff_vie(ecran, &v_ia1, save_screen);
         pos_to_up_ecran[2] = eff_vaisseau(ecran, &v_ia1, save_screen);
@@ -227,7 +227,7 @@ void play(SDL_Surface *ecran) {
                 break;
         }
 
-        /// CONSOLE
+        /// CONSOLE:
         if (action.key[SDLK_F3]) {
             if (etat_interface[CONSOLE]) {
                 etat_interface[CONSOLE]=0;
@@ -255,7 +255,6 @@ void play(SDL_Surface *ecran) {
             temps_precedent=temps_actuel;
         } else {
             SDL_Delay(30*vitesse_jeu - (temps_actuel - temps_precedent));
-            printf("%f    ", vitesse_jeu);
         }
     }
 

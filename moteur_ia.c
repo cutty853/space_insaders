@@ -90,15 +90,15 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     }else if(v_ia->vitesse < v_joueur->vitesse){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
         mouvement_vaisseau(AVANCE, DROIT, v_ia);
     }
-    if(v_ia->angle <= (v_ia->angle_de_decalage)-(100-v_ia->seuil_intelligence) || v_ia->angle >= (v_ia->angle_de_decalage)+(100-v_ia->seuil_intelligence)){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
+    if(v_ia->angle <= v_ia->angle_de_decalage-5 || v_ia->angle >= v_ia->angle_de_decalage+5){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
-    }else{/// dans le bon axe, déclenche le tir.
-        if(v_ia->tir.etat != 1){/// Si pas déjà entrain de tirer alors tir.
-            int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
-            if(alea_tir > 100-v_ia->seuil_intelligence)
-                tir_ia(v_ia);
-        }
+    }
+    /// Conditions de tir:
+    if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->angle_de_decalage)-(80-v_ia->seuil_intelligence) && v_ia->angle <= (v_ia->angle_de_decalage)+(80-v_ia->seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
+        int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
+        if(alea_tir > 100-v_ia->seuil_intelligence)
+            tir_ia(v_ia);
     }
 }
 void ia_fuit(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "fuit": il va se caher derrière les obstacles de la carte.
