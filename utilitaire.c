@@ -83,6 +83,7 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
     vaisseau->etat_rotation = 0; /// à l'initialisation, aucun des vaisseaux ne tourne.
+    vaisseau->angle_de_decalage = 0;/// n'a pas encore choisi de cible.
 
     if(vaisseau->intelligence == IA_NOVICE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
@@ -91,11 +92,11 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     }else if(vaisseau->intelligence == IA_NORMAL) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 15;
+        vaisseau->seuil_intelligence = 25;
     }else if(vaisseau->intelligence == IA_EXPERTE) {
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 50;
+        vaisseau->seuil_intelligence = 75;
     }
     else {/// il s'agit du joueur.
         vaisseau->sprite = IMG_Load("images/joueur_ship.png");

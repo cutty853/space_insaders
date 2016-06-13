@@ -85,7 +85,7 @@ typedef struct {
     SDL_Rect position;
     _hitbox hitbox;
 
-    int angle_de_decalage; // TEST
+    int angle_de_decalage;// Verif
 
 } _vaisseau;
 
