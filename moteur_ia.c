@@ -97,7 +97,7 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     /// Conditions de tir:
     if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->angle_de_decalage)-(80-v_ia->seuil_intelligence) && v_ia->angle <= (v_ia->angle_de_decalage)+(80-v_ia->seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
         int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
-        if(alea_tir > 100-v_ia->seuil_intelligence)
+        if(alea_tir > 1000-v_ia->seuil_intelligence)
             tir_ia(v_ia);
     }
 }

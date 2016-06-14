@@ -63,7 +63,7 @@ void play(SDL_Surface *ecran) {
     if (fichier != NULL){
         int init_val_int[NBR_VALEURS_TRANSMISES], nbr_ia;
         char titre[] = "IA0";
-        /// GEN:
+        /// GENERAL:
         do{
             fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
         } while(strcmp(titre, "GEN") != 0);
@@ -144,7 +144,6 @@ void play(SDL_Surface *ecran) {
                 charge_sprite_tir(&v_ia1);
             }
         }
-
         gestion_distance_tir(&v_player);
         if(v_player.tir.etat == 0){
             eff_tir(ecran, save_screen, &v_player);

@@ -78,7 +78,7 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     vaisseau->vie.charge = tab_init_val[8];
     vaisseau->intelligence = tab_init_val[9];
 
-    vaisseau->vitesse_min = 0;
+    vaisseau->vitesse_min = -(vaisseau->vitesse_max/3);
     vaisseau->vitesse = 0.0;
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
@@ -197,7 +197,7 @@ void degat_tir(_vaisseau *vaisseau){
 void degat_collisions(_vaisseau *vaisseau){
     if(vaisseau->bouclier.charge > VIDE)
         vaisseau->bouclier.charge --;
-    vaisseau->vitesse = -10;
+    vaisseau->vitesse = -1.0*(  vaisseau->vitesse_max+( vaisseau->vitesse_max/(2*(vaisseau->vitesse_max-(vaisseau->vitesse-1))) )  );
 }
 
 void gestion_distance_tir(_vaisseau *vaisseau){
