@@ -194,6 +194,19 @@ void degat_tir(_vaisseau *vaisseau){
         vaisseau->bouclier.charge --;
     }
 }
+void degat_collisions(_vaisseau *vaisseau){
+    if(vaisseau->bouclier.charge > VIDE)
+        vaisseau->bouclier.charge --;
+    vaisseau->vitesse = -10;
+}
+
+void gestion_distance_tir(_vaisseau *vaisseau){
+    if (vaisseau->tir.etat == 1){
+        vaisseau->tir.distance_parcourue ++;
+        if(vaisseau->tir.distance_parcourue > vaisseau->tir.distance_max)
+            vaisseau->tir.etat = 0;
+    }
+}
 
 
 

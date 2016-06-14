@@ -87,7 +87,7 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     if((v_ia->position.x - distance_securite_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_securite_horizontale)){
         if((v_ia->position.y - distance_securite_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_securite_verticale))
             mouvement_vaisseau(RECUL, DROIT, v_ia);; /// L'ia est trop proche est risque de déclencher une colision.
-    }else if(v_ia->vitesse < v_joueur->vitesse){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
+    }else if(v_ia->vitesse < v_ia->vitesse_max){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
         mouvement_vaisseau(AVANCE, DROIT, v_ia);
     }
     if(v_ia->angle <= v_ia->angle_de_decalage-5 || v_ia->angle >= v_ia->angle_de_decalage+5){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.

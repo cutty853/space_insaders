@@ -14,3 +14,5 @@ int recup_int(FILE* fichier);
 int recup_string(FILE* fichier);
 
 void degat_tir(_vaisseau *vaisseau);
+void degat_collisions(_vaisseau *vaisseau);
+void gestion_distance_tir(_vaisseau *vaisseau);

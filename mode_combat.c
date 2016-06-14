@@ -38,7 +38,8 @@ void play(SDL_Surface *ecran) {
 
     /// Zone pour les commandes a effectué dès l'affichage de la carte
     memset(&action,0,sizeof(action));
-        /// Chargement de la map
+
+    /// Chargement de la map
     charge_niveau(ecran);
     charge_sprite_explosion(&boom);
     charge_sprite_explosion(&boom2);
@@ -126,44 +127,39 @@ void play(SDL_Surface *ecran) {
         pos_to_up_ecran[9] = eff_vaisseau(ecran, &v_player, save_screen);
 
         /// GESTION DES TIRS:
-        if (v_ia1.tir.etat == 1){
-            v_ia1.tir.distance_parcourue ++;
-            if(v_ia1.tir.distance_parcourue > v_ia1.tir.distance_max){
+        gestion_distance_tir(&v_ia1);
+        if(v_ia1.tir.etat == 0){
+            eff_tir(ecran, save_screen, &v_ia1);
+            decharge_sprite_tir(&v_ia1);
+            charge_sprite_tir(&v_ia1);
+        }else{
+            pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
+            calcul_pos_tir(&v_ia1);
+            pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
+            if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1 && v_ia1.tir.etat == 1){
+                degat_tir(&v_player);
                 v_ia1.tir.etat = 0;
                 eff_tir(ecran, save_screen, &v_ia1);
                 decharge_sprite_tir(&v_ia1);
                 charge_sprite_tir(&v_ia1);
-            }else{
-                pos_to_up_tir_ia[0] = eff_tir(ecran, save_screen, &v_ia1);
-                calcul_pos_tir(&v_ia1);
-                pos_to_up_tir_ia[1] = aff_tir(ecran, &v_ia1);
-                if (col_aabb_cercle(&(v_ia1.tir.hitbox.aabb), &(v_player.hitbox.cercle))==1 && v_ia1.tir.etat == 1){
-                    degat_tir(&v_player);
-                    v_ia1.tir.etat = 0;
-                    eff_tir(ecran, save_screen, &v_ia1);
-                    decharge_sprite_tir(&v_ia1);
-                    charge_sprite_tir(&v_ia1);
-                }
             }
         }
-        if (v_player.tir.etat == 1){
-            v_player.tir.distance_parcourue ++;
-            if(v_player.tir.distance_parcourue > v_player.tir.distance_max){
+
+        gestion_distance_tir(&v_player);
+        if(v_player.tir.etat == 0){
+            eff_tir(ecran, save_screen, &v_player);
+            decharge_sprite_tir(&v_player);
+            charge_sprite_tir(&v_player);
+        }else{
+            pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
+            calcul_pos_tir(&v_player);
+            pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
+            if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1 && v_player.tir.etat == 1){
+                degat_tir(&v_ia1);
                 v_player.tir.etat = 0;
                 eff_tir(ecran, save_screen, &v_player);
                 decharge_sprite_tir(&v_player);
                 charge_sprite_tir(&v_player);
-            }else{
-                pos_to_up_tir_joueur[0] = eff_tir(ecran, save_screen, &v_player);
-                calcul_pos_tir(&v_player);
-                pos_to_up_tir_joueur[1] = aff_tir(ecran, &v_player);
-                if (col_aabb_cercle(&(v_player.tir.hitbox.aabb), &(v_ia1.hitbox.cercle))==1 && v_player.tir.etat == 1){
-                    degat_tir(&v_ia1);
-                    v_player.tir.etat = 0;
-                    eff_tir(ecran, save_screen, &v_player);
-                    decharge_sprite_tir(&v_player);
-                    charge_sprite_tir(&v_player);
-                }
             }
         }
 
@@ -173,17 +169,19 @@ void play(SDL_Surface *ecran) {
             case BAS:
             case MOYEN:
             case HAUT:
-                    if (col_cercle_cercle(&(v_player.hitbox.cercle), &(v_ia1.hitbox.cercle))==1) {
-                        calcul_pos_vaisseau(&v_ia1, ecran);
-                        calcul_pos_bouclier(&v_ia1);
-                        calcul_pos_vie(&v_ia1);
-                        calcul_pos_hitbox_vaisseau(&v_ia1);
-                        calcul_pos_hitbox_tir(&(v_ia1.tir));
-                    }else
-                        v_ia1.vie.charge=VIDE;
-                    pos_to_up_ecran[3] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-                    pos_to_up_ecran[4] = aff_bouclier(ecran, &v_ia1);
-                    pos_to_up_ecran[5] = aff_vie(ecran, &v_ia1);
+                if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle)) != 1){ /// Collison entre vaisseaux.
+                    degat_collisions(&v_ia1);
+                    degat_collisions(&v_player);
+                }
+                calcul_pos_vaisseau(&v_ia1, ecran);
+                calcul_pos_bouclier(&v_ia1);
+                calcul_pos_vie(&v_ia1);
+                calcul_pos_hitbox_vaisseau(&v_ia1);
+                calcul_pos_hitbox_tir(&(v_ia1.tir));
+
+                pos_to_up_ecran[3] = aff_vaisseau(ecran, &v_ia1, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+                pos_to_up_ecran[4] = aff_bouclier(ecran, &v_ia1);
+                pos_to_up_ecran[5] = aff_vie(ecran, &v_ia1);
                 break;
             case VIDE:
                 if (boom2.phase < NB_SPRITES_EXPLOSION) {
@@ -203,17 +201,19 @@ void play(SDL_Surface *ecran) {
             case BAS:
             case MOYEN:
             case HAUT:
-                    if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle))==1) {
-                        calcul_pos_vaisseau(&v_player, ecran);
-                        calcul_pos_bouclier(&v_player);
-                        calcul_pos_vie(&v_player);
-                        calcul_pos_hitbox_vaisseau(&v_player);
-                        calcul_pos_hitbox_tir(&(v_player.tir));
-                    }else
-                        v_player.vie.charge=VIDE;
-                    pos_to_up_ecran[10] = aff_vaisseau(ecran, &v_player, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
-                    pos_to_up_ecran[11] = aff_bouclier(ecran, &v_player);
-                    pos_to_up_ecran[12] = aff_vie(ecran, &v_player);
+                if (col_cercle_cercle(&(v_ia1.hitbox.cercle), &(v_player.hitbox.cercle)) != 1){ /// Collison entre vaisseaux.
+                    degat_collisions(&v_player);
+                    degat_collisions(&v_ia1);
+                }
+                calcul_pos_vaisseau(&v_player, ecran);
+                calcul_pos_bouclier(&v_player);
+                calcul_pos_vie(&v_player);
+                calcul_pos_hitbox_vaisseau(&v_player);
+                calcul_pos_hitbox_tir(&(v_player.tir));
+
+                pos_to_up_ecran[10] = aff_vaisseau(ecran, &v_player, save_screen);/// TOUJOURS afficher le vaisseau en premier dans l'appelle des fonction (dans cette version de la fonction).
+                pos_to_up_ecran[11] = aff_bouclier(ecran, &v_player);
+                pos_to_up_ecran[12] = aff_vie(ecran, &v_player);
                 break;
             case VIDE:
                 if (boom.phase < NB_SPRITES_EXPLOSION) {
