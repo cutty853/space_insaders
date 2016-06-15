@@ -2,7 +2,7 @@ void test_surface(SDL_Surface* surface, int ref_err);
 void test_police(TTF_Font* police, int ref_err);
 
 void init_pos(SDL_Rect* position, int x, int y);
-void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init_val[NBR_VALEURS_TRANSMISES]);
+void init_vaisseau(_vaisseau *vaisseau, int tab_init_val[NBR_VALEURS_TRANSMISES]);
 void init_tir (_vaisseau *vaisseau);
 
 void pause();

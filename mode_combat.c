@@ -26,12 +26,13 @@
 void play(SDL_Surface *ecran) {
     _input action;
     TTF_Font *police_texte=NULL;
-    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran = 14, etat_interface[NB_ETAT_INTERFACE], niveau = 1, i = 0;
+    int temps_actuel=0, temps_precedent=0, nb_pos_to_up_ecran = 14, etat_interface[NB_ETAT_INTERFACE], niveau = 3,  i = 0, j = 0;
     float vitesse_jeu = 1.0;
     SDL_Surface *save_screen = NULL;
     SDL_Rect *pos_to_up_console;
     SDL_Rect pos_to_up_ecran[14], pos_to_up_tir_ia[2], pos_to_up_tir_joueur[2];
     _vaisseau v_player, v_ia1;
+    _vaisseau tab_v_ia[2];
     _explosion boom, boom2;
     FILE* fichier = NULL;
     etat_interface[CONSOLE] = 0;
@@ -61,7 +62,7 @@ void play(SDL_Surface *ecran) {
             exit(6666);
     }
     if (fichier != NULL){
-        int init_val_int[NBR_VALEURS_TRANSMISES], nbr_ia;
+        int init_val[NBR_VALEURS_TRANSMISES], nbr_ia;
         char titre[] = "IA0";
         /// GENERAL:
         do{
@@ -76,31 +77,63 @@ void play(SDL_Surface *ecran) {
         } while(strcmp(titre, "IA1") != 0);
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
-            init_val_int[i] = recup_int(fichier);
+            init_val[i] = recup_int(fichier);
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
-            init_val_int[i] = recup_string(fichier);
+            init_val[i] = recup_string(fichier);
         }
-        init_vaisseau(&v_ia1, CHERCHE, init_val_int);
+        init_vaisseau(&v_ia1, init_val);
         init_hitbox(&(v_ia1.hitbox), v_ia1.position.x+(TAILLE_JOUEUR/2), v_ia1.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_ia1.position.x, v_ia1.position.y, v_ia1.position.w, v_ia1.position.h);
         charge_sprite_bouclier(&v_ia1);
         charge_sprite_vie(&v_ia1);
         charge_sprite_tir(&v_ia1);
 
+        /// Prototype plusieurs IA:
+        for(j = 0; i<nbr_ia; j++){
+            char titre_voulu[] = "IA0";
+            switch(j){
+                case 0:
+                    sprintf(titre_voulu, "IA1");
+                    break;
+                case 1:
+                    sprintf(titre_voulu, "IA2");
+                    break;
+                default:
+                    exit(646);
+                    break;
+            }
+            do{
+                fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine".
+            } while(strcmp(titre, titre_voulu) != 0);
+            for(i=0; i<NBR_VALEURS_INT; i++){
+                deplace_curseur(fichier);
+                init_val[i] = recup_int(fichier);
+            }
+            for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
+                deplace_curseur(fichier);
+                init_val[i] = recup_string(fichier);
+            }
+            init_vaisseau(&tab_v_ia[j], init_val);
+            init_hitbox(&(tab_v_ia[j].hitbox), tab_v_ia[j].position.x+(TAILLE_JOUEUR/2), tab_v_ia[j].position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, tab_v_ia[j].position.x, tab_v_ia[j].position.y, tab_v_ia[j].position.w, tab_v_ia[j].position.h);
+            charge_sprite_bouclier(&tab_v_ia[j]);
+            charge_sprite_vie(&tab_v_ia[j]);
+            charge_sprite_tir(&tab_v_ia[j]);
+        }
+
         /// JOUEUR:
         do{
-            fgets(titre, 4, fichier); /// On lit maximum 5 caractères du fichier, on stocke le tout dans "chaine"
+            fgets(titre, 4, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "chaine"
         } while(strcmp(titre, "JOU") != 0);
         for(i=0; i<NBR_VALEURS_INT; i++){
             deplace_curseur(fichier);
-            init_val_int [i] = recup_int(fichier);
+            init_val [i] = recup_int(fichier);
         }
         for(i=NBR_VALEURS_INT; i<NBR_VALEURS_TRANSMISES; i++){
             deplace_curseur(fichier);
-            init_val_int[i] = recup_string(fichier);
+            init_val[i] = recup_string(fichier);
         }
-        init_vaisseau(&v_player, INDEPENDENT, init_val_int);
+        init_vaisseau(&v_player, init_val);
         init_hitbox(&(v_player.hitbox), v_player.position.x+(TAILLE_JOUEUR/2), v_player.position.y+(TAILLE_JOUEUR/2), TAILLE_JOUEUR/2, 0, v_player.position.x, v_player.position.y, v_player.position.w, v_player.position.h);
         charge_sprite_bouclier(&v_player);
         charge_sprite_vie(&v_player);
@@ -108,10 +141,12 @@ void play(SDL_Surface *ecran) {
 
         close(fichier);
     }
+
     /// test console
     pos_to_up_console = malloc(sizeof(SDL_Rect)*1);
     police_texte = TTF_OpenFont("polices/geo_sans_light.ttf", 18);
     test_police(police_texte, 202);
+
     /// Sauvegarde de l'écran
     save_screen = SDL_DisplayFormat(ecran);
 

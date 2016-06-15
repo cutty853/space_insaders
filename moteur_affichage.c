@@ -304,9 +304,7 @@ void charge_sprite_bouclier(_vaisseau *vaisseau){
 void charge_sprite_vie(_vaisseau *vaisseau){
     int i;
     switch (vaisseau->intelligence) {
-        case IA_NOVICE:
-        case IA_NORMAL:
-        case IA_EXPERTE:
+        case IA:
             for (i=0;i<NB_SPRITES_VIE;i++)
                 vaisseau->vie.sprite[i] = SDL_CreateRGBSurface(SDL_HWSURFACE, 40, 5, 32, 0, 0, 0, 0);
             break;

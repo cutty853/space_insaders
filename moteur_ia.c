@@ -63,22 +63,22 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     int pos_relative = 0, sens_de_rotation = 0;
 
     pos_relative = compare_position(v_ia, v_joueur);
-    switch (pos_relative){// Mieux optimisé avec des puissances 2 plutot que des valeurs absolues.
+    switch (pos_relative){// Plus optimisé avec des puissances 2 plutot que des valeurs absolues.
         case BAS_DROITE:
-            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
-            v_ia->angle_de_decalage += 0; /// décalage de l'arctan.
+            v_ia->vaisseau_ia.angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
+            v_ia->vaisseau_ia.angle_de_decalage += 0; /// décalage de l'arctan.
             break;
         case HAUT_DROITE:
-            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
-            v_ia->angle_de_decalage += 90; /// décalage de l'arctan.
+            v_ia->vaisseau_ia.angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
+            v_ia->vaisseau_ia.angle_de_decalage += 90; /// décalage de l'arctan.
             break;
         case HAUT_GAUCHE:
-            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
-            v_ia->angle_de_decalage += 180; /// décalage de l'arctan.
+            v_ia->vaisseau_ia.angle_de_decalage = (180/PI)*(atan(fabs(v_joueur->position.x - v_ia->position.x) / fabs(v_ia->position.y - v_joueur->position.y)));
+            v_ia->vaisseau_ia.angle_de_decalage += 180; /// décalage de l'arctan.
             break;
         case BAS_GAUCHE:
-            v_ia->angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
-            v_ia->angle_de_decalage += 270; /// décalage de l'arctan.
+            v_ia->vaisseau_ia.angle_de_decalage = (180/PI)*(atan(fabs(v_ia->position.y - v_joueur->position.y) / fabs(v_joueur->position.x - v_ia->position.x)));
+            v_ia->vaisseau_ia.angle_de_decalage += 270; /// décalage de l'arctan.
             break;
     }
 
@@ -90,14 +90,14 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
     }else if(v_ia->vitesse < v_ia->vitesse_max){/// atteint la vitesse du joueur mais ne le rattrape pas par sécurité.
         mouvement_vaisseau(AVANCE, DROIT, v_ia);
     }
-    if(v_ia->angle <= v_ia->angle_de_decalage-5 || v_ia->angle >= v_ia->angle_de_decalage+5){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
+    if(v_ia->angle <= v_ia->vaisseau_ia.angle_de_decalage-5 || v_ia->angle >= v_ia->vaisseau_ia.angle_de_decalage+5){/// tourne tant que pas bien orienter pour tirer avec une certaine ''imprecision''.
         sens_de_rotation = choix_sens_de_rotation(v_ia, pos_relative);
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
     }
     /// Conditions de tir:
-    if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->angle_de_decalage)-(80-v_ia->seuil_intelligence) && v_ia->angle <= (v_ia->angle_de_decalage)+(80-v_ia->seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
+    if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->vaisseau_ia.angle_de_decalage)-(80-v_ia->vaisseau_ia.val_seuil_intelligence) ) && (v_ia->angle <= (v_ia->vaisseau_ia.angle_de_decalage)+(80-v_ia->vaisseau_ia.val_seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
         int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
-        if(alea_tir > 1000-v_ia->seuil_intelligence)
+        if(alea_tir > 100-(v_ia->vaisseau_ia.val_seuil_intelligence) )
             tir_ia(v_ia);
     }
 }
@@ -111,15 +111,15 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
     else if(v_ia->angle < 0)
         v_ia->angle += 359;
 
-    switch(v_ia->comportement){
+    switch(v_ia->vaisseau_ia.comportement){
         case CHERCHE:
             ia_cherche(v_ia, v_joueur);
-            v_ia->comportement = recherche_ia(v_ia, v_joueur);
-            if(v_ia->comportement != CHERCHE){/// l'ia a trouvé et choisi de d'engager le combat ou non.
+            v_ia->vaisseau_ia.comportement = recherche_ia(v_ia, v_joueur);
+            if(v_ia->vaisseau_ia.comportement != CHERCHE){/// l'ia a trouvé et choisi de d'engager le combat ou non.
                 if(v_ia->vie.charge == BAS && v_ia->bouclier.charge == VIDE)
-                    v_ia->comportement = FUIT;
+                    v_ia->vaisseau_ia.comportement = FUIT;
                 else
-                    v_ia->comportement = ATTAQUE;
+                    v_ia->vaisseau_ia.comportement = ATTAQUE;
             }
             break;
         case ATTAQUE:
@@ -128,10 +128,8 @@ void tour_ia(_vaisseau *v_ia, _vaisseau *v_joueur, SDL_Surface *ecran){
         case FUIT:
             ia_fuit(v_ia, v_joueur);
             break;
-        case INDEPENDENT:
-            break;
         default:
-            exit(666);
+            exit(616);
             break;
     }
 }
@@ -156,10 +154,10 @@ int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vais
     else if(pos_x_relative < 0 && pos_y_relative == 0)
         return GAUCHE;
     else
-        return 666;
+        return 626;
 }
 int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens de rotation: positif = sens trigo.
-    if(v_ia->angle < v_ia->angle_de_decalage)
+    if(v_ia->angle < v_ia->vaisseau_ia.angle_de_decalage)
         return POSITIF;
     else
         return NEGATIF;

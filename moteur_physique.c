@@ -117,8 +117,6 @@ void supprime_hitbox (_hitbox* h) {
     h->aabb.h = 0;
 }
 void supprime_vaisseau (_vaisseau *vaisseau){
-    vaisseau->comportement = INDEPENDENT;
-
     vaisseau->position.x = 0;
     vaisseau->position.y = 0;
     vaisseau->angle = 0;

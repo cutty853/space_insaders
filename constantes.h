@@ -39,7 +39,7 @@
     #define TAILLE_CONSOLE_Y 180
     #define ENUM_TITRE_STATS_CONSOLE() {"Position en x : ", "Angle : ", "Position en y : ", "Angle de decalage : ", "Hauteur : "}
     #define ENUM_VAR_STATS_CONSOLE() {{sprintf(texte_infosup[0], "%d", (int)vaisseau.position.x), sprintf(texte_infosup[1], "%i", vaisseau.angle),\
-    sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%i", (int)vaisseau.angle_de_decalage),\
+    sprintf(texte_infosup[2], "%d", (int)vaisseau.position.y), sprintf(texte_infosup[3], "%i", (int)vaisseau.vaisseau_ia.angle_de_decalage),\
     sprintf(texte_infosup[4], "%d", (int)vaisseau.position.h)}}
     enum {CONSOLE=0};
     /// GENERAL
@@ -52,7 +52,7 @@
     #define FPS 60
     #define PI  3.14159265358979323846264338327950288419716939937510582
     /// RESSOURCES
-    #define NBR_VALEURS_TRANSMISES 10
+    #define NBR_VALEURS_TRANSMISES 11
     #define NBR_VALEURS_INT 6
 #endif // DEF_CONSTANTES
 

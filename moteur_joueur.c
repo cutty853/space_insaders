@@ -63,17 +63,15 @@ void etat_action_joueur(_input* in)
 void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom, float *vitesse_jeu){
     etat_action_joueur(action);
         // Gestion du clavier
-    if (action->key[SDLK_w]) {
+    if (action->key[SDLK_w] || v_joueur->vitesse < v_joueur->vitesse_min) {
         vitesse_joueur(v_joueur, AVANT);
-    }
-    if (action->key[SDLK_s]) {
+    }else if (action->key[SDLK_s]) {/// Ne doit pas pvr avancer ET ralentir.
         vitesse_joueur(v_joueur, ARRIERE);
     }
     if (action->key[SDLK_a]) {
         v_joueur->angle+= v_joueur->vitesse_rotation;
         v_joueur->etat_rotation = 1;
-    }
-    if (action->key[SDLK_d]) {
+    }else if (action->key[SDLK_d]) { /// Ne doit pas pvr tourner dans les 2 sens.
         v_joueur->angle-= v_joueur->vitesse_rotation;
         v_joueur->etat_rotation = 1;
     }

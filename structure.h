@@ -34,8 +34,9 @@ typedef struct {
     _polygone polygone;
 } _hitbox;
 
-typedef enum{JOUEUR, IA_NOVICE, IA_NORMAL, IA_EXPERTE} _intelligence;
-typedef enum{CHERCHE, ATTAQUE, FUIT, INDEPENDENT} _comportement;
+typedef enum{IA_NOVICE, IA_NORMAL, IA_EXPERTE} _seuil_intelligence;
+typedef enum{JOUEUR, IA} _intelligence;
+typedef enum{CHERCHE, ATTAQUE, FUIT} _comportement;
 typedef enum {VIDE, BAS, MOYEN, HAUT} _charge;
 typedef enum {TIR_LASER, OBUS, RAYON_LASER} _arme;
 //typedef enum {CAPA1, CAPA2, CAPA3} _capacite;
@@ -67,25 +68,29 @@ typedef struct{
     _hitbox hitbox;
 } _tir;
 
+typedef struct{
+    _comportement comportement;
+    _seuil_intelligence seuil_intelligence;
+    int val_seuil_intelligence;
+    int angle_de_decalage;
+} _v_ia;
+
 typedef struct {
     SDL_Surface *sprite;
     int poid;
-    float vitesse, acceleration; // En prixel par seconde*pow(-2)
+    float vitesse, acceleration;
     int vitesse_max, vitesse_min;
     int vitesse_rotation, angle;
     int etat_rotation;
-    int seuil_intelligence;
+
     _intelligence intelligence;
-    _comportement comportement;
+    _v_ia vaisseau_ia;
     _bouclier bouclier;
     _vie vie;
     _arme arme;
     _tir tir;
-    //_capacite capacite;
     SDL_Rect position;
     _hitbox hitbox;
-
-    int angle_de_decalage;// Verif
 
 } _vaisseau;
 

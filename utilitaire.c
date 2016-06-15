@@ -64,9 +64,7 @@ int aleatoire(int mini, int maxi){/// random entre le minimum demande et le maxi
     return ( (rand()%maxi)+mini );
 }
 
-void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init_val[NBR_VALEURS_TRANSMISES]){
-    vaisseau->comportement = comportement;
-
+void init_vaisseau(_vaisseau *vaisseau, int tab_init_val[NBR_VALEURS_TRANSMISES]){
     vaisseau->position.x = tab_init_val[0];
     vaisseau->position.y = tab_init_val[1];
     vaisseau->angle = tab_init_val[2];
@@ -83,24 +81,32 @@ void init_vaisseau(_vaisseau *vaisseau, _comportement comportement, int tab_init
     vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
     vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
     vaisseau->etat_rotation = 0; /// à l'initialisation, aucun des vaisseaux ne tourne.
-    vaisseau->angle_de_decalage = 0;/// n'a pas encore choisi de cible.
 
-    if(vaisseau->intelligence == IA_NOVICE) {
+
+    if(vaisseau->intelligence == IA){
         vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
         test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 25;
-    }else if(vaisseau->intelligence == IA_NORMAL) {
-        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
-        test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 50;
-    }else if(vaisseau->intelligence == IA_EXPERTE) {
-        vaisseau->sprite = IMG_Load("images/vaisseau_ia.png");
-        test_surface(vaisseau->sprite, 104);
-        vaisseau->seuil_intelligence = 75;
-    }
-    else {/// il s'agit du joueur.
+        vaisseau->vaisseau_ia.seuil_intelligence = tab_init_val[10];
+        vaisseau->vaisseau_ia.comportement = CHERCHE;
+        vaisseau->vaisseau_ia.angle_de_decalage = 0;/// n'a pas encore choisi de cible.
+        switch(vaisseau->vaisseau_ia.seuil_intelligence){
+            case IA_NOVICE:
+                vaisseau->vaisseau_ia.val_seuil_intelligence = 25;
+                break;
+            case IA_NORMAL:
+                vaisseau->vaisseau_ia.val_seuil_intelligence = 50;
+                break;
+            case IA_EXPERTE:
+                vaisseau->vaisseau_ia.val_seuil_intelligence = 75;
+                break;
+            default:
+                exit(636);
+        }
+    }else if(vaisseau->intelligence == JOUEUR){/// il s'agit du joueur.
         vaisseau->sprite = IMG_Load("images/joueur_ship.png");
         test_surface(vaisseau->sprite, 105);
+    }else{
+        exit(656);
     }
 }
 void init_pos(SDL_Rect* position, int x, int y){
@@ -129,14 +135,14 @@ void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
         case TOURNE:
             vaisseau->etat_rotation = 1;
             if(sens == POSITIF){
-                if(vaisseau->angle <= vaisseau->vitesse_rotation && vaisseau->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
-                    vaisseau->angle = vaisseau->angle_de_decalage;
+                if(vaisseau->angle <= vaisseau->vitesse_rotation && vaisseau->vaisseau_ia.comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
+                    vaisseau->angle = vaisseau->vaisseau_ia.angle_de_decalage;
                 else
                     vaisseau->angle += vaisseau->vitesse_rotation;
             }
             if(sens == NEGATIF){
-                if(vaisseau->angle >= 360-vaisseau->vitesse_rotation && vaisseau->comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
-                    vaisseau->angle = vaisseau->angle_de_decalage;
+                if(vaisseau->angle >= 360-vaisseau->vitesse_rotation && vaisseau->vaisseau_ia.comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
+                    vaisseau->angle = vaisseau->vaisseau_ia.angle_de_decalage;
                 else
                     vaisseau->angle -= vaisseau->vitesse_rotation;
             }
@@ -177,14 +183,19 @@ int recup_string(FILE* fichier){
         return(HAUT);
     }else if(strcmp(val_string, "JOU") == 0){
         return(JOUEUR);
+    }else if(strcmp(val_string, "ART") == 0){
+        return(IA);
     }else if(strcmp(val_string, "NOV") == 0){
         return(IA_NOVICE);
     }else if(strcmp(val_string, "NOR") == 0){
         return(IA_NORMAL);
     }else if(strcmp(val_string, "EXP") == 0){
         return(IA_EXPERTE);
-    }else
-        exit(666);/// témoin de chargement.
+    }else{
+        //printf("%s", val_string);
+        //pause();
+        exit(4673);
+    }
 }
 
 void degat_tir(_vaisseau *vaisseau){
