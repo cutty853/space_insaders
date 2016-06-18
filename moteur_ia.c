@@ -27,8 +27,8 @@ int direction = 0;
 int duree = 0;
 
 _comportement recherche_ia(_vaisseau *v_ia, _vaisseau *v_joueur){ ///detecte le joueur à partir d'une certaine distance si non se balade aléatoirement.
-    int distance_detection_horizontale = 300; /// En pixels.
-    int distance_detection_verticale = 300; /// En pixels.
+    int distance_detection_horizontale = 10*v_ia->vaisseau_ia.val_seuil_intelligence;/// En pixels.
+    int distance_detection_verticale = distance_detection_horizontale;/// Formation d'un carré.
     if((v_ia->position.x - distance_detection_horizontale) < v_joueur->position.x && v_joueur->position.x < (v_ia->position.x + distance_detection_horizontale)){
         if((v_ia->position.y - distance_detection_verticale) < v_joueur->position.y && v_joueur->position.y < (v_ia->position.y + distance_detection_verticale))
             return ATTAQUE; /// Le joueur est dans le carré de detection.
@@ -95,11 +95,7 @@ void ia_attaque(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "attaque":
         mouvement_vaisseau(TOURNE, sens_de_rotation, v_ia);
     }
     /// Conditions de tir:
-    if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->vaisseau_ia.angle_de_decalage)-(80-v_ia->vaisseau_ia.val_seuil_intelligence) ) && (v_ia->angle <= (v_ia->vaisseau_ia.angle_de_decalage)+(80-v_ia->vaisseau_ia.val_seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
-        int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
-        if(alea_tir > 100-(v_ia->vaisseau_ia.val_seuil_intelligence) )
-            tir_ia(v_ia);
-    }
+    gestion_tir_ia(v_ia);
 }
 void ia_fuit(_vaisseau *v_ia, _vaisseau *v_joueur){/// Le vaisseau "fuit": il va se caher derrière les obstacles de la carte.
     exit(00000); // Pas encore fait, il faudrait déjà qu'elle est un quelque part où fuire (obstacle).
@@ -154,16 +150,34 @@ int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur){ /// Position du vais
     else if(pos_x_relative < 0 && pos_y_relative == 0)
         return GAUCHE;
     else
-        return 626;
+        exit(626);
 }
 int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative){ /// Choix du sens de rotation: positif = sens trigo.
-    if(v_ia->angle < v_ia->vaisseau_ia.angle_de_decalage)
-        return POSITIF;
-    else
-        return NEGATIF;
+    int premiere_angle = 0;
+    int deuxieme_angle = 0;
+    if(v_ia->angle < v_ia->vaisseau_ia.angle_de_decalage){
+        premiere_angle = v_ia->vaisseau_ia.angle_de_decalage - v_ia->angle;
+        deuxieme_angle = 360 - premiere_angle;
+        if(premiere_angle > deuxieme_angle)
+            return NEGATIF;
+        else
+            return POSITIF;
+    }else{
+        premiere_angle = v_ia->angle - v_ia->vaisseau_ia.angle_de_decalage;
+        deuxieme_angle = 360 - premiere_angle;
+        if(premiere_angle > deuxieme_angle)
+            return POSITIF;
+        else
+            return NEGATIF;
+    }
 }
 
-void tir_ia(_vaisseau *v_ia){
-    init_tir (v_ia);
-    init_hitbox(&(v_ia->tir.hitbox), 0, 0, 0, 0, v_ia->tir.position.x, v_ia->tir.position.y, 6, 6);
+void gestion_tir_ia(_vaisseau *v_ia){
+    if(v_ia->tir.etat != 1 && ( (v_ia->angle >= (v_ia->vaisseau_ia.angle_de_decalage)-(80-v_ia->vaisseau_ia.val_seuil_intelligence) ) && (v_ia->angle <= (v_ia->vaisseau_ia.angle_de_decalage)+(80-v_ia->vaisseau_ia.val_seuil_intelligence)) ) ){/// Si pas déjà entrain de tirer alors tir.
+        int alea_tir = aleatoire(1, 100); /// Aléa pour empêcher le tir permanant.
+        if(alea_tir > 100-(v_ia->vaisseau_ia.val_seuil_intelligence) ){
+            init_tir(v_ia);
+            init_hitbox(&(v_ia->tir.hitbox), 0, 0, 0, 0, v_ia->tir.position.x, v_ia->tir.position.y, 6, 6);
+        }
+    }
 }

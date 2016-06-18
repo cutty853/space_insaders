@@ -7,7 +7,6 @@ int col_polygone_point (_polygone *p, _point* x);
 int col_aabb_cercle (SDL_Rect* aabb, _cercle *c);
 void init_hitbox(_hitbox* h, int xCercle, int yCercle, int rCercle, int nb_points, int xAABB, int yAABB, int wAABB, int hAABB);
 void supprime_hitbox (_hitbox* h);
-void supprime_vaisseau (_vaisseau *vaisseau);
 void calcul_pos_hitbox_vaisseau(_vaisseau *v);
 void calcul_pos_hitbox_tir(_tir* t);
 void transform_aabb_polygone(SDL_Rect* aabb, _polygone *p);

@@ -1,0 +1,17 @@
+Touches à utiliser:
+z = accélerer.
+q = pivoter vers la gauche.
+s = ralentir.
+d = pivoter vers la droite.
+
+- = ralentir la vitesse de jeu.
++ = accelérer la vitesse de jeu.
+
+Echap = accéder au menu du jeu.
+	- nécessaire pour quitter, pour recommencer ainsi que pour accéder au niveau superieur en recliquant sur "jouer".
+
+Il existe 2 armes dans le jeu: les lasers (trait rouge) et les obus (point orange).
+	- Un obu va moins vite et moins loin q'un tir laser mais fait 2 fois plus de dégats.
+La vie (barre verte) et le bouclier (barre bleue) ne se régénèrent pas.
+En sortant des bordures de l'écran, vous réapparaîtrez au coté de l'écran opposé à celui où vous êtes sorti.
+Une fois le niveau gagné, vous pouvez vous éplce librement ou passer au niveau suivant grâce à la touche "échap" puis "jouer".

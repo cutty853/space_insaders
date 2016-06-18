@@ -116,23 +116,6 @@ void supprime_hitbox (_hitbox* h) {
     h->aabb.w = 0;
     h->aabb.h = 0;
 }
-void supprime_vaisseau (_vaisseau *vaisseau){
-    vaisseau->position.x = 0;
-    vaisseau->position.y = 0;
-    vaisseau->angle = 0;
-    vaisseau->poid = 0;
-    vaisseau->vitesse_max = 0;
-    vaisseau->vitesse_rotation = 0;
-    vaisseau->arme = 0;
-    vaisseau->bouclier.charge = 0;
-    vaisseau->vie.charge = 0;
-    vaisseau->intelligence = 0;
-
-    vaisseau->vitesse_min = 0;
-    vaisseau->vitesse = 0.0;
-    vaisseau->acceleration = ((vaisseau->poid)*(vaisseau->vitesse_max))/1000.0; ///accélération dépendante du poid.
-    vaisseau->tir.etat = 0; /// à l'initialisation, aucun des vaisseaux ne tir.
-}
 
 void calcul_pos_hitbox_vaisseau(_vaisseau *v) {
     int zoom=v->position.w/TAILLE_JOUEUR;
@@ -159,39 +142,39 @@ void transform_aabb_polygone(SDL_Rect* aabb, _polygone *p) {
     p->points[3].y = aabb->y+aabb->h;
 }
 
-SDL_Rect eff_hitbox_aabb(SDL_Rect *aabb, SDL_Surface *save_screen, SDL_Surface *ecran) {
-    SDL_BlitSurface(save_screen, aabb, ecran, aabb);
-    return *aabb;
-}
-
-SDL_Rect aff_hitbox_aabb (SDL_Rect *aabb, SDL_Surface *ecran) {
-    SDL_Surface* ligne[2] = {NULL};
-    SDL_Rect pos_hitbox;
-    ligne[0] = SDL_CreateRGBSurface(SDL_HWSURFACE, aabb->w, 2, 32, 0, 0, 0, 0);
-    ligne[1] = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, aabb->h, 32, 0, 0, 0, 0);
-    SDL_FillRect(ligne[0], NULL, SDL_MapRGB(ligne[0]->format, 0, 255, 0));
-    SDL_FillRect(ligne[1], NULL, SDL_MapRGB(ligne[1]->format, 0, 255, 0));
-
-    init_pos(&pos_hitbox, aabb->x, aabb->y);
-    SDL_BlitSurface(ligne[0], NULL, ecran, &pos_hitbox);
-    init_pos(&pos_hitbox, aabb->x, aabb->y+aabb->h-2);
-    SDL_BlitSurface(ligne[0], NULL, ecran, &pos_hitbox);
-    init_pos(&pos_hitbox, aabb->x, aabb->y);
-    SDL_BlitSurface(ligne[1], NULL, ecran, &pos_hitbox);
-    init_pos(&pos_hitbox, aabb->x+aabb->w-2, aabb->y);
-    SDL_BlitSurface(ligne[1], NULL, ecran, &pos_hitbox);
-
-    return *aabb;
-}
-
-SDL_Rect aff_hitbox_cercle (_cercle *c, SDL_Surface* ecran, int x, int y) {
-    SDL_Surface *carre=SDL_CreateRGBSurface(SDL_HWSURFACE, 32, c->rayon, c->rayon, 0, 0, 0, 0);
-    SDL_Surface *tmp_rotation=NULL;
-    SDL_Rect pos, pre_pos;
-    int i;
-    init_pos(&pos, 100, 200);
-    SDL_FillRect(carre, NULL, SDL_MapRGB(carre->format, 0, 255, 0));
-    for (i=0; i<360; i++) {
+//SDL_Rect eff_hitbox_aabb(SDL_Rect *aabb, SDL_Surface *save_screen, SDL_Surface *ecran) {
+//    SDL_BlitSurface(save_screen, aabb, ecran, aabb);
+//    return *aabb;
+//}
+//
+//SDL_Rect aff_hitbox_aabb (SDL_Rect *aabb, SDL_Surface *ecran) {
+//    SDL_Surface* ligne[2] = {NULL};
+//    SDL_Rect pos_hitbox;
+//    ligne[0] = SDL_CreateRGBSurface(SDL_HWSURFACE, aabb->w, 2, 32, 0, 0, 0, 0);
+//    ligne[1] = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, aabb->h, 32, 0, 0, 0, 0);
+//    SDL_FillRect(ligne[0], NULL, SDL_MapRGB(ligne[0]->format, 0, 255, 0));
+//    SDL_FillRect(ligne[1], NULL, SDL_MapRGB(ligne[1]->format, 0, 255, 0));
+//
+//    init_pos(&pos_hitbox, aabb->x, aabb->y);
+//    SDL_BlitSurface(ligne[0], NULL, ecran, &pos_hitbox);
+//    init_pos(&pos_hitbox, aabb->x, aabb->y+aabb->h-2);
+//    SDL_BlitSurface(ligne[0], NULL, ecran, &pos_hitbox);
+//    init_pos(&pos_hitbox, aabb->x, aabb->y);
+//    SDL_BlitSurface(ligne[1], NULL, ecran, &pos_hitbox);
+//    init_pos(&pos_hitbox, aabb->x+aabb->w-2, aabb->y);
+//    SDL_BlitSurface(ligne[1], NULL, ecran, &pos_hitbox);
+//
+//    return *aabb;
+//}
+//
+//SDL_Rect aff_hitbox_cercle (_cercle *c, SDL_Surface* ecran, int x, int y) {
+//    SDL_Surface *carre=SDL_CreateRGBSurface(SDL_HWSURFACE, 32, c->rayon, c->rayon, 0, 0, 0, 0);
+//    SDL_Surface *tmp_rotation=NULL;
+//    SDL_Rect pos, pre_pos;
+//    int i;
+//    init_pos(&pos, 100, 200);
+//    SDL_FillRect(carre, NULL, SDL_MapRGB(carre->format, 0, 255, 0));
+//    for (i=0; i<360; i++) {
 //        pre_pos.w = carre->w;
 //        pre_pos.h = carre->h;
 //        tmp_rotation = rotozoomSurface(carre, i, 1, 1);
@@ -200,5 +183,5 @@ SDL_Rect aff_hitbox_cercle (_cercle *c, SDL_Surface* ecran, int x, int y) {
 //            pos.y -= ((pos.h - c->rayon)-(pre_pos.h - c->rayon))/2;
 //        }
 //        SDL_BlitSurface(tmp_rotation, NULL, ecran, &pos);
-    }
-}
+//    }
+//}

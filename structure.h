@@ -59,8 +59,8 @@ typedef struct{
 typedef struct{
     SDL_Surface *sprite;
     SDL_Rect position;
-    _arme type;
     float vitesse;
+    int degats;
     int angle;
     int etat;
     int distance_parcourue;

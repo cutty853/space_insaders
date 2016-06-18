@@ -116,10 +116,26 @@ void init_pos(SDL_Rect* position, int x, int y){
 void init_tir (_vaisseau *vaisseau){/// Initialisation de tous les parametres du tir
     vaisseau->tir.etat = 1;
     init_pos(&(vaisseau->tir.position), vaisseau->position.x+(TAILLE_JOUEUR/2.0), vaisseau->position.y+(TAILLE_JOUEUR/2.0));
-    vaisseau->tir.type = vaisseau->arme;
     vaisseau->tir.angle = vaisseau->angle;
-    vaisseau->tir.distance_max = 25;
     vaisseau->tir.distance_parcourue = 0;
+
+    switch(vaisseau->arme){
+        case TIR_LASER:
+            vaisseau->tir.degats = 1;
+            vaisseau->tir.distance_max = 15;
+            vaisseau->tir.vitesse = vaisseau->vitesse_max + 15;
+            break;
+        case OBUS:
+            vaisseau->tir.degats = 2;
+            vaisseau->tir.distance_max = 12;
+            vaisseau->tir.vitesse = vaisseau->vitesse_max + 7;
+            break;
+        case RAYON_LASER:
+            vaisseau->tir.degats = 3;
+            vaisseau->tir.distance_max = 10;
+            vaisseau->tir.vitesse = vaisseau->vitesse_max + 25;
+            break;
+    }
 }
 
 void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
@@ -135,16 +151,10 @@ void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
         case TOURNE:
             vaisseau->etat_rotation = 1;
             if(sens == POSITIF){
-                if(vaisseau->angle <= vaisseau->vitesse_rotation && vaisseau->vaisseau_ia.comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus
-                    vaisseau->angle = vaisseau->vaisseau_ia.angle_de_decalage;
-                else
-                    vaisseau->angle += vaisseau->vitesse_rotation;
+                vaisseau->angle += vaisseau->vitesse_rotation;
             }
             if(sens == NEGATIF){
-                if(vaisseau->angle >= 360-vaisseau->vitesse_rotation && vaisseau->vaisseau_ia.comportement == ATTAQUE)/// fix du bug du changement de sens de rotation quand le v_joueur passe au dessus.
-                    vaisseau->angle = vaisseau->vaisseau_ia.angle_de_decalage;
-                else
-                    vaisseau->angle -= vaisseau->vitesse_rotation;
+                vaisseau->angle -= vaisseau->vitesse_rotation;
             }
             break;
         case RIEN:
@@ -153,11 +163,17 @@ void mouvement_vaisseau (int action, int sens, _vaisseau *vaisseau){
     }
 }
 
-void deplace_curseur(FILE* fichier){
+void deplace_curseur(FILE *fichier){
     char deux_points = ':';
     do{/// Boucle de lecture des caractères un à un
         deux_points = fgetc(fichier); /// On lit le caractère
     } while (deux_points != ':'); /// On continue tant que fgetc n'a pas retourné EOF (fin de fichier)
+}
+void trouve_titre(FILE *fichier, int taille_string, char titre_voulu[]){
+    char *titre = malloc(taille_string*sizeof(char));
+    do{
+        fgets(titre, taille_string, fichier); /// On lit maximum 4 caractères du fichier, on stocke le tout dans "titre".
+    } while(strcmp(titre, titre_voulu) != 0);
 }
 int recup_int(FILE* fichier){
     int val_int = 0;
@@ -192,17 +208,40 @@ int recup_string(FILE* fichier){
     }else if(strcmp(val_string, "EXP") == 0){
         return(IA_EXPERTE);
     }else{
-        //printf("%s", val_string);
-        //pause();
         exit(4673);
     }
 }
 
-void degat_tir(_vaisseau *vaisseau){
-    if(vaisseau->bouclier.charge == VIDE){
-        vaisseau->vie.charge --;
-    } else{
-        vaisseau->bouclier.charge --;
+void degat_tir(_vaisseau *vaisseau_touche, _vaisseau *vaisseau_tireur){
+    switch(vaisseau_touche->bouclier.charge){
+        case BAS:
+        case MOYEN:
+        case HAUT:
+            vaisseau_touche->bouclier.charge -= vaisseau_tireur->tir.degats;
+            switch(vaisseau_touche->bouclier.charge){
+                case VIDE:
+                case BAS:
+                case MOYEN:
+                case HAUT:
+                    break;
+                default:
+                    vaisseau_touche->bouclier.charge = VIDE;/// Remise à zéro pour éviter les valeurs inconnues.
+                    break;
+            }
+            break;
+        case VIDE:
+            vaisseau_touche->vie.charge -= vaisseau_tireur->tir.degats;
+            switch(vaisseau_touche->vie.charge){
+                case VIDE:
+                case BAS:
+                case MOYEN:
+                case HAUT:
+                    break;
+                default:
+                    vaisseau_touche->vie.charge = VIDE;/// Remise à zéro pour éviter les valeurs inconnues.
+                    break;
+            }
+            break;
     }
 }
 void degat_collisions(_vaisseau *vaisseau){
@@ -219,6 +258,55 @@ void gestion_distance_tir(_vaisseau *vaisseau){
     }
 }
 
+void calcul_pos_bouclier(_vaisseau *vaisseau){
+    vaisseau->bouclier.position.x = vaisseau->position.x;
+    vaisseau->bouclier.position.y = (vaisseau->position.y)+60+10; /// +60 = taille verticale du vaisseau, +10 pou la taille de rotation.
+}
+void calcul_pos_vie(_vaisseau *vaisseau){
+    vaisseau->vie.position.x = vaisseau->bouclier.position.x;
+    vaisseau->vie.position.y = (vaisseau->bouclier.position.y)+5; /// +5 = epaisseur de la barre de bouclier.
+}
+void calcul_pos_vaisseau(_vaisseau *vaisseau, SDL_Surface *ecran){
+    SDL_Surface *tmp_rotation = NULL;
 
+    /// Calcul des positions:
+    vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
+    vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
 
+    /// Vérification des sorties d'écran:
+    if(vaisseau->position.x >= ecran->w)
+        vaisseau->position.x = TAILLE_VAISSEAU;
+    else if(vaisseau->position.x <= 0)
+        vaisseau->position.x = ecran->w-TAILLE_VAISSEAU;
+    if(vaisseau->position.y >= ecran->h)
+        vaisseau->position.y = TAILLE_VAISSEAU;
+    else if(vaisseau->position.y <= 0)
+        vaisseau->position.y = ecran->h-TAILLE_VAISSEAU;
 
+    SDL_FreeSurface(tmp_rotation);
+}
+void calcul_pos_tir(_vaisseau *vaisseau){
+    vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
+    vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
+}
+
+void supprime_vaisseau (_vaisseau *vaisseau){
+    vaisseau->position.x = 0;
+    vaisseau->position.y = 0;
+    vaisseau->angle = 0;
+    vaisseau->poid = 0;
+    vaisseau->vitesse_max = 0;
+    vaisseau->vitesse_min = 0;
+    vaisseau->vitesse = 0.0;
+    vaisseau->acceleration = 0.0;
+    vaisseau->vitesse_rotation = 0;
+    vaisseau->arme = 0;
+    vaisseau->bouclier.charge = 0;
+    vaisseau->vie.charge = 0;
+    vaisseau->vaisseau_ia.seuil_intelligence = 0;
+    vaisseau->vaisseau_ia.val_seuil_intelligence = 0;
+    vaisseau->vaisseau_ia.comportement = 0;
+    vaisseau->vaisseau_ia.angle_de_decalage = 0;
+    vaisseau->tir.etat = 0;
+    vaisseau->sprite = NULL;
+}

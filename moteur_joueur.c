@@ -89,7 +89,7 @@ void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom, float *v
     if (action->key[SDLK_KP_MINUS]) {///Ralenti le temps.
         *vitesse_jeu += 0.05;
     }else if (action->key[SDLK_KP_PLUS]) {///Accélère le temps.
-        if (*vitesse_jeu > 0.6)/// à partir de 0.5, le jeu crash.
+        if (*vitesse_jeu > 0.5)/// à partir de 0.5, le jeu crash.
             *vitesse_jeu -= 0.05;
     }
 }

@@ -9,4 +9,4 @@ void ia_fuit(_vaisseau *v_ia, _vaisseau *v_joueur);
 int compare_position(_vaisseau *v_ia, _vaisseau *v_joueur);
 int choix_sens_de_rotation(_vaisseau *v_ia, int pos_relative);
 
-void tir_ia(_vaisseau *v_ia);
+void gestion_tir_ia(_vaisseau *v_ia);

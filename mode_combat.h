@@ -1,1 +1,1 @@
-void play(SDL_Surface *ecran);
+void play(SDL_Surface *ecran, int *niveau);

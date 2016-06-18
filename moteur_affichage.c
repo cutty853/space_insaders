@@ -185,38 +185,6 @@ SDL_Rect eff_tir(SDL_Surface *ecran, SDL_Surface *save_screen, _vaisseau *vaisse
     return vaisseau->tir.position;
 }
 
-void calcul_pos_bouclier(_vaisseau *vaisseau){
-    vaisseau->bouclier.position.x = vaisseau->position.x;
-    vaisseau->bouclier.position.y = (vaisseau->position.y)+60+10; /// +60 = taille verticale du vaisseau, +10 pou la taille de rotation.
-}
-void calcul_pos_vie(_vaisseau *vaisseau){
-    vaisseau->vie.position.x = vaisseau->bouclier.position.x;
-    vaisseau->vie.position.y = (vaisseau->bouclier.position.y)+5; /// +5 = epaisseur de la barre de bouclier.
-}
-void calcul_pos_vaisseau(_vaisseau *vaisseau, SDL_Surface *ecran){
-    SDL_Surface *tmp_rotation = NULL;
-
-    /// Calcul des positions:
-    vaisseau->position.x += (vaisseau->vitesse)*sin(-RADIANATION(vaisseau->angle));
-    vaisseau->position.y += (vaisseau->vitesse)*(-cos(RADIANATION(vaisseau->angle)));
-
-    /// Vérification des sorties d'écran:
-    if(vaisseau->position.x >= ecran->w)
-        vaisseau->position.x = TAILLE_VAISSEAU;
-    else if(vaisseau->position.x <= 0)
-        vaisseau->position.x = ecran->w-TAILLE_VAISSEAU;
-    if(vaisseau->position.y >= ecran->h)
-        vaisseau->position.y = TAILLE_VAISSEAU;
-    else if(vaisseau->position.y <= 0)
-        vaisseau->position.y = ecran->h-TAILLE_VAISSEAU;
-
-    SDL_FreeSurface(tmp_rotation);
-}
-void calcul_pos_tir(_vaisseau *vaisseau){
-    vaisseau->tir.position.x += vaisseau->tir.vitesse * sin(-RADIANATION(vaisseau->tir.angle));
-    vaisseau->tir.position.y += vaisseau->tir.vitesse * (-cos(RADIANATION(vaisseau->tir.angle)));
-}
-
 SDL_Rect aff_bouclier(SDL_Surface *ecran, _vaisseau *vaisseau){
     switch (vaisseau->bouclier.charge) {
         case VIDE:
@@ -325,18 +293,15 @@ void charge_sprite_tir (_vaisseau *vaisseau){
     switch(vaisseau->arme){
         case TIR_LASER:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 2, 20, 32, 255, 0, 0, 255);
-            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 0, 0)); ///Rouge
-            vaisseau->tir.vitesse = vaisseau->vitesse_max + 12;
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 0, 0)); ///Rouge.
             break;
         case OBUS:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 255, 165, 0, 255);
-            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 165, 0));///Orange
-            vaisseau->tir.vitesse = vaisseau->vitesse_max + 6;
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 255, 165, 0));///Orange.
             break;
         case RAYON_LASER:
             vaisseau->tir.sprite = SDL_CreateRGBSurface(SDL_HWSURFACE, 4, 10, 32, 0, 0, 255, 255);
-            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 0, 0, 255));///Bleu
-            vaisseau->tir.vitesse = vaisseau->vitesse_max + 24;
+            SDL_FillRect(vaisseau->tir.sprite, NULL, SDL_MapRGB((vaisseau->tir.sprite)->format, 0, 0, 255));///Bleu.
             break;
         default:
             break;
