@@ -1,10 +1,6 @@
 void test_surface(SDL_Surface* surface, int ref_err);
 void test_police(TTF_Font* police, int ref_err);
 
-void init_pos(SDL_Rect* position, int x, int y);
-void init_vaisseau(_vaisseau *vaisseau, int tab_init_val[NBR_VALEURS_TRANSMISES]);
-void init_tir (_vaisseau *vaisseau);
-
 void pause();
 int aleatoire(int mini, int maxi);
 void mouvement_vaisseau(int action, int sens, _vaisseau *vaisseau);
@@ -15,7 +11,8 @@ int recup_int(FILE* fichier);
 int recup_string(FILE* fichier);
 
 void degat_tir(_vaisseau *vaisseau_touche, _vaisseau *vaisseau_tireur);
-void degat_collisions(_vaisseau *vaisseau);
+void degat_collisions(_vaisseau *v_belier, _vaisseau *v_victime);
+
 void gestion_distance_tir(_vaisseau *vaisseau);
 
 void calcul_pos_bouclier(_vaisseau *vaisseau);

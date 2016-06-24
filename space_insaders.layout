@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="moteur_initialisation.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="444" topLine="2" />
+		</Cursor>
+	</File>
+	<File name="structure.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1674" topLine="63" />
+		</Cursor>
+	</File>
+	<File name="utilitaire.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="constantes.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1942" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1457" topLine="31" />
+		</Cursor>
+	</File>
+	<File name="mode_campagne.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="593" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="mode_combat.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="35" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="moteur_joueur.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2797" topLine="63" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="736" topLine="7" />
 		</Cursor>
 	</File>
 	<File name="moteur_affichage.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -21,50 +41,29 @@
 			<Cursor1 position="482" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="moteur_ia.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+	<File name="moteur_ia.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4791" topLine="76" />
-		</Cursor>
-		<Folding>
-			<Collapse line="99" />
-			<Collapse line="103" />
-			<Collapse line="132" />
-			<Collapse line="154" />
-		</Folding>
-	</File>
-	<File name="utilitaire.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="653" topLine="0" />
+			<Cursor1 position="199" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="moteur_affichage.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="moteur_joueur.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9511" topLine="213" />
-		</Cursor>
-	</File>
-	<File name="constantes.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1942" topLine="16" />
-		</Cursor>
-	</File>
-	<File name="mode_campagne.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="553" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="moteur_ia.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="432" topLine="0" />
+			<Cursor1 position="2655" topLine="63" />
 		</Cursor>
 	</File>
 	<File name="moteur_physique.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4570" topLine="3" />
+			<Cursor1 position="2789" topLine="77" />
 		</Cursor>
 	</File>
-	<File name="structure.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="moteur_ia.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1310" topLine="10" />
+			<Cursor1 position="1599" topLine="80" />
+		</Cursor>
+	</File>
+	<File name="moteur_initialisation.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="452" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="moteur_joueur.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -72,25 +71,24 @@
 			<Cursor1 position="185" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="mode_combat.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13607" topLine="270" />
+		</Cursor>
+	</File>
+	<File name="moteur_affichage.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6221" topLine="149" />
+		</Cursor>
+	</File>
+	<File name="utilitaire.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="550" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="moteur_physique.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="528" topLine="0" />
+			<Cursor1 position="365" topLine="0" />
 		</Cursor>
-	</File>
-	<File name="mode_combat.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="utilitaire.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4334" topLine="88" />
-		</Cursor>
-		<Folding>
-			<Collapse line="25" />
-			<Collapse line="31" />
-			<Collapse line="38" />
-			<Collapse line="62" />
-		</Folding>
 	</File>
 </CodeBlocks_layout_file>

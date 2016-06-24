@@ -63,6 +63,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="moteur_ia.h" />
+		<Unit filename="moteur_initialisation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="moteur_initialisation.h" />
 		<Unit filename="moteur_joueur.c">
 			<Option compilerVar="CC" />
 		</Unit>

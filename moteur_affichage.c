@@ -10,16 +10,17 @@
     #include <SDL/SDL_ttf.h>
     #include <SDL/SDL_rotozoom.h>
 
-    #include "constantes.h"
     #include "structure.h"
+    #include "constantes.h"
 
-    #include "moteur_affichage.h"
-    #include "moteur_physique.h"
     #include "utilitaire.h"
     #include "mode_combat.h"
     #include "mode_campagne.h"
     #include "moteur_ia.h"
     #include "moteur_joueur.h"
+    #include "moteur_affichage.h"
+    #include "moteur_physique.h"
+    #include "moteur_initialisation.h"
 #endif
 
 
@@ -153,7 +154,7 @@ int menu(SDL_Surface *ecran){
 }
 
 void charge_niveau (SDL_Surface *ecran) {
-    SDL_Surface *fond_combat=NULL;
+    SDL_Surface *fond_combat = NULL;
     SDL_Rect pos_fond;
     double zoom;
     init_pos(&pos_fond, 0, 0);

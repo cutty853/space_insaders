@@ -10,8 +10,8 @@
     #include <SDL/SDL_ttf.h>
     #include <SDL/SDL_rotozoom.h>
 
-    #include "constantes.h"
     #include "structure.h"
+    #include "constantes.h"
 
     #include "utilitaire.h"
     #include "mode_combat.h"
@@ -20,10 +20,12 @@
     #include "moteur_joueur.h"
     #include "moteur_affichage.h"
     #include "moteur_physique.h"
+    #include "moteur_initialisation.h"
 #endif
 
 int main(int argc, char** argv){
-    srand(time(NULL)); /// initialisation de rand
+    SDL_Init(SDL_INIT_TIMER);/// Initialisation du temps.
+    srand(time(NULL));/// initialisation de rand.
     SDL_Surface *ecran=NULL;
     FILE* ctt = NULL;
     int action, continuer = 1, niveau = 1;

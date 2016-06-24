@@ -10,16 +10,17 @@
     #include <SDL/SDL_ttf.h>
     #include <SDL/SDL_rotozoom.h>
 
-    #include "constantes.h"
     #include "structure.h"
+    #include "constantes.h"
 
-    #include "moteur_affichage.h"
-    #include "moteur_physique.h"
     #include "utilitaire.h"
     #include "mode_combat.h"
     #include "mode_campagne.h"
     #include "moteur_ia.h"
     #include "moteur_joueur.h"
+    #include "moteur_affichage.h"
+    #include "moteur_physique.h"
+    #include "moteur_initialisation.h"
 #endif
 
 // COLLISIONS
@@ -90,20 +91,6 @@ int col_aabb_cercle (SDL_Rect* aabb, _cercle *c) {
         return 1;
     else
         return 0;
-}
-
-void init_hitbox(_hitbox* h, int xCercle, int yCercle, int rCercle, int nb_points, int xAABB, int yAABB, int wAABB, int hAABB) {
-    if (nb_points==0)
-        h->polygone.points = NULL;
-    else
-        h->polygone.points = malloc(sizeof(_point)*nb_points);
-    h->polygone.nb_points = nb_points;
-    h->cercle.centre.x = xCercle;
-    h->cercle.centre.y = yCercle;
-    h->cercle.rayon = rCercle;
-    init_pos(&(h->aabb), xAABB, yAABB);
-    h->aabb.w = wAABB;
-    h->aabb.h = hAABB;
 }
 
 void supprime_hitbox (_hitbox* h) {

@@ -11,7 +11,12 @@ Echap = accéder au menu du jeu.
 	- nécessaire pour quitter, pour recommencer ainsi que pour accéder au niveau superieur en recliquant sur "jouer".
 
 Il existe 2 armes dans le jeu: les lasers (trait rouge) et les obus (point orange).
-	- Un obu va moins vite et moins loin q'un tir laser mais fait 2 fois plus de dégats.
-La vie (barre verte) et le bouclier (barre bleue) ne se régénèrent pas.
+	- Un obu va moins vite et moins loin qu'un tir laser mais fait 2 fois plus de dégats.
+La vie (barre verte) ne se régénère pas.
+le bouclier (barre bleue) se régénère de 1 cran toute les 5 secondes.
 En sortant des bordures de l'écran, vous réapparaîtrez au coté de l'écran opposé à celui où vous êtes sorti.
 Une fois le niveau gagné, vous pouvez vous éplce librement ou passer au niveau suivant grâce à la touche "échap" puis "jouer".
+En cas de collision les 2 vaissseaux :
+	- seront repoussés en fonction de la vitesse de l'impactant (avantage sur l'impactant).
+	- perdront 1 niveau de bouclier.
+	- ne pourront plus tirer durant un laps de temps.

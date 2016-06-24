@@ -2,7 +2,7 @@ GEN
 nbr_ia:1
 
 IA1
-position_x:800
+position_x:1000
 position_y:350
 angle:90
 poid:25

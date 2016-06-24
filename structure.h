@@ -77,11 +77,8 @@ typedef struct{
 
 typedef struct {
     SDL_Surface *sprite;
-    int poid;
-    float vitesse, acceleration;
-    int vitesse_max, vitesse_min;
-    int vitesse_rotation, angle;
-    int etat_rotation;
+    float vitesse, acceleration, vitesse_rotation;
+    int vitesse_max, vitesse_min, angle, etat_rotation, poid;
 
     _intelligence intelligence;
     _v_ia vaisseau_ia;

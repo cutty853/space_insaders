@@ -10,16 +10,17 @@
     #include <SDL/SDL_ttf.h>
     #include <SDL/SDL_rotozoom.h>
 
-    #include "constantes.h"
     #include "structure.h"
+    #include "constantes.h"
 
-    #include "moteur_joueur.h"
     #include "utilitaire.h"
     #include "mode_combat.h"
     #include "mode_campagne.h"
     #include "moteur_ia.h"
+    #include "moteur_joueur.h"
     #include "moteur_affichage.h"
     #include "moteur_physique.h"
+    #include "moteur_initialisation.h"
 #endif
 
 void etat_action_joueur(_input* in)
@@ -83,7 +84,8 @@ void tour_joueur(_input *action, _vaisseau *v_joueur, _explosion *boom, float *v
         init_hitbox(&(v_joueur->tir.hitbox), 0, 0, 0, 0, v_joueur->tir.position.x, v_joueur->tir.position.y, 6, 6);
     }
     if (action->key[SDLK_KP1]) {
-        v_joueur->vie.charge = VIDE;
+        v_joueur->vie.charge = HAUT;
+        v_joueur->bouclier.charge = HAUT;
     }
     ///CHANGEMENT DU TEMPS:
     if (action->key[SDLK_KP_MINUS]) {///Ralenti le temps.
